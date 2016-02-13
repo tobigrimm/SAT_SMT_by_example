@@ -1,0 +1,76 @@
+\subsection{Zebra puzzle (AKA Einstein puzzle)} % FIXME \ac
+
+Zebra puzzle is a popular puzzle, defined as follows:
+
+% FIXME remove paragraph at first line
+\begin{framed}
+\begin{quotation}
+1.There are five houses.\\
+2.The Englishman lives in the red house.\\
+3.The Spaniard owns the dog.\\
+4.Coffee is drunk in the green house.\\
+5.The Ukrainian drinks tea.\\
+6.The green house is immediately to the right of the ivory house.\\
+7.The Old Gold smoker owns snails.\\
+8.Kools are smoked in the yellow house.\\
+9.Milk is drunk in the middle house.\\
+10.The Norwegian lives in the first house.\\
+11.The man who smokes Chesterfields lives in the house next to the man with the fox.\\
+12.Kools are smoked in the house next to the house where the horse is kept.\\
+13.The Lucky Strike smoker drinks orange juice.\\
+14.The Japanese smokes Parliaments.\\
+15.The Norwegian lives next to the blue house.\\
+\\
+Now, who drinks water? Who owns the zebra?\\
+\\
+In the interest of clarity, it must be added that each of the five houses is painted a different color, and their inhabitants are of different national extractions, own different pets, drink different beverages and smoke different brands of American cigarets [sic]. One other thing: in statement 6, right means your right.
+\end{quotation}
+\end{framed}
+( \url{https://en.wikipedia.org/wiki/Zebra_Puzzle} ) \\
+\\
+It's a very good example of constraint satisfaction problem (CSP). % FIXME \ac
+
+We would encode each entity as integer variable, representing number of house.
+
+Then, to define that Englishman lives in red house, we will define this constraint: \texttt{Englishman == Red}, meaning that number of a house where Englishmen resides and where tea is drunk is the same.
+
+To define that Norwegian lives next to the blue house, we don't realy know, if it is at left side of blue house or at right side, but we know that house numbers are different by just 1.
+So we will define this constraint: \texttt{Norwegian==Blue-1 OR Norwegian==Blue+1}.
+
+We will also need to limit all house numbers, so they will be in range of 1..5.
+
+We will also use \texttt{Distinct} to show that all various entities of the same type are all has different house numbers.
+
+\lstinputlisting{SMT/zebra.py}
+
+When we run it, we got correct result:
+
+\begin{lstlisting}
+sat
+[Snails = 3,
+ Blue = 2,
+ Ivory = 4,
+ OrangeJuice = 4,
+ Parliament = 5,
+ Yellow = 1,
+ Fox = 1,
+ Zebra = 5,
+ Horse = 2,
+ Dog = 4,
+ Tea = 2,
+ Water = 1,
+ Chesterfield = 2,
+ Red = 3,
+ Japanese = 5,
+ LuckyStrike = 4,
+ Norwegian = 1,
+ Milk = 3,
+ Kools = 1,
+ OldGold = 3,
+ Ukrainian = 2,
+ Coffee = 5,
+ Green = 5,
+ Spaniard = 4,
+ Englishman = 3]
+ \end{lstlisting}
+

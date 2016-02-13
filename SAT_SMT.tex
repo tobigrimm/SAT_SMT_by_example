@@ -1,0 +1,85 @@
+﻿\documentclass{article}
+
+\usepackage{cmap}
+
+\usepackage[russian,english]{babel}
+\usepackage[T2A]{fontenc}
+\usepackage[default]{sourcesanspro}
+
+\usepackage{amsmath, amssymb, graphics, setspace}
+\usepackage[table]{xcolor}% http://ctan.org/pkg/xcolor
+
+\usepackage{listings}
+\usepackage{url}
+\usepackage[cm]{fullpage}
+\usepackage[backend=biber,style=alphabetic]{biblatex}
+\usepackage{graphicx}
+\usepackage{framed}
+\usepackage{color}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage[footnote,printonlyused,withpage]{acronym}
+\usetikzlibrary{arrows}
+\usepackage[nottoc]{tocbibind}
+%\usepackage{esint}
+%\usepackage{charter}
+%\usepackage[charter]{mathdesign}
+\usepackage[]{hyperref} % should be last
+
+\definecolor{lstbgcolor}{rgb}{0.94,0.94,0.94}
+\definecolor{light-gray}{gray}{0.87}
+
+\newcommand{\TT}[1]{\texttt{#1}}
+
+\newcommand{\TITLE}{Quick introduction into SAT/SMT solvers}
+\newcommand{\AUTHOR}{Dennis Yurichev \TT{<dennis(a)yurichev.com>}}
+
+\hypersetup{
+    pdftex,
+    colorlinks=true,
+    allcolors=blue,
+    pdfauthor={\AUTHOR},
+    pdftitle={\TITLE},
+    pdfpagemode=None
+}
+
+\lstset{
+    %backgroundcolor=\color{lstbgcolor},
+    backgroundcolor=\color{light-gray},
+    basicstyle=\ttfamily, 
+    breaklines=true,
+    frame=single,
+    columns=fullflexible,keepspaces,
+}
+
+\author{\AUTHOR}
+\title{\TITLE}
+\date{December 2015 -- February 2016}
+
+\bibliography{articles}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+% sections
+\input{intro}
+\input{SAT}
+\input{SMT}
+\input{ciphers}
+\input{symbolic/main.tex}
+
+\section{Acronyms used}
+
+\begin{acronym}
+\acro{CNF}{Conjunctive normal form}
+\acro{DNF}{Disjunctive normal form}
+\acro{DSL}{Domain-specific language}
+\acro{CPRNG}{Cryptographically Secure Pseudorandom Number Generator}
+\end{acronym}
+
+\printbibliography
+
+\end{document}

@@ -1,0 +1,140 @@
+% FIXME \ac{}
+\subsection{Cracking LCG with Z3 SMT solver}
+
+% FIXME first appeared in blog...
+
+There are well-known weaknesses of LCG (
+\href{http://en.wikipedia.org/wiki/Linear_congruential_generator#Advantages_and_disadvantages_of_LCGs}{1},
+\href{http://www.reteam.org/papers/e59.pdf}{2}, % FIXME \cite
+\href{http://stackoverflow.com/questions/8569113/why-1103515245-is-used-in-rand/8574774#8574774}{3}
+), but let's see, if it would be possible to crack it straightforwardly, without any special knowledge.
+We would define all relations between LCG states in term of Z3 SMT solver.
+(I first made attempt to do it using \href{https://reference.wolfram.com/language/ref/FindInstance.html}{FindInstance} in Wolfram Mathematica, but failed, perhaps, made a mistake somewhere).
+Here is a test progam:
+
+\begin{lstlisting}
+#include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
+
+int main()
+{
+	int i;
+
+	srand(time(NULL));
+
+	for (i=0; i<10; i++)
+		printf ("%d\n", rand()%100);
+};
+\end{lstlisting}
+
+It is intended to print 10 pseudorandom numbers in 0..99 range.
+So it does:
+
+\begin{lstlisting}
+37
+29
+74
+95
+98
+40
+23
+58
+61
+17
+\end{lstlisting}
+
+Let's say we are observing only 8 of these numbers (from 29 to 61) and we need to predict next one (17) and/or previous one (37).
+
+The program is compiled using MSVC 2013 (I choose it because its LCG is simpler than that in Glib):
+
+\begin{lstlisting}
+.text:0040112E rand            proc near
+.text:0040112E                 call    __getptd
+.text:00401133                 imul    ecx, [eax+0x14], 214013
+.text:0040113A                 add     ecx, 2531011
+.text:00401140                 mov     [eax+14h], ecx
+.text:00401143                 shr     ecx, 16
+.text:00401146                 and     ecx, 7FFFh
+.text:0040114C                 mov     eax, ecx
+.text:0040114E                 retn
+.text:0040114E rand            endp
+\end{lstlisting}
+
+This is very simple LCG, but the result is not clipped state, but it's rather shifted by 16 bits.
+Let's define LCG in Z3:
+
+\begin{lstlisting}
+#!/usr/bin/python
+from z3 import *
+
+output_prev = BitVec('output_prev', 32)
+state1 = BitVec('state1', 32)
+state2 = BitVec('state2', 32)
+state3 = BitVec('state3', 32)
+state4 = BitVec('state4', 32)
+state5 = BitVec('state5', 32)
+state6 = BitVec('state6', 32)
+state7 = BitVec('state7', 32)
+state8 = BitVec('state8', 32)
+state9 = BitVec('state9', 32)
+state10 = BitVec('state10', 32)
+output_next = BitVec('output_next', 32)
+
+s = Solver()
+
+s.add(state2 == state1*214013+2531011)
+s.add(state3 == state2*214013+2531011)
+s.add(state4 == state3*214013+2531011)
+s.add(state5 == state4*214013+2531011)
+s.add(state6 == state5*214013+2531011)
+s.add(state7 == state6*214013+2531011)
+s.add(state8 == state7*214013+2531011)
+s.add(state9 == state8*214013+2531011)
+s.add(state10 == state9*214013+2531011)
+
+s.add(output_prev==URem((state1>>16)&0x7FFF,100))
+s.add(URem((state2>>16)&0x7FFF,100)==29)
+s.add(URem((state3>>16)&0x7FFF,100)==74)
+s.add(URem((state4>>16)&0x7FFF,100)==95)
+s.add(URem((state5>>16)&0x7FFF,100)==98)
+s.add(URem((state6>>16)&0x7FFF,100)==40)
+s.add(URem((state7>>16)&0x7FFF,100)==23)
+s.add(URem((state8>>16)&0x7FFF,100)==58)
+s.add(URem((state9>>16)&0x7FFF,100)==61)
+s.add(output_next==URem((state10>>16)&0x7FFF,100))
+
+print(s.check())
+print(s.model())
+\end{lstlisting}
+
+URem states for \textit{unsigned remainder}.
+It works for some time and gave us correct result!
+
+\begin{lstlisting}
+sat
+[state3 = 2276903645,
+ state4 = 1467740716,
+ state5 = 3163191359,
+ state7 = 4108542129,
+ state8 = 2839445680,
+ state2 = 998088354,
+ state6 = 4214551046,
+ state1 = 1791599627,
+ state9 = 548002995,
+ output_next = 17,
+ output_prev = 37,
+ state10 = 1390515370]
+\end{lstlisting}
+
+% FIXME tilde
+I added ~10 states to be sure result will be correct. It may be not if you supply lesser amount of PRNG numbers.
+
+That is the reason why LCG is not suitable for any security-related task.
+This is why \href{https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator}{cryptographically secure pseudorandom number generators} are exist: they are designed to be protected against such simple attack.
+Well, at least if \href{https://en.wikipedia.org/wiki/Dual_EC_DRBG}{NSA is not involved}.
+
+As far, as I can understand, \href{http://en.wikipedia.org/wiki/Security_token}{security tokens} like \href{http://en.wikipedia.org/wiki/RSA_SecurID}{RSA SecurID} can be viewed just as \ac{CPRNG} with a secret seed.
+It shows new pseudorandom number each minute, and the server can predict it, because it knows the seed.
+Imagine if such token would implement LCG -- it would be much easier to break!
+

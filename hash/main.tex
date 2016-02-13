@@ -1,0 +1,223 @@
+\subsection{Simple hash function: manual decompiling + Z3 SMT solver}
+
+(This piece of text was initially added to my ``Reverse Engineering for Beginners'' book (\url{beginners.re}) at March 2014)
+\footnote{This example was also used by Murphy Berzish in his lecture about SAT and SMT:
+\url{http://mirror.csclub.uwaterloo.ca/csclub/mtrberzi-sat-smt-slides.pdf},
+\url{http://mirror.csclub.uwaterloo.ca/csclub/mtrberzi-sat-smt.mp4}}.
+
+Amateur cryptography is usually (unintentionally) 
+very weak and can be broken easily---for cryptographers, of course.
+
+But let's pretend we are not among these crypto-professionals.
+
+Here is one-way hash function, that converted a 64-bit value to another and we need to try to reverse its flow back.
+
+\subsubsection{Manual decompiling}
+
+Here its assembly language listing in IDA:
+
+\lstinputlisting{hash/algo_1.asm}
+
+The example was compiled by GCC, so the first argument is passed in ECX.
+
+If you don't have Hex-Rays, or if you distrust to it, you can try to reverse this code manually.
+One method is to represent the CPU registers as local C variables and replace each instruction by a one-line equivalent expression, like:
+
+\lstinputlisting{hash/algo_2.c}
+
+If you are careful enough, this code can be compiled and will even work in the same way as the original.
+
+Then, we are going to rewrite it gradually, keeping in mind all registers usage.
+Attention and focus is very important here---any tiny typo may ruin all your work!
+
+Here is the first step:
+
+\lstinputlisting{hash/algo_3.c}
+
+Next step:
+
+\lstinputlisting{hash/algo_4.c}
+
+We can spot the division using multiplication.
+Indeed, let's calculate the divider in Wolfram Mathematica:
+
+\begin{lstlisting}[caption=Wolfram Mathematica]
+In[1]:=N[2^(64 + 5)/16^^8888888888888889]
+Out[1]:=60.
+\end{lstlisting}
+
+We get this:
+
+\lstinputlisting{hash/algo_5.c}
+
+One more step:
+
+\lstinputlisting{hash/algo_6.c}
+
+By simple reducing, we finally see that it's calculating the remainder, not the quotient:
+
+\lstinputlisting{hash/algo_7.c}
+
+We end up with this fancy formatted source-code:
+
+\lstinputlisting{hash/algo_src.c}
+
+Since we are not cryptoanalysts we can't find an easy way to generate the input value for some specific output value.
+The rotate instruction's coefficients look frightening---it's a warranty that the function is not bijective,
+it has collisions, or, speaking more simply, many inputs may be possible for one output.
+
+Brute-force is not solution because values are 64-bit ones, that's beyond reality.
+
+\subsubsection{Now let's use the Z3 SMT solver}
+
+Still, without any special cryptographic knowledge, we may try to break this 
+algorithm using the excellent SMT solver from Microsoft Research named Z3\footnote{\url{http://go.yurichev.com/17314}}.
+It is in fact theorem prover, but we are going to use it as SMT solver.
+Simply said, we can think about it as a system capable of solving huge equation systems.
+
+Here is the Python source code:
+
+\lstinputlisting[numbers=left]{hash/1.py}
+
+This is going to be our first solver.
+
+We see the variable definitions on line 7.
+These are just 64-bit variables.
+\texttt{i1..i6} are intermediate variables, representing the values in the registers between instruction executions.
+
+Then we add the so-called constraints on lines 10..15.
+The last constraint at 17 is the most important one: 
+we are going to try to find an input value for which our algorithm will produce 10816636949158156260.
+
+Essentially, the SMT-solver searches for (any) values that satisfies all constraints.
+
+RotateRight, RotateLeft, URem---are functions from the Z3 Python API, not related to Python language.
+
+Then we run it:
+
+\begin{lstlisting}
+...>python.exe 1.py
+sat
+[i1 = 3959740824832824396,
+ i3 = 8957124831728646493,
+ i5 = 10816636949158156260,
+ inp = 1364123924608584563,
+ outp = 10816636949158156260,
+ i4 = 14065440378185297801,
+ i2 = 4954926323707358301]
+ inp=0x12EE577B63E80B73
+outp=0x961C69FF0AEFD7E4
+\end{lstlisting}
+
+``sat'' mean ``satisfiable'', i.e., the solver was able to found at least one solution.
+The solution is printed in the square brackets.
+The last two lines are the input/output pair in hexadecimal form.
+Yes, indeed, if we run our function with \texttt{0x12EE577B63E80B73} as input, the algorithm will produce the value we were looking for.
+
+But, as we noticed before, the function we work with is not bijective, so there may be other correct input values.
+The Z3 SMT solver is not capable of producing more than one result, but let's hack our example slightly, 
+by adding line 19, which implies ``look for any other results than this'':
+
+\lstinputlisting[numbers=left]{hash/2.py}
+
+Indeed, it finds another correct result:
+
+\begin{lstlisting}
+...>python.exe 2.py
+sat
+[i1 = 3959740824832824396,
+ i3 = 8957124831728646493,
+ i5 = 10816636949158156260,
+ inp = 10587495961463360371,
+ outp = 10816636949158156260,
+ i4 = 14065440378185297801,
+ i2 = 4954926323707358301]
+ inp=0x92EE577B63E80B73
+outp=0x961C69FF0AEFD7E4
+\end{lstlisting}
+
+This can be automated.
+Each found result can be added as a constraint and then the next result will be searched for.
+Here is a slightly more sophisticated example:
+
+\lstinputlisting[numbers=left]{hash/3.py}
+
+We got:
+
+\begin{lstlisting}
+1364123924608584563
+1234567890
+9223372038089343698
+4611686019661955794
+13835058056516731602
+3096040143925676201
+12319412180780452009
+7707726162353064105
+16931098199207839913
+1906652839273745429
+11130024876128521237
+15741710894555909141
+6518338857701133333
+5975809943035972467
+15199181979890748275
+10587495961463360371
+results total= 16
+\end{lstlisting}
+
+So there are 16 correct input values for \texttt{0x92EE577B63E80B73} as a result.
+
+The second is 1234567890---it is indeed the value which was used by me originally while preparing this example.
+
+Let's also try to research our algorithm a bit more.
+Acting on a sadistic whim, let's find if the there are any possible input/output pairs in 
+which the lower 32-bit parts are equal to each other?
+
+Let's remove the \textit{outp} constraint and add another, at line 17:
+
+\lstinputlisting[numbers=left]{hash/4.py}
+
+It is indeed so:
+
+\begin{lstlisting}
+sat
+[i1 = 14869545517796235860,
+ i3 = 8388171335828825253,
+ i5 = 6918262285561543945,
+ inp = 1370377541658871093,
+ outp = 14543180351754208565,
+ i4 = 10167065714588685486,
+ i2 = 5541032613289652645]
+ inp=0x13048F1D12C00535
+outp=0xC9D3C17A12C00535
+\end{lstlisting}
+
+Let's be more sadistic and add another constraint: last 16 bits must be \texttt{0x1234}:
+
+\lstinputlisting[numbers=left]{hash/5.py}
+
+Oh yes, this possible as well:
+
+\begin{lstlisting}
+sat
+[i1 = 2834222860503985872,
+ i3 = 2294680776671411152,
+ i5 = 17492621421353821227,
+ inp = 461881484695179828,
+ outp = 419247225543463476,
+ i4 = 2294680776671411152,
+ i2 = 2834222860503985872]
+ inp=0x668EEC35F961234
+outp=0x5D177215F961234
+\end{lstlisting}
+
+Z3 works very fast and it implies that the algorithm is weak, it is not cryptographic at all
+(like the most of the amateur cryptography).
+
+Is it possible to tackle real cryptography by these methods? 
+Real algorithms like AES, RSA, etc, can also be represented as huge system of equations, 
+but these are so huge that they are impossible to work with on computers, now or in the near future.
+Of course, cryptographers are fully aware of this.
+
+Summarizing, when dealing with amateur crypto, 
+it's a very good idea to try a SMT/SAT solver (like Z3).
+

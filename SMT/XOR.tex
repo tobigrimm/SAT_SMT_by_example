@@ -1,0 +1,154 @@
+\subsection{Using Z3 theorem prover to prove equivalence of some weird alternative to XOR operation}
+
+(The article was first published in my blog at April 2015: \url{http://blog.yurichev.com/node/86}).
+
+There is a "A Hacker's Assistant" program\footnote{\url{http://www.hackersdelight.org/}} (\textit{Aha!}) written by Henry Warren,
+who is also the author of the great "Hacker's Delight" book.
+
+The \textit{Aha!} program is essentially \textit{superoptimizer}\footnote{\url{http://en.wikipedia.org/wiki/Superoptimization}},
+which blindly brute-force a list of some generic RISC CPU instructions to achieve shortest possible (and jumpless or branch-free) 
+CPU code sequence for desired operation.
+One of the impressive examples of its work is finding of Dietz's formula\footnote{\url{http://aggregate.org/MAGIC/\#Average\%20of\%20Integers}},
+which is the code of computing average number of two numbers without overflow (which is important if you want to find average number of numbers like 0xFFFFFF00 and so on, using 32-bit registers).
+Taking this in input:
+
+\begin{lstlisting}
+int userfun(int x, int y) {     // To find Dietz's formula for
+                                // the floor-average of two
+                                // unsigned integers.
+   return ((unsigned long long)x + (unsigned long long)y) >> 1;
+}
+\end{lstlisting}
+
+... the \textit{Aha!} gives this:
+
+\begin{lstlisting}
+Found a 4-operation program:
+   and   r1,ry,rx
+   xor   r2,ry,rx
+   shrs  r3,r2,1
+   add   r4,r3,r1
+   Expr: (((y ^ x) >>s 1) + (y & x))
+\end{lstlisting}
+
+And it works correctly.
+
+\textit{Aha!} can also find jumpless version of abs() function easily.
+
+Compiler developers use superoptimization to find shortest possible (and/or jumpless) code, but I tried to do otherwise -- to find longest code for some basic operation.
+I tried \textit{Aha!} to find equivalent of basic XOR operation without usage of the actual XOR instruction, and the most bizarre example \textit{Aha!} gave is:
+
+\begin{lstlisting}
+Found a 4-operation program:
+   add   r1,ry,rx
+   and   r2,ry,rx
+   mul   r3,r2,-2
+   add   r4,r3,r1
+   Expr: (((y & x)*-2) + (y + x))
+\end{lstlisting}
+
+And it's hard to say, why/where we can use it, maybe for obfuscation, I'm not sure.
+I would call this \textit{suboptimization} (as opposed to \textit{superoptimization}). Or maybe \textit{superdeoptimization}.
+
+But my another question was also, is it possible to prove that this is correct formula at all?
+The \textit{Aha!} checking some intput/output values against XOR operation, but of course, not all the possible values.
+It is 32-bit code, so it may take very long time to try all possible 32-bit inputs to test it.
+
+We can try Z3 theorem prover for the job. It's called ``prover'', after all.
+
+So I wrote this:
+
+\begin{lstlisting}
+#!/usr/bin/python
+from z3 import *
+
+x = BitVec('x', 32)
+y = BitVec('y', 32)
+output = BitVec('output', 32)
+s = Solver()
+s.add(x^y==output)
+s.add(((y & x)*0xFFFFFFFE) + (y + x)!=output)
+print s.check()
+\end{lstlisting}
+
+In plain English language, this means "are there any case for x and y where $x \oplus y$ doesn't equals to $((y \& x)*-2) + (y + x)$?"
+... and Z3 prints "unsat", meaning, it can't find any counterexample to the equation.
+So this \textit{Aha!} output is proved to be working just like XOR operation.
+
+Oh, I also tried to extend the formula to 64-bit:
+
+\begin{lstlisting}
+#!/usr/bin/python
+from z3 import *
+
+x = BitVec('x', 64)
+y = BitVec('y', 64)
+output = BitVec('output', 64)
+s = Solver()
+s.add(x^y==output)
+s.add(((y & x)*0xFFFFFFFE) + (y + x)!=output)
+print s.check()
+\end{lstlisting}
+
+Nope, now it says "sat", meaning, Z3 found at least one counterexample.
+Oops, it's because I forgot to extend -2 number to 64-bit value:
+
+\begin{lstlisting}
+#!/usr/bin/python
+from z3 import *
+
+x = BitVec('x', 64)
+y = BitVec('y', 64)
+output = BitVec('output', 64)
+s = Solver()
+s.add(x^y==output)
+s.add(((y & x)*0xFFFFFFFFFFFFFFFE) + (y + x)!=output)
+print s.check()
+\end{lstlisting}
+
+Now it says "unsat", so the formula given by \textit{Aha!} works for 64-bit code as well.
+
+\subsubsection{In SMT-LIB form}
+
+Now we can rephrase our equation to more suitable form: $(x + y - ((x \& y)<<1))$.
+It also works well is Z3:
+
+\begin{lstlisting}
+#!/usr/bin/python
+from z3 import *
+
+x = BitVec('x', 64)
+y = BitVec('y', 64)
+output = BitVec('output', 64)
+s = Solver()
+s.add(x^y==output)
+s.add((x + y - ((x & y)<<1)) != output)
+print s.check()
+\end{lstlisting}
+
+Here is how to define it in SMT-LIB way:
+
+\begin{lstlisting}
+(declare-const x (_ BitVec 64))
+(declare-const y (_ BitVec 64))
+(assert (not (=(bvsub (bvadd x y) (bvshl (bvand x y) (_ bv1 64))) (bvxor x y))))
+(check-sat)
+\end{lstlisting}
+
+\subsubsection{How the equation works}
+
+First of all, binary addition can be viewed as binary XORing with carrying (\ref{adder}).
+Here is an example: let's add 2 (10b) and 2 (10b).
+XORing these two values resulting 0, but there is a carry generated during addition of two second bits.
+That carry bit is propagated further and settles at the place of the 3rd bit: 100b.
+4 (100b) is hence a final result of addition.
+
+If the carry bits are not generated during addition, the addition operation is merely XORing.
+For example, let's add 1 (1b) and 2 (10b). $1 + 2$ equals to 3, but $1 \oplus 2$ is also 3.
+
+If the addition is XORing plus carry generation and application, we should eliminate effect of carrying somehow here.
+The first part of the equation ($x + y$) is addition, the second ($(x \& y)<<1$) is just calculation of every carry bit which was used during addition.
+Subtracting removes carry bits from the result of addition, so the only XOR effect is left then.
+
+It's hard to say how Z3 proves this: maybe it just simplifies the equation down to single XOR using simple boolean algebra rewriting rules?
+
