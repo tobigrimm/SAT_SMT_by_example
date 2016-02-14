@@ -1,4 +1,4 @@
-\subsection{Simple hash function: manual decompiling + Z3 SMT solver}
+\subsection{Simple hash function}
 
 (This piece of text was initially added to my ``Reverse Engineering for Beginners'' book (\url{beginners.re}) at March 2014)
 \footnote{This example was also used by Murphy Berzish in his lecture about SAT and SMT:
@@ -16,14 +16,14 @@ Here is one-way hash function, that converted a 64-bit value to another and we n
 
 Here its assembly language listing in IDA:
 
-\lstinputlisting{hash/algo_1.asm}
+\lstinputlisting{SMT/hash/algo_1.asm}
 
 The example was compiled by GCC, so the first argument is passed in ECX.
 
 If you don't have Hex-Rays, or if you distrust to it, you can try to reverse this code manually.
 One method is to represent the CPU registers as local C variables and replace each instruction by a one-line equivalent expression, like:
 
-\lstinputlisting{hash/algo_2.c}
+\lstinputlisting{SMT/hash/algo_2.c}
 
 If you are careful enough, this code can be compiled and will even work in the same way as the original.
 
@@ -32,11 +32,11 @@ Attention and focus is very important here---any tiny typo may ruin all your wor
 
 Here is the first step:
 
-\lstinputlisting{hash/algo_3.c}
+\lstinputlisting{SMT/hash/algo_3.c}
 
 Next step:
 
-\lstinputlisting{hash/algo_4.c}
+\lstinputlisting{SMT/hash/algo_4.c}
 
 We can spot the division using multiplication.
 Indeed, let's calculate the divider in Wolfram Mathematica:
@@ -48,19 +48,19 @@ Out[1]:=60.
 
 We get this:
 
-\lstinputlisting{hash/algo_5.c}
+\lstinputlisting{SMT/hash/algo_5.c}
 
 One more step:
 
-\lstinputlisting{hash/algo_6.c}
+\lstinputlisting{SMT/hash/algo_6.c}
 
 By simple reducing, we finally see that it's calculating the remainder, not the quotient:
 
-\lstinputlisting{hash/algo_7.c}
+\lstinputlisting{SMT/hash/algo_7.c}
 
 We end up with this fancy formatted source-code:
 
-\lstinputlisting{hash/algo_src.c}
+\lstinputlisting{SMT/hash/algo_src.c}
 
 Since we are not cryptoanalysts we can't find an easy way to generate the input value for some specific output value.
 The rotate instruction's coefficients look frightening---it's a warranty that the function is not bijective,
@@ -77,7 +77,7 @@ Simply said, we can think about it as a system capable of solving huge equation 
 
 Here is the Python source code:
 
-\lstinputlisting[numbers=left]{hash/1.py}
+\lstinputlisting[numbers=left]{SMT/hash/1.py}
 
 This is going to be our first solver.
 
@@ -118,7 +118,7 @@ But, as we noticed before, the function we work with is not bijective, so there 
 The Z3 SMT solver is not capable of producing more than one result, but let's hack our example slightly, 
 by adding line 19, which implies ``look for any other results than this'':
 
-\lstinputlisting[numbers=left]{hash/2.py}
+\lstinputlisting[numbers=left]{SMT/hash/2.py}
 
 Indeed, it finds another correct result:
 
@@ -140,7 +140,7 @@ This can be automated.
 Each found result can be added as a constraint and then the next result will be searched for.
 Here is a slightly more sophisticated example:
 
-\lstinputlisting[numbers=left]{hash/3.py}
+\lstinputlisting[numbers=left]{SMT/hash/3.py}
 
 We got:
 
@@ -174,7 +174,7 @@ which the lower 32-bit parts are equal to each other?
 
 Let's remove the \textit{outp} constraint and add another, at line 17:
 
-\lstinputlisting[numbers=left]{hash/4.py}
+\lstinputlisting[numbers=left]{SMT/hash/4.py}
 
 It is indeed so:
 
@@ -193,7 +193,7 @@ outp=0xC9D3C17A12C00535
 
 Let's be more sadistic and add another constraint: last 16 bits must be \texttt{0x1234}:
 
-\lstinputlisting[numbers=left]{hash/5.py}
+\lstinputlisting[numbers=left]{SMT/hash/5.py}
 
 Oh yes, this possible as well:
 
