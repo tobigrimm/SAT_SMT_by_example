@@ -68,18 +68,13 @@ Exponentiation is heavy operation, can we use binary operations? Yes, just repla
 \end{equation}
 
 The effect is just the same, but the final value is in base 2 instead of 10.
-Even more, we can replace summing operation to logical OR:
 
-\begin{equation}
-\underbrace{2^{i_1} \vee 2^{i_2} \vee \cdots \vee 2^{i_9}}_9 = 1111111110_2
-\end{equation}
+Now a working example:
 
-Now working example:
-
-\lstinputlisting{SMT/sudoku.py}
+\lstinputlisting{SMT/sudoku_plus.py}
 
 \begin{lstlisting}
-\$ time python sudoku0.py
+\$ time python sudoku_plus.py
 1 4 5 3 2 7 6 9 8
 8 3 9 6 5 4 1 2 7
 6 7 2 9 1 8 5 4 3
@@ -89,18 +84,43 @@ Now working example:
 3 6 7 5 4 2 8 1 9
 9 8 4 7 6 1 2 3 5
 5 2 1 8 3 9 7 6 4
-real    0m1.358s
-user    0m1.350s
-sys     0m0.008s
+
+real    0m11.717s
+user    0m10.896s
+sys     0m0.068s
+\end{lstlisting}
+
+Even more, we can replace summing operation to logical OR:
+
+\begin{equation}
+\underbrace{2^{i_1} \vee 2^{i_2} \vee \cdots \vee 2^{i_9}}_9 = 1111111110_2
+\end{equation}
+
+% FIXME: только часть исходника + ссылка на github
+\lstinputlisting{SMT/sudoku_or.py}
+
+Now it works much faster. Z3 handles OR operation over bit vectors better than addition?
+
+\begin{lstlisting}
+\$ time python sudoku_or.py
+1 4 5 3 2 7 6 9 8
+8 3 9 6 5 4 1 2 7
+6 7 2 9 1 8 5 4 3
+4 9 6 1 8 5 3 7 2
+2 1 8 4 7 3 9 5 6
+7 5 3 2 9 6 4 8 1
+3 6 7 5 4 2 8 1 9
+9 8 4 7 6 1 2 3 5
+5 2 1 8 3 9 7 6 4
+
+real    0m1.429s
+user    0m1.393s
+sys     0m0.036s
 \end{lstlisting}
 
 The puzzle I used as example is dubbed as one of the hardest known
 \footnote{\url{http://www.mirror.co.uk/news/weird-news/worlds-hardest-sudoku-can-you-242294}} (well, for humans).
-It took 1.35 seconds on my Intel Core i3-3110M 2.4GHz notebook to solve it.
-
-% dunno why
-%What is also weird is that if to replace all OR operations in my piece of source code to addition ones, it stopping working, I don't know why.
-%Maybe I did something wrong? Or hit some bug related to handling summing operation for bit vector \textit{sort}?
+It took ~1.4 seconds on my Intel Core i3-3110M 2.4GHz notebook to solve it. % FIXME tilde
 
 \subsubsection{The second idea}
 
@@ -112,6 +132,7 @@ I've rewritten my first Sudoku solver, now it operates over \textit{Int} \textit
 and now also other constaint added: each cell value must be in 1..9 range, because, otherwise, Z3 will offer (although correct) solution with too big
 and/or negative numbers.
 
+% FIXME: только часть исходника + ссылка на github
 \lstinputlisting{SMT/sudoku2.py}
 
 \begin{lstlisting}
