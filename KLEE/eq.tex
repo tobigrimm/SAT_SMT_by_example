@@ -1,0 +1,55 @@
+\subsection{School-level equation}
+
+Let's revisit school-level system of equations from (XXX). % FIXME \ref
+
+We will force KLEE to find a path, where all the constraints are satisfied:
+
+\lstinputlisting{KLEE/klee_eq1.c}
+
+% FIXME:
+\begin{lstlisting}
+\$ clang -emit-llvm -c -g klee_eq.c
+...
+
+\$ klee klee_eq.bc
+KLEE: output directory is "/home/klee/klee-out-93"
+KLEE: WARNING: undefined reference to function: klee_assert
+KLEE: WARNING ONCE: calling external: klee_assert(0)
+KLEE: ERROR: /home/klee/klee_eq.c:18: failed external call: klee_assert
+KLEE: NOTE: now ignoring this error at this location
+
+KLEE: done: total instructions = 32
+KLEE: done: completed paths = 1
+KLEE: done: generated tests = 1
+\end{lstlisting}
+
+Let's find out, where \TT{klee\_assert()} has been triggered:
+
+% FIXME:
+\begin{lstlisting}
+\$ ls klee-last | grep err
+test000001.external.err
+
+\$ ktest-tool --write-ints klee-last/test000001.ktest
+ktest file : 'klee-last/test000001.ktest'
+args       : ['klee_eq.bc']
+num objects: 3
+object    0: name: b'circle'
+object    0: size: 4
+object    0: data: 5
+object    1: name: b'square'
+object    1: size: 4
+object    1: data: 2
+object    2: name: b'triangle'
+object    2: size: 4
+object    2: data: 1
+\end{lstlisting}
+
+This is indeed correct solution to the system of equations.
+
+KLEE has intrinsic \TT{klee\_assume()} which tells KLEE to cut path if some constraint is not true.
+So we can rewrite our example in such cleaner way:
+
+\lstinputlisting{KLEE/klee_eq2.c}
+
+
