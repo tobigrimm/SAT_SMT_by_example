@@ -48,7 +48,7 @@ object    0: data: b'\x01\x04\x05\x03\x02\x07\x06\t\x08\x08\x03\t\x06\x05\x04\x0
 % FIXME backslash
 \TT{\\t} is character with ASCII code of 9 in C/C++, and KLEE attempts to treat byte array as C/C++ string, so it shows some values in such way.
 We can just remember that there is 9 at the each place where we see \TT{\\t}.
-And solution is indeed correct (XXX), not properly formatted, though, but that's fine.\\ % FIXME \ref{}
+The solution, while not properly formatted, correct indeed (XXX).\\ % FIXME \ref{}
 \\
 By the way, at lines 42, 43 you may see how we tell to KLEE that all array elements must be within some limits.
 If we comment these lines out, we've got this:
@@ -95,5 +95,5 @@ sys     0m0.318s
 That works much faster: perhaps KLEE indeed handle this intrinsic in a special way.
 And, as we see, the only one path is generated (one we actually interesting in it) instead of 161.
 
-But still, it's much slower than Z3Py solution.
+It's still much slower than Z3Py solution, though.
 

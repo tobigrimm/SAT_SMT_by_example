@@ -1,0 +1,199 @@
+\subsection{UNIX date/time}
+
+UNIX date/time\footnote{\url{https://en.wikipedia.org/wiki/Unix_time}} is a number of seconds that have elapsed since 1-Jan-1970 00:00 UTC.
+C/C++ gmtime() function is used to decode this value into human-readable date/time.
+
+Here is a piece of code I've copypasted from some ancient version of Minix OS 
+(\url{http://www.cise.ufl.edu/~cop4600/cgi-bin/lxr/http/source.cgi/lib/ansi/gmtime.c}) and reworked slightly:
+
+\lstinputlisting[numbers=left]{KLEE/klee_time1.c}
+
+Let's try it:
+
+% FIXME:
+\begin{lstlisting}
+\$ clang -emit-llvm -c -g klee_time1.c
+...
+
+\$ klee klee_time1.bc
+KLEE: output directory is "/home/klee/klee-out-107"
+KLEE: WARNING: undefined reference to function: printf
+KLEE: ERROR: /home/klee/klee_time1.c:86: external call with symbolic argument: printf
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: /home/klee/klee_time1.c:83: ASSERTION FAIL: 0
+KLEE: NOTE: now ignoring this error at this location
+
+KLEE: done: total instructions = 101579
+KLEE: done: completed paths = 1635
+KLEE: done: generated tests = 2
+\end{lstlisting}
+
+Wow, assert() at line 83 has been triggered, why?
+Let's see a value of UNIX time which triggers it:
+
+% FIXME:
+\begin{lstlisting}
+\$ ls klee-last | grep err
+test000001.exec.err
+test000002.assert.err
+
+\$ ktest-tool --write-ints klee-last/test000002.ktest
+ktest file : 'klee-last/test000002.ktest'
+args       : ['klee_time1.bc']
+num objects: 1
+object    0: name: b'time'
+object    0: size: 4
+object    0: data: 978278400
+\end{lstlisting}
+
+Let's decode this value using UNIX date utility:
+
+% FIXME:
+\begin{lstlisting}
+\$ date -u --date='@978278400'
+Sun Dec 31 16:00:00 UTC 2000
+\end{lstlisting}
+
+After may investigation, I've found that \TT{month} variable can hold incorrect value of 12 (while 11 is maximal, for December), 
+because LEAPYEAR() macro should receive year number as 2000, not as 100.
+So I've introduced a bug during rewritting this function, and KLEE found it!
+
+Just interesting, what would be if I'll replace switch() to array of strings, like it usually happens in concise C/C++ code?
+
+% FIXME:
+\begin{lstlisting}
+	...
+
+const char *_months[] =
+{
+	"January", "February", "March",
+	"April", "May", "June",
+	"July", "August", "September",
+	"October", "November", "December"
+};
+
+	...
+
+	while (dayno >= _ytab[LEAPYEAR(year)][month])
+	{
+		dayno -= _ytab[LEAPYEAR(year)][month];
+		month++;
+	}
+	
+	char *s=_months[month];
+
+	printf ("%04d-%s-%02d %02d:%02d:%02d\n", YEAR0+year, s, dayno+1, hour, minutes, seconds);
+	printf ("week day: %s\n", _days[wday]);	
+	
+	...
+
+\end{lstlisting}
+
+KLEE detects attempt to read beyond array boundaries:
+
+% FIXME:
+\begin{lstlisting}
+\$ klee klee_time2.bc
+KLEE: output directory is "/home/klee/klee-out-108"
+KLEE: WARNING: undefined reference to function: printf
+KLEE: ERROR: /home/klee/klee_time2.c:69: external call with symbolic argument: printf
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: /home/klee/klee_time2.c:67: memory error: out of bound pointer
+KLEE: NOTE: now ignoring this error at this location
+
+KLEE: done: total instructions = 101716
+KLEE: done: completed paths = 1635
+KLEE: done: generated tests = 2
+\end{lstlisting}
+
+This is the same UNIX time value we've already seen:
+
+% FIXME:
+\begin{lstlisting}
+\$ ls klee-last | grep err
+test000001.exec.err
+test000002.ptr.err
+
+\$ ktest-tool --write-ints klee-last/test000002.ktest
+ktest file : 'klee-last/test000002.ktest'
+args       : ['klee_time2.bc']
+num objects: 1
+object    0: name: b'time'
+object    0: size: 4
+object    0: data: 978278400
+\end{lstlisting}
+
+So, if this piece of code can be triggered on remote computer, with this input value (\textit{input of death}),
+it's possible to crash the process (with some luck, though).\\
+\\
+OK, now I'm fixing a bug by moving year subtracting expression to line 43, and let's find, what UNIX time value corresponds to some fancy date
+like 2022-February-2?
+
+\lstinputlisting[numbers=left]{KLEE/klee_time3.c}
+
+% FIXME:
+\begin{lstlisting}
+\$ clang -emit-llvm -c -g klee_time3.c
+...
+
+\$ klee klee_time3.bc
+KLEE: output directory is "/home/klee/klee-out-109"
+KLEE: WARNING: undefined reference to function: klee_assert
+KLEE: WARNING ONCE: calling external: klee_assert(0)
+KLEE: ERROR: /home/klee/klee_time3.c:47: failed external call: klee_assert
+KLEE: NOTE: now ignoring this error at this location
+
+KLEE: done: total instructions = 101087
+KLEE: done: completed paths = 1635
+KLEE: done: generated tests = 1635
+
+\$ ls klee-last | grep err
+test000587.external.err
+
+\$ ktest-tool --write-ints klee-last/test000587.ktest
+ktest file : 'klee-last/test000587.ktest'
+args       : ['klee_time3.bc']
+num objects: 1
+object    0: name: b'time'
+object    0: size: 4
+object    0: data: 1645488640
+
+\$ date -u --date='@1645488640'
+Tue Feb 22 00:10:40 UTC 2022
+\end{lstlisting}
+
+Success, but hours/minutes/seconds are seems random -- they are random indeed, because, KLEE satisfied all constraints we've put, nothing else.
+
+Let's add constraints to hours/minutes/seconds as well:
+
+% FIXME:
+\begin{lstlisting}
+	...
+
+	if (YEAR0+year==2022 && month==1 && dayno+1==22 && hour==22 && minutes==22 && seconds==22)
+		klee_assert(0);
+	
+	...
+\end{lstlisting}
+
+Let's run it and check...
+
+% FIXME:
+\begin{lstlisting}
+\$ ktest-tool --write-ints klee-last/test000597.ktest
+ktest file : 'klee-last/test000597.ktest'
+args       : ['klee_time3.bc']
+num objects: 1
+object    0: name: b'time'
+object    0: size: 4
+object    0: data: 1645568542
+
+\$ date -u --date='@1645568542'
+Tue Feb 22 22:22:22 UTC 2022
+\end{lstlisting}
+
+Now that is precise.
+
+Yes, of course, C/C++ libraries has function(s) to encode human-readable date into UNIX time value, but what we've got here is KLEE working
+\textit{antipode} of decoding function, \textit{inverse function} in a way.
+
