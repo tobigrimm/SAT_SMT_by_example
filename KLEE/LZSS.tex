@@ -1,0 +1,190 @@
+\subsection{LZSS decompressor}
+
+I've googled for a very simple LZSS decompressor and landed at this page:
+\url{http://www.opensource.apple.com/source/boot/boot-132/i386/boot2/lzss.c}.
+
+Let's pretend, we're looking at unknown compressing algorithm with no compressor available.
+Will it be possible to construct a compressed piece of data so that decompressor would generate data we need?
+
+Here is my first experiment:
+
+\lstinputlisting{KLEE/klee_lzss1.c}
+
+What I did is changing size of ring buffer from 4096 to 32, because if bigger, KLEE consumes all RAM it can.
+I found that KLEE can live with that small buffer.
+I also decreased \TT{COMPRESSED\_LEN} gradually to check, whether KLEE would find compressed piece of data, and it did:
+
+% FIXME:
+\begin{lstlisting}
+\$ clang -emit-llvm -c -g klee_lzss.c
+...
+
+\$ time klee klee_lzss.bc
+KLEE: output directory is "/home/klee/klee-out-7"
+KLEE: WARNING: undefined reference to function: klee_assert
+KLEE: ERROR: /home/klee/klee_lzss.c:122: invalid klee_assume call (provably false)
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: /home/klee/klee_lzss.c:47: memory error: out of bound pointer
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: /home/klee/klee_lzss.c:37: memory error: out of bound pointer
+KLEE: NOTE: now ignoring this error at this location
+KLEE: WARNING ONCE: calling external: klee_assert(0)
+KLEE: ERROR: /home/klee/klee_lzss.c:124: failed external call: klee_assert
+KLEE: NOTE: now ignoring this error at this location
+
+KLEE: done: total instructions = 41417919
+KLEE: done: completed paths = 437820
+KLEE: done: generated tests = 4
+
+real    13m0.215s
+user    11m57.517s
+sys     1m2.187s
+
+\$ ls klee-last | grep err
+test000001.user.err
+test000002.ptr.err
+test000003.ptr.err
+test000004.external.err
+
+\$ ktest-tool --write-ints klee-last/test000004.ktest
+ktest file : 'klee-last/test000004.ktest'
+args       : ['klee_lzss.bc']
+num objects: 1
+object    0: name: b'input'
+object    0: size: 15
+object    0: data: b'\xffBuffalo \x01b\x0f\x03\r\x05'
+\end{lstlisting}
+
+% FIXME tilde
+KLEE consumed ~1GB of RAM and worked for ~15 minutes (on my XXX), 
+but here it is, a 15 bytes which, if decompressed by our copypasted algorithm, will result in desired text!
+
+During my experimentation, I've found that KLEE can do even more cooler thing, to find out size of compressed piece of data:
+
+% FIXME:
+\begin{lstlisting}
+int main()
+{
+	uint8_t input[24];
+	uint8_t plain[24];
+	uint32_t size;
+  
+	klee_make_symbolic(input, sizeof input, "input");
+	klee_make_symbolic(&size, sizeof size, "size");
+	
+	decompress_lzss(plain, input, size);
+
+	for (int i=0; i<23; i++)
+		klee_assume (plain[i]=="Buffalo buffalo Buffalo"[i]);
+
+	klee_assert(0);
+	
+	return 0;
+}
+\end{lstlisting}
+
+... but then KLEE works much slower, consumes much more RAM and I had success only with even smaller pieces of desired text.
+
+So how LZSS works? Without peeking into Wikipedia, we can say that: 
+if LZSS compressor observes some data it already had, it replaces the data with a link to some place in past with size. 
+If it observes something yet unseen, it puts data as is.
+This is theory.
+This is indeed what we've got. Desired text is three ``Buffalo'' words, the first and the last are equivalent, but the second is \textit{almost} equivalent, 
+differing with first by one character.
+
+That's what we see:
+
+% FIXME: colored Buffalo, ``b'', slashes
+\begin{lstlisting}
+'\xffBuffalo \x01b\x0f\x03\r\x05'
+\end{lstlisting}
+
+Here is some control byte (0xff), ``Buffalo'' word is placed \textit{as is}, then another control byte (0x01), 
+then we see beginning of the second word (``b'') and more
+control bytes, perhaps, links to the beginning of the buffer.
+These are command to decompressor, like, in plain English, ``copy data from the buffer we've already done, from that place to that place'', etc.
+
+Interesting, is it possible to meddle into this piece of compressed data?
+Out of whim, can we force KLEE to find a compressed data, where not just ``b'' character has been placed \textit{as is},
+but also the second character of the word, i.e., ``bu''?
+
+I've modified main() function by adding \TT{klee\_assume()}: now the 11th byte of input (compressed) data (right after ``b'' byte) should have ``u''.
+I has no luck with 15 byte of compressed data, so I increased it to 16 bytes:
+
+% FIXME:
+\begin{lstlisting}
+int main()
+{
+#define COMPRESSED_LEN 16
+	uint8_t input[COMPRESSED_LEN];
+	uint8_t plain[24];
+	uint32_t size=COMPRESSED_LEN;
+  
+	klee_make_symbolic(input, sizeof input, "input");
+	
+	klee_assume(input[11]=='u');
+	
+	decompress_lzss(plain, input, size);
+
+	for (int i=0; i<23; i++)
+		klee_assume (plain[i]=="Buffalo buffalo Buffalo"[i]);
+
+	klee_assert(0);
+	
+	return 0;
+}
+\end{lstlisting}
+
+% FIXME: umlaut
+... and voila: KLEE found a compressed piece of data which satisfied our whimsical constraint:
+
+% FIXME:
+\begin{lstlisting}
+\$ time klee klee_lzss.bc
+KLEE: output directory is "/home/klee/klee-out-9"
+KLEE: WARNING: undefined reference to function: klee_assert
+KLEE: ERROR: /home/klee/klee_lzss.c:97: invalid klee_assume call (provably false)
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: /home/klee/klee_lzss.c:47: memory error: out of bound pointer
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: /home/klee/klee_lzss.c:37: memory error: out of bound pointer
+KLEE: NOTE: now ignoring this error at this location
+KLEE: WARNING ONCE: calling external: klee_assert(0)
+KLEE: ERROR: /home/klee/klee_lzss.c:99: failed external call: klee_assert
+KLEE: NOTE: now ignoring this error at this location
+
+KLEE: done: total instructions = 36700587
+KLEE: done: completed paths = 369756
+KLEE: done: generated tests = 4
+
+real    12m16.983s
+user    11m17.492s
+sys     0m58.358s
+
+\$ ktest-tool --write-ints klee-last/test000004.ktest
+ktest file : 'klee-last/test000004.ktest'
+args       : ['klee_lzss.bc']
+num objects: 1
+object    0: name: b'input'
+object    0: size: 16
+object    0: data: b'\xffBuffalo \x13bu\x10\x02\r\x05'
+\end{lstlisting}
+
+So now we find a piece of data where two strings are placed \textit{as is}: ``Buffalo'' and ``bu''.
+
+% FIXME: colored Buffalo and bu
+\begin{lstlisting}
+'\xffBuffalo \x13bu\x10\x02\r\x05'
+\end{lstlisting}
+
+Both pieces of compressed data, if feeded into our copypasted function, produce ``Buffalo buffalo Buffalo'' text string.
+
+Please note, I still have no access to LZSS compressor code, and I didn't get into LZSS decompressor details yet.
+
+Unfortunately, things are not that cool: 
+KLEE is very slow and I had success only with small pieces of text, and also ring buffer size had to be decreased significantly
+(original LZSS decompressor with ring buffer of 4096 bytes cannot decompress correctly what we found).
+
+Nevertheless, it's very impressive, taking into account the fact that we're not getting into internals of this specific LZSS decompressor.
+Once more time, we've created \textit{antipode} of decompressor, or \textit{inverse function}.
+
