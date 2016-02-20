@@ -1,0 +1,82 @@
+\subsection{Inverse function for base64 decoder}
+
+It's piece of cake for KLEE to reconstruct input base64 string given just base64 decoder without encoder.
+I've copypasted this piece of code somewhere.
+
+We add constraints (lines 84, 85) so that output buffer must have byte values from 0 to 15.
+We also tell to KLEE that the Base64decode() function must return 16 (i.e., size of output buffer in bytes, line 82).
+
+\lstinputlisting[numbers=left]{KLEE/klee_base64.c}
+
+% FIXME:
+\begin{lstlisting}
+\$ clang -emit-llvm -c -g klee_base64.c
+...
+
+\$ klee klee_base64.bc
+KLEE: output directory is "/home/klee/klee-out-99"
+KLEE: WARNING: undefined reference to function: klee_assert
+KLEE: ERROR: /home/klee/klee_base64.c:99: invalid klee_assume call (provably false)
+KLEE: NOTE: now ignoring this error at this location
+KLEE: WARNING ONCE: calling external: klee_assert(0)
+KLEE: ERROR: /home/klee/klee_base64.c:104: failed external call: klee_assert
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: /home/klee/klee_base64.c:85: memory error: out of bound pointer
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: /home/klee/klee_base64.c:81: memory error: out of bound pointer
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: /home/klee/klee_base64.c:65: memory error: out of bound pointer
+KLEE: NOTE: now ignoring this error at this location
+
+...
+\end{lstlisting}
+
+We're interesting in the second error, where \TT{klee\_assert()} has been triggered:
+
+% FIXME:
+\begin{lstlisting}
+\$ ls klee-last | grep err
+test000001.user.err
+test000002.external.err
+test000003.ptr.err
+test000004.ptr.err
+test000005.ptr.err
+
+\$ ktest-tool --write-ints klee-last/test000002.ktest
+ktest file : 'klee-last/test000002.ktest'
+args       : ['klee_base64.bc']
+num objects: 1
+object    0: name: b'input'
+object    0: size: 32
+object    0: data: b'AAECAwQFBgcICQoLDA0OD4\x00\xff\xff\xff\xff\xff\xff\xff\xff\x00'
+\end{lstlisting}
+
+This is indeed a real base64 string, terminated with the zero byte, just as it's requested by C/C++ standards.
+The final zero byte at 31th byte (starting at zeroth byte) is our deed: so that KLEE would report lesser number of errors. % FIXME spelling
+
+The base64 string is indeed correct:
+
+% FIXME:
+\begin{lstlisting}
+\$ echo AAECAwQFBgcICQoLDA0OD4 | base64 -d | hexdump -C
+base64: invalid input
+00000000  00 01 02 03 04 05 06 07  08 09 0a 0b 0c 0d 0e 0f  |................|
+00000010
+\end{lstlisting}
+
+base64 decoder Linux utility I've just run blaming for ``invalid input'' -- it means input string is not properly padded:
+Now let's pad it manually, and decoder utility will no complain anymore:
+
+% FIXME:
+\begin{lstlisting}
+\$ echo AAECAwQFBgcICQoLDA0OD4== | base64 -d | hexdump -C
+00000000  00 01 02 03 04 05 06 07  08 09 0a 0b 0c 0d 0e 0f  |................|
+00000010
+\end{lstlisting}
+
+The reason our generated base64 string is not padded is because base64 decoders are usually discards padding symbols (``='') at the end.
+In other words, they are not require them, so is the case of our decoder.
+Padding symbols are left unnoticed to KLEE.
+
+So we again made \textit{antipode} or \textit{inverse function} of base64 decoder.
+

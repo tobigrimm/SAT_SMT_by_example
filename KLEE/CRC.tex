@@ -1,0 +1,165 @@
+\subsection{CRC} % FIXME full name
+
+\subsubsection{Buffer alteration case \#1}
+
+Sometimes, you need to alter a piece of data which is \textit{protected} by some kind of checksum or \ac{CRC}, and you can't change checksum or CRC value, but can alter piece of data so that checksum will remain the same.
+
+Let's pretend, we've got a piece of data with ``Hello, world!'' string at the beginning and ``and goodbye'' string at the end.
+We can alter 14 characters at the middle, but for some reason, they must be in \textit{a..z} limits, but we can put any characters there.
+CRC64 of the whole block must be \TT{0x12345678abcdef12}.
+
+Let's see\footnote{There are several slightly different CRC64 implementations, the one I use here can also be different from popular ones.}:
+
+\lstinputlisting{KLEE/klee_CRC64.c}
+
+Since our code uses memcmp() standard C/C++ function, we need to add \TT{--libc=uclibc} switch, so KLEE will use its own uClibc % FIXME check spelling
+implementation. % \ref{} -> closed programs
+
+% FIXME:
+\begin{lstlisting}
+\$ clang -emit-llvm -c -g klee_CRC64.c
+
+\$ time klee --libc=uclibc klee_CRC64.bc
+\end{lstlisting}
+
+It takes about 1 minute (on my XXX) and we getting this:
+
+% FIXME:
+\begin{lstlisting}
+...
+real    0m52.643s
+user    0m51.232s
+sys     0m0.239s
+...
+\$ ls klee-last | grep err
+test000001.user.err
+test000002.user.err
+test000003.user.err
+test000004.external.err
+
+\$ ktest-tool --write-ints klee-last/test000004.ktest
+ktest file : 'klee-last/test000004.ktest'
+args       : ['klee_CRC64.bc']
+num objects: 1
+object    0: name: b'buf'
+object    0: size: 46
+object    0: data: b'Hello, world!.. qqlicayzceamyw ... and goodbye'
+\end{lstlisting}
+
+Maybe it's slow, but definitely faster than bruteforce.
+Indeed, $log_2{26^{14}}=65.8$ % FIXME tilde
+which is close to 64 bits.
+In other words, one need 14 latin characters to encode 64 bits. % FIXME tilde
+And KLEE + SMT solver needs 64 bits at some place it can alter to make final CRC64 value equal to what we defined.
+
+I tried to reduce length of the \textit{middle block} to 13 characters: no luck for KLEE then, it has no space enough.
+
+\subsubsection{Buffer alteration case \#2}
+
+I went sadistic: what if the buffer must contain the CRC64 value which, after calculation of CRC64, will result in the same value?
+Fascinately, % FIXME check spelling
+KLEE can solve this.
+The buffer will have the following format:
+
+% FIXME:
+\begin{lstlisting}
+Hello, world! <8-bytes (64-bit value)> and goodbye <6 more bytes>
+\end{lstlisting}
+
+% FIXME:
+\begin{lstlisting}
+int main()
+{
+#define HEAD_STR "Hello, world!.. "
+#define HEAD_SIZE strlen(HEAD_STR)
+#define TAIL_STR " ... and goodbye"
+#define TAIL_SIZE strlen(TAIL_STR)
+// 8 bytes for 64-bit value:
+#define MID_SIZE 8
+#define BUF_SIZE HEAD_SIZE+TAIL_SIZE+MID_SIZE+6
+
+	char buf[BUF_SIZE];
+  
+	klee_make_symbolic(buf, sizeof buf, "buf");
+
+	klee_assume (memcmp (buf, HEAD_STR, HEAD_SIZE)==0);
+
+	klee_assume (memcmp (buf+HEAD_SIZE+MID_SIZE, TAIL_STR, TAIL_SIZE)==0);
+	
+	uint64_t mid_value=*(uint64_t*)(buf+HEAD_SIZE);
+	klee_assume (crc64 (0, buf, BUF_SIZE)==mid_value);
+
+	klee_assert(0);
+
+	return 0;
+}
+\end{lstlisting}
+
+It works:
+
+% FIXME:
+\begin{lstlisting}
+\$ time klee --libc=uclibc klee_CRC64.bc
+...
+real    5m17.081s
+user    5m17.014s
+sys     0m0.319s
+
+\$ ls klee-last | grep err
+test000001.user.err
+test000002.user.err
+test000003.external.err
+
+\$ ktest-tool --write-ints klee-last/test000003.ktest
+ktest file : 'klee-last/test000003.ktest'
+args       : ['klee_CRC64.bc']
+num objects: 1
+object    0: name: b'buf'
+object    0: size: 46
+object    0: data: b'Hello, world!.. T+]\xb9A\x08\x0fq ... and goodbye\xb6\x8f\x9c\xd8\xc5\x00'
+\end{lstlisting}
+
+8 bytes between two strings is 64-bit value which equals to CRC64 of this whole block.
+Again, it's faster than brute-force way to find it.
+If to decrease last spare 6-byte buffer to 4 bytes or less, KLEE works so long so I've stopped it.
+
+\subsubsection{Recovering input data for given CRC32 value of it}
+
+I've always wanted to do so, but everyone knows this is impossible for input buffers larger than 4 bytes.
+As my experiments show, it's still possible for tiny input buffers of data, constrained in some way.
+
+The CRC32 value of 6-byte ``SILVER'' string is known: \TT{0xDFA3DFDD}.
+KLEE can find this 6-byte string, if it knows that each byte of input buffer is in \textit{A..Z} limits:
+
+\lstinputlisting[numbers=left]{KLEE/klee_SILVER.c}
+
+% FIXME:
+\begin{lstlisting}
+\$ clang -emit-llvm -c -g klee_SILVER.c
+...
+
+\$ klee klee_SILVER.bc
+...
+
+\$ ls klee-last | grep err
+test000013.external.err
+
+\$ ktest-tool --write-ints klee-last/test000013.ktest
+ktest file : 'klee-last/test000013.ktest'
+args       : ['klee_SILVER.bc']
+num objects: 1
+object    0: name: b'str'
+object    0: size: 6
+object    0: data: b'SILVER'
+\end{lstlisting}
+
+Still, it's no magic: if to remove condition at lines 23..25 (i.e., if to relax constraints),
+KLEE will produce some other string, which will be still correct for the CRC32 value given.
+
+It works, because 6 Latin characters in \textit{A..Z} limits contain ~28.2 bits: % tilde
+$log_2{26^6}=~28.2$, which is even smaller value than 32.
+In other words, the final CRC32 value holds enough bits to recover ~28.2 bits of input.
+
+The input buffer can be even bigger, if each byte of it will be in even tighter % FIXME spelling
+constraints (decimal digits, binary digits, etc).
+
