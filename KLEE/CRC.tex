@@ -47,9 +47,9 @@ object    0: data: b'Hello, world!.. qqlicayzceamyw ... and goodbye'
 \end{lstlisting}
 
 Maybe it's slow, but definitely faster than bruteforce.
-Indeed, $log_2{26^{14}}=65.8$ % FIXME tilde
+Indeed, $log_2{26^{14}} \approx 65.8$
 which is close to 64 bits.
-In other words, one need 14 latin characters to encode 64 bits. % FIXME tilde
+In other words, one need $\approx 14$ latin characters to encode 64 bits.
 And KLEE + SMT solver needs 64 bits at some place it can alter to make final CRC64 value equal to what we defined.
 
 I tried to reduce length of the \textit{middle block} to 13 characters: no luck for KLEE then, it has no space enough.
@@ -156,9 +156,9 @@ object    0: data: b'SILVER'
 Still, it's no magic: if to remove condition at lines 23..25 (i.e., if to relax constraints),
 KLEE will produce some other string, which will be still correct for the CRC32 value given.
 
-It works, because 6 Latin characters in \textit{A..Z} limits contain ~28.2 bits: % tilde
-$log_2{26^6}=~28.2$, which is even smaller value than 32.
-In other words, the final CRC32 value holds enough bits to recover ~28.2 bits of input.
+It works, because 6 Latin characters in \textit{A..Z} limits contain $\approx 28.2$ bits:
+$log_2{26^6} \approx 28.2$, which is even smaller value than 32.
+In other words, the final CRC32 value holds enough bits to recover $\approx 28.2$ bits of input.
 
 The input buffer can be even bigger, if each byte of it will be in even tighter % FIXME spelling
 constraints (decimal digits, binary digits, etc).

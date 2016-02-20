@@ -77,7 +77,7 @@ Now let's pad it manually, and decoder utility will no complain anymore:
 
 The reason our generated base64 string is not padded is because base64 decoders are usually discards padding symbols (``='') at the end.
 In other words, they are not require them, so is the case of our decoder.
-Padding symbols are left unnoticed to KLEE.
+Hence, padding symbols are left unnoticed to KLEE.
 
 So we again made \textit{antipode} or \textit{inverse function} of base64 decoder.
 

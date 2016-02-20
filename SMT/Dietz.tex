@@ -29,7 +29,12 @@ And it works correctly\footnote{For those who interesting how it works, its mech
 That's why I placed these two pieces of text one after another.}.
 But how to prove it?
 
-We will place Dietz's formula on the left side of equation and $x+y/2$ (or $x+y>>1$) on the right side.
+We will place Dietz's formula on the left side of equation and $x+y/2$ (or $x+y>>1$) on the right side:
+
+\begin{center}
+$\forall n \in 0..2^{64}-1\; ( (x\&y) + (x \oplus y)>>1 = x+y>>1)$
+\end{center}
+
 One important thing is that we can't operate on 64-bit values on right side, because result will overflow.
 So we will zero extend inputs on right side by 1 bit (in other words, we will just 1 zero bit before each variable).
 The result of Dietz's formula will also be extended by 1 bit.
