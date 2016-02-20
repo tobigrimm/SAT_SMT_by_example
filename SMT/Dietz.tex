@@ -1,0 +1,63 @@
+\subsection{Dietz's formula}
+
+Now something practical and useful.
+
+One of the impressive examples of \textit{Aha!} work is finding of Dietz's formula\footnote{\url{http://aggregate.org/MAGIC/\#Average\%20of\%20Integers}},
+which is the code of computing average number of two numbers without overflow (which is important if you want to find average number of numbers like 0xFFFFFF00 and so on, using 32-bit registers).
+Taking this in input:
+
+\begin{lstlisting}
+int userfun(int x, int y) {     // To find Dietz's formula for
+                                // the floor-average of two
+                                // unsigned integers.
+   return ((unsigned long long)x + (unsigned long long)y) >> 1;
+}
+\end{lstlisting}
+
+... the \textit{Aha!} gives this:
+
+\begin{lstlisting}
+Found a 4-operation program:
+   and   r1,ry,rx
+   xor   r2,ry,rx
+   shrs  r3,r2,1
+   add   r4,r3,r1
+   Expr: (((y ^ x) >>s 1) + (y & x))
+\end{lstlisting}
+
+And it works correctly\footnote{For those who interesting how it works, its mechanics is closely related to the weird XOR alternative we just saw.
+That's why I placed these two pieces of text one after another.}.
+But how to prove it?
+
+We will place Dietz's formula on the left side of equation and $x+y/2$ (or $x+y>>1$) on the right side.
+One important thing is that we can't operate on 64-bit values on right side, because result will overflow.
+So we will zero extend inputs on right side by 1 bit (in other words, we will just 1 zero bit before each variable).
+The result of Dietz's formula will also be extended by 1 bit.
+Hence, both sides of equation will has width of 64 bits:
+
+\begin{lstlisting}
+(declare-const x (_ BitVec 64))
+(declare-const y (_ BitVec 64))
+(assert 
+	(forall ((x (_ BitVec 64)) (y (_ BitVec 64)))
+		(=
+			((_ zero_extend 1)
+				(bvadd
+					(bvand x y)
+					(bvlshr (bvxor x y) (_ bv1 64))
+				)
+			)
+			(bvlshr
+				(bvadd ((_ zero_extend 1) x) ((_ zero_extend 1) y))
+				(_ bv1 65)
+			)
+		)
+	)
+)
+(check-sat)
+\end{lstlisting}
+
+Z3 says ``sat''.\\
+\\
+65 bits are enough, because the result of addition of two biggest 64-bit values has width of 65 bits: \TT{0xFF...FF + 0xFF...FF = 0x1FF...FE}.
+

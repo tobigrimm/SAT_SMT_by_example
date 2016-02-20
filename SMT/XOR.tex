@@ -8,32 +8,7 @@ who is also the author of the great "Hacker's Delight" book.
 The \textit{Aha!} program is essentially \textit{superoptimizer}\footnote{\url{http://en.wikipedia.org/wiki/Superoptimization}},
 which blindly brute-force a list of some generic RISC CPU instructions to achieve shortest possible (and jumpless or branch-free) 
 CPU code sequence for desired operation.
-One of the impressive examples of its work is finding of Dietz's formula\footnote{\url{http://aggregate.org/MAGIC/\#Average\%20of\%20Integers}},
-which is the code of computing average number of two numbers without overflow (which is important if you want to find average number of numbers like 0xFFFFFF00 and so on, using 32-bit registers).
-Taking this in input:
-
-\begin{lstlisting}
-int userfun(int x, int y) {     // To find Dietz's formula for
-                                // the floor-average of two
-                                // unsigned integers.
-   return ((unsigned long long)x + (unsigned long long)y) >> 1;
-}
-\end{lstlisting}
-
-... the \textit{Aha!} gives this:
-
-\begin{lstlisting}
-Found a 4-operation program:
-   and   r1,ry,rx
-   xor   r2,ry,rx
-   shrs  r3,r2,1
-   add   r4,r3,r1
-   Expr: (((y ^ x) >>s 1) + (y & x))
-\end{lstlisting}
-
-And it works correctly.
-
-\textit{Aha!} can also find jumpless version of abs() function easily.
+For example, \textit{Aha!} can find jumpless version of abs() function easily.
 
 Compiler developers use superoptimization to find shortest possible (and/or jumpless) code, but I tried to do otherwise -- to find longest code for some basic operation.
 I tried \textit{Aha!} to find equivalent of basic XOR operation without usage of the actual XOR instruction, and the most bizarre example \textit{Aha!} gave is:
@@ -131,7 +106,16 @@ Here is how to define it in SMT-LIB way:
 \begin{lstlisting}
 (declare-const x (_ BitVec 64))
 (declare-const y (_ BitVec 64))
-(assert (not (=(bvsub (bvadd x y) (bvshl (bvand x y) (_ bv1 64))) (bvxor x y))))
+(assert 
+	(not
+		(=
+			(bvsub
+				(bvadd x y)
+				(bvshl (bvand x y) (_ bv1 64)))
+			(bvxor x y)
+		)
+	)
+)
 (check-sat)
 \end{lstlisting}
 
@@ -143,11 +127,21 @@ So we can rewrite our SMT example as:
 \begin{lstlisting}
 (declare-const x (_ BitVec 64))
 (declare-const y (_ BitVec 64))
-(forall (=(bvsub (bvadd x y) (bvshl (bvand x y) (_ bv1 64))) (bvxor x y)))
+(assert 
+	(forall ((x (_ BitVec 64)) (y (_ BitVec 64)))
+		(=
+			(bvsub 
+				(bvadd x y)
+				(bvshl (bvand x y) (_ bv1 64))
+			)
+			(bvxor x y)
+		)
+	)
+)
 (check-sat)
 \end{lstlisting}
 
-It returns \TT{sat}, meaning, the equation is correct for all \TT{x} and \TT{y} values.
+It returns \TT{sat}, meaning, the equation is correct for all possible 64-bit \TT{x} and \TT{y} values.
 
 Mathematically speaking: $\forall n\!\in\!\mathbb{N}\; (x \oplus y = (x + y - ((x \& y)<<1)))$
 \footnote{
