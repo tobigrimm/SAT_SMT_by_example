@@ -64,5 +64,7 @@ Hence, both sides of equation will has width of 64 bits:
 
 Z3 says ``sat''.\\
 \\
-65 bits are enough, because the result of addition of two biggest 64-bit values has width of 65 bits: \TT{0xFF...FF + 0xFF...FF = 0x1FF...FE}.
+65 bits are enough, because the result of addition of two biggest 64-bit values has width of 65 bits: \TT{0xFF...FF + 0xFF...FF = 0x1FF...FE}.\\
+\\
+As in previous example about XOR equivalent, \TT{(not (= ... ))} and \TT{exists} can also be used here instead of \TT{forall}.
 

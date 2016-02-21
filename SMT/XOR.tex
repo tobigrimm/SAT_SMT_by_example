@@ -121,7 +121,30 @@ Here is how to define it in SMT-LIB way:
 
 \subsubsection{Using universal quantifier}
 
-Z3 has universal quantifier \TT{forall}, which defines a constraint, where all possible values for the equation must be true.
+Z3 has universal quantifier \TT{exists}, which defines a constraint, which is true if at least one set of variables satistfied underlying condition:
+
+\begin{lstlisting}
+(declare-const x (_ BitVec 64))
+(declare-const y (_ BitVec 64))
+(assert 
+	(exists ((x (_ BitVec 64)) (y (_ BitVec 64)))
+		(not (=
+			(bvsub 
+				(bvadd x y)
+				(bvshl (bvand x y) (_ bv1 64))
+			)
+			(bvxor x y)
+		))
+	)
+)
+(check-sat)
+\end{lstlisting}
+
+It returns ``unsat'', meaning, Z3 couldn't find any counterexample of the equation, i.e., it's not exist.\\
+\\
+This is also known as $\exists$ in mathematical logic lingo.\\
+\\
+Z3 has also universal quantifier \TT{forall}, which defines a constraint, where all possible values for the equation must be true.
 So we can rewrite our SMT example as:
 
 \begin{lstlisting}
@@ -141,7 +164,7 @@ So we can rewrite our SMT example as:
 (check-sat)
 \end{lstlisting}
 
-It returns \TT{sat}, meaning, the equation is correct for all possible 64-bit \TT{x} and \TT{y} values.
+It returns \TT{sat}, meaning, the equation is correct for all possible 64-bit \TT{x} and \TT{y} values, like them all were checked.
 
 Mathematically speaking: $\forall n\!\in\!\mathbb{N}\; (x \oplus y = (x + y - ((x \& y)<<1)))$
 \footnote{
