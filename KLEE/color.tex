@@ -1,0 +1,143 @@
+\subsection{Unit test: HTML color}
+
+The most popular ways to represent HTML/CSS color is by English name (e.g., ``red'') and by 6-digit hexadecimal number (e.g., ``\#0077CC'').
+There is third, less popular way: if each byte in hexadecimal number has two doubling digits, it can be \textit{abbreviated}, thus, 
+``\#0077CC'' can be written just as ``\#07C''.
+
+Let's write a function to convert 3 color components into name (if possible, first priority), 3-digit hexadecimal form (if possible, second priority),
+or as 6-digit hexadecimal form (as a last resort).
+
+\lstinputlisting{KLEE/color.c}
+
+There are 5 paths in function, and let's see, if KLEE could find them all?
+It's indeed so:
+
+% FIXME:
+\begin{lstlisting}
+\$ clang -emit-llvm -c -g color.c
+
+\$ klee color.bc
+KLEE: output directory is "/home/klee/klee-out-134"
+KLEE: WARNING: undefined reference to function: sprintf
+KLEE: WARNING: undefined reference to function: strcpy
+KLEE: WARNING ONCE: calling external: strcpy(51867584, 51598960)
+KLEE: ERROR: /home/klee/color.c:33: external call with symbolic argument: sprintf
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: /home/klee/color.c:28: external call with symbolic argument: sprintf
+KLEE: NOTE: now ignoring this error at this location
+
+KLEE: done: total instructions = 479
+KLEE: done: completed paths = 19
+KLEE: done: generated tests = 5
+\end{lstlisting}
+
+We can ignore calls to strcpy() and sprintf(), because we are not really interesting in state of \TT{out} variable.
+
+So there are exactly 5 paths:
+
+% FIXME:
+\begin{lstlisting}
+\$ ls klee-last
+assembly.ll   run.stats            test000003.ktest     test000005.ktest
+info          test000001.ktest     test000003.pc        test000005.pc
+messages.txt  test000002.ktest     test000004.ktest     warnings.txt
+run.istats    test000003.exec.err  test000005.exec.err
+\end{lstlisting}
+
+1st set of input variables will result in ``red'' string:
+
+% FIXME:
+\begin{lstlisting}
+\$ ktest-tool --write-ints klee-last/test000001.ktest
+ktest file : 'klee-last/test000001.ktest'
+args       : ['color.bc']
+num objects: 3
+object    0: name: b'R'
+object    0: size: 1
+object    0: data: b'\xff'
+object    1: name: b'G'
+object    1: size: 1
+object    1: data: b'\x00'
+object    2: name: b'B'
+object    2: size: 1
+object    2: data: b'\x00'
+\end{lstlisting}
+
+2nd set of input variables will result in ``green'' string:
+
+% FIXME:
+\begin{lstlisting}
+\$ ktest-tool --write-ints klee-last/test000002.ktest
+ktest file : 'klee-last/test000002.ktest'
+args       : ['color.bc']
+num objects: 3
+object    0: name: b'R'
+object    0: size: 1
+object    0: data: b'\x00'
+object    1: name: b'G'
+object    1: size: 1
+object    1: data: b'\xff'
+object    2: name: b'B'
+object    2: size: 1
+object    2: data: b'\x00'
+\end{lstlisting}
+
+3rd set of input variables will result in ``\#010000'' string:
+
+% FIXME:
+\begin{lstlisting}
+\$ ktest-tool --write-ints klee-last/test000003.ktest
+ktest file : 'klee-last/test000003.ktest'
+args       : ['color.bc']
+num objects: 3
+object    0: name: b'R'
+object    0: size: 1
+object    0: data: b'\x01'
+object    1: name: b'G'
+object    1: size: 1
+object    1: data: b'\x00'
+object    2: name: b'B'
+object    2: size: 1
+object    2: data: b'\x00'
+\end{lstlisting}
+
+4th set of input variables will result in ``blue'' string:
+
+% FIXME:
+\begin{lstlisting}
+\$ ktest-tool --write-ints klee-last/test000004.ktest
+ktest file : 'klee-last/test000004.ktest'
+args       : ['color.bc']
+num objects: 3
+object    0: name: b'R'
+object    0: size: 1
+object    0: data: b'\x00'
+object    1: name: b'G'
+object    1: size: 1
+object    1: data: b'\x00'
+object    2: name: b'B'
+object    2: size: 1
+object    2: data: b'\xff'
+\end{lstlisting}
+
+5th set of input variables will result in ``\#F01'' string:
+
+% FIXME:
+\begin{lstlisting}
+\$ ktest-tool --write-ints klee-last/test000005.ktest
+ktest file : 'klee-last/test000005.ktest'
+args       : ['color.bc']
+num objects: 3
+object    0: name: b'R'
+object    0: size: 1
+object    0: data: b'\xff'
+object    1: name: b'G'
+object    1: size: 1
+object    1: data: b'\x00'
+object    2: name: b'B'
+object    2: size: 1
+object    2: data: b'\x11'
+\end{lstlisting}
+
+These 5 sets of input variables can form a unit test for our function.
+
