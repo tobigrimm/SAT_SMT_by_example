@@ -1,0 +1,99 @@
+\subsection{Finding modular inverse}
+
+And now one useful equation.
+
+It's possible to replace division operation (slow) by multiplication (faster).
+Read \href{http://beginners.re/15-Nov-2015/Reverse_Engineering_for_Beginners-en.pdf#page=490&zoom=auto,-107,806}{here} or \href{http://yurichev.com/blog/modulo/}{here} about it.
+
+In shortest possible terms, here is how it works.
+
+If you need to divide integer by 13, this is the same as multiplication it by $\frac{1}{13}$.
+But you operate on integer numbers (\ac{CPU} registers) and can't use ratios.
+
+Given the fact that the division by $2^n$ on \ac{CPU} occurring at lightning speed, we can reformulate the problem as:
+
+\begin{center}
+{\Large $\frac{x}{13} = x \cdot \frac{1}{13} = x \cdot \frac{M}{2^n} = \frac{x \cdot M}{2^n}$ }
+\end{center}
+
+... where $M$ is \textit{magic coefficient} and $n$ is usually started at register width in bits (32 or 64).
+
+But how to find \textit{magic coefficient}?
+This equation is to be solved:
+
+\begin{center}
+{\Large $17 \cdot x = 1+k \cdot 2^{64}$ }
+\end{center}
+
+This is a little overkill to use SMT-solver to solve this equation
+\footnote{\url{https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm} is usually used:
+\url{http://rosettacode.org/wiki/Modular\_inverse}}, but still possible:
+
+\begin{lstlisting}
+(declare-const x Int)
+(declare-const k Int)
+(assert (> x 0))
+(assert (> k 0))
+(assert (=
+		(* 17 x)
+		(+ 1 (* k (^ 2 64)))
+	)
+)
+(check-sat)
+(get-model)
+\end{lstlisting}
+
+Important note: we use \textit{Int} sort here, because this is Diophantine equation (i.e., only integer solutions are allowed).
+Resulting code will run on integer \ac{CPU} registers, after all.
+
+Z3 gave this:
+
+% FIXME:
+\begin{lstlisting}
+\$ z3 -smt2 1.smt
+sat
+(model
+  (define-fun k () Int
+    16)
+  (define-fun x () Int
+    17361641481138401521)
+)
+\end{lstlisting}
+
+Let's check:
+
+% FIXME:
+\begin{lstlisting}
+#include <stdint.h>
+#include <stdio.h>
+
+uint64_t div_by_17 (uint64_t x)
+{
+	__int128 result = (__int128)x * (__int128)17361641481138401521UL;
+	return result >> 64 >> 4;
+};
+
+int main()
+{
+	printf ("%lld\n", 123456789/17);
+	printf ("%lld\n", div_by_17(123456789));
+};
+\end{lstlisting}
+
+... and it works.
+
+GCC doesn't use 128-bit registers, it just exploit the fact that x86 multiplication instruction produces 128-bit result, lower 64-bit part in RAX register,
+and higher 64-bit part in RDX register.
+In standard C/C++ it's not possible to access higher part, so this hack is helpful.
+
+This is what optimizing GCC 4.8.4 generates:
+
+\begin{lstlisting}
+div_by_17:
+        movabs  rax, -1085102592571150095
+        mul     rdi
+        mov     rax, rdx
+        sar     rax, 4
+        ret
+\end{lstlisting}
+

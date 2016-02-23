@@ -32,7 +32,7 @@ In some time in near future, Mathematica's user may assign some number to $x$ an
 Mathematica does this because it parses the expression and finds some known patterns.
 This is also called \textit{term rewriting}\footnote{\url{https://en.wikipedia.org/wiki/Rewriting}}.
 In plain English language it may sounds like this:
-``if there is a $+$ operator between two known numbers, replace this subexpression by a computed number which is sum of these two numbers''.
+``if there is a $+$ operator between two known numbers, replace this subexpression by a computed number which is sum of these two numbers, if possible''.
 Just like humans do.
 
 Mathematica also has rules like ``replace $sin(\pi)$ by 0'' and ``replace $sin(\frac{\pi}{2})$ by 1'', but as you can see, $\pi$ must be preserved
@@ -83,13 +83,14 @@ and process it many times.
 Term rewriting is also slow.
 All these things are extremely clumsy in comparison to a fast \ac{FPU}.
 
-``Symbolic computation'' is opposed to ``numerical computation'', the last one is just processing numbers step-by-step, using calculator, \ac{CPU} or \ac{FPU}.
+``Symbolic computation'' is opposed to ``numerical computation'', the last one is just processing numbers step-by-step, using calculator, \ac{CPU} or \ac{FPU}.\\
+\\
 Some problems can be solved better by the first method, some others -- by the second one.
 
 \subsubsection{Rational data type}
 
 Some LISP implementations can store a number as a ratio/fraction
-\footnote{\url{https://en.wikipedia.org/wiki/Rational_data_type}}, i.e., placing two numbers into cell (which, in this case, is called \textit{atom} in LISP lingo).
+\footnote{\url{https://en.wikipedia.org/wiki/Rational_data_type}}, i.e., placing two numbers in a cell (which, in this case, is called \textit{atom} in LISP lingo).
 For example, you divide 1 by 3, and the interpreter, by understanding that $\frac{1}{3}$ is 
 an irreducible fraction\footnote{\url{https://en.wikipedia.org/wiki/Irreducible_fraction}}, creates a cell with 1 and 3 numbers.
 Some time after, you may multiply this cell by 6, and the multiplication function inside LISP interpreter may return much better result (2 without \textit{noise}).
