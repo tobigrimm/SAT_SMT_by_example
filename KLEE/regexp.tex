@@ -1,0 +1,119 @@
+\subsection{Regular expressions}
+
+I've always wanted to generate possible strings for given regular expression.
+This is not so hard if to dive into regular expression matcher theory and details, but can we force RE matcher to do this?
+
+I took lightest RE engine I've found: \url{https://github.com/cesanta/slre}, and wrote this:
+
+% FIXME:
+\begin{lstlisting}
+int main(void)
+{
+	char s[6];
+	klee_make_symbolic(s, sizeof s, "s");
+	s[5]=0;
+	if (slre_match("^\\d[a-c]+(x|y|z)", s, 5, NULL, 0, 0)==5)
+		klee_assert(0);
+}
+\end{lstlisting}
+
+So I wanted a string consisting of digit, ``a'' or ``b'' or ``c'' (at least one character) and ``x'' or ``y'' or ``z'' (one character).
+The whole string must have size of 5 characters.
+
+% FIXME:
+\begin{lstlisting}
+\$ klee --libc=uclibc slre.bc
+...
+KLEE: ERROR: /home/klee/slre.c:445: failed external call: klee_assert
+KLEE: NOTE: now ignoring this error at this location
+...
+
+\$ ls klee-last | grep err
+test000014.external.err
+
+\$ ktest-tool --write-ints klee-last/test000014.ktest
+ktest file : 'klee-last/test000014.ktest'
+args       : ['slre.bc']
+num objects: 1
+object    0: name: b's'
+object    0: size: 6
+object    0: data: b'5aaax\xff'
+\end{lstlisting}
+
+This is indeed correct string. ``\textbackslash{}xff'' is at the place where terminal zero byte should be, but RE engine we use ignores the last zero byte, because it has buffer lenght as a passed parameter.
+Hence, KLEE doesn't \textit{reconstruct} final byte.
+
+Can we get more?
+Now we add additional constraint:
+
+\begin{lstlisting}
+int main(void)
+{
+	char s[6];
+	klee_make_symbolic(s, sizeof s, "s");
+	s[5]=0;
+	if (slre_match("^\\d[a-c]+(x|y|z)", s, 5, NULL, 0, 0)==5 &&
+			strcmp(s, "5aaax")!=0)
+		klee_assert(0);
+}
+\end{lstlisting}
+
+% FIXME:
+\begin{lstlisting}
+\$ ktest-tool --write-ints klee-last/test000014.ktest
+ktest file : 'klee-last/test000014.ktest'
+args       : ['slre.bc']
+num objects: 1
+object    0: name: b's'
+object    0: size: 6
+object    0: data: b'7aaax\xff'
+\end{lstlisting}
+
+Let's say, out of whim, we don't like ``a'' at the 2nd position (starting at 0th):
+
+% FIXME:
+\begin{lstlisting}
+int main(void)
+{
+	char s[6];
+	klee_make_symbolic(s, sizeof s, "s");
+	s[5]=0;
+	if (slre_match("^\\d[a-c]+(x|y|z)", s, 5, NULL, 0, 0)==5 &&
+			strcmp(s, "5aaax")!=0 &&
+			s[2]!='a')
+		klee_assert(0);
+}
+\end{lstlisting}
+
+KLEE found a way to circumvent our new constraint:
+
+% FIXME:
+\begin{lstlisting}
+\$ ktest-tool --write-ints klee-last/test000014.ktest
+ktest file : 'klee-last/test000014.ktest'
+args       : ['slre.bc']
+num objects: 1
+object    0: name: b's'
+object    0: size: 6
+object    0: data: b'7abax\xff'
+\end{lstlisting}
+
+Let's also define constraint KLEE cannot solve:
+
+\begin{lstlisting}
+int main(void)
+{
+	char s[6];
+	klee_make_symbolic(s, sizeof s, "s");
+	s[5]=0;
+	if (slre_match("^\\d[a-c]+(x|y|z)", s, 5, NULL, 0, 0)==5 &&
+			strcmp(s, "5aaax")!=0 &&
+			s[2]!='a' &&
+			s[2]!='b' &&
+			s[2]!='c')
+		klee_assert(0);
+}
+\end{lstlisting}
+
+It cannot indeed, and KLEE finished without reporting about \TT{klee\_assert()} triggering.
+
