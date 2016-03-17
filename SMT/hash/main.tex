@@ -1,7 +1,7 @@
 \subsection{Simple hash function}
 
 (This piece of text was initially added to my ``Reverse Engineering for Beginners'' book (\url{beginners.re}) at March 2014)
-\footnote{This example was also used by Murphy Berzish in his lecture about SAT and SMT:
+\footnote{This example was also used by Murphy Berzish in his lecture about \ac{SAT} and \ac{SMT}:
 \url{http://mirror.csclub.uwaterloo.ca/csclub/mtrberzi-sat-smt-slides.pdf},
 \url{http://mirror.csclub.uwaterloo.ca/csclub/mtrberzi-sat-smt.mp4}}.
 
@@ -68,11 +68,11 @@ it has collisions, or, speaking more simply, many inputs may be possible for one
 
 Brute-force is not solution because values are 64-bit ones, that's beyond reality.
 
-\subsubsection{Now let's use the Z3 SMT solver}
+\subsubsection{Now let's use the Z3 \ac{SMT} solver}
 
 Still, without any special cryptographic knowledge, we may try to break this 
-algorithm using the excellent SMT solver from Microsoft Research named Z3\footnote{\url{http://go.yurichev.com/17314}}.
-It is in fact theorem prover, but we are going to use it as SMT solver.
+algorithm using the excellent \ac{SMT} solver from Microsoft Research named Z3\footnote{\url{http://go.yurichev.com/17314}}.
+It is in fact theorem prover, but we are going to use it as \ac{SMT} solver.
 Simply said, we can think about it as a system capable of solving huge equation systems.
 
 Here is the Python source code:
@@ -89,7 +89,7 @@ Then we add the so-called constraints on lines 10..15.
 The last constraint at 17 is the most important one: 
 we are going to try to find an input value for which our algorithm will produce 10816636949158156260.
 
-Essentially, the SMT-solver searches for (any) values that satisfies all constraints.
+Essentially, the \ac{SMT}-solver searches for (any) values that satisfies all constraints.
 
 RotateRight, RotateLeft, URem---are functions from the Z3 Python API, not related to Python language.
 
@@ -109,13 +109,13 @@ sat
 outp=0x961C69FF0AEFD7E4
 \end{lstlisting}
 
-``sat'' mean ``satisfiable'', i.e., the solver was able to found at least one solution.
+``sat'' mean ``satisfiable'', i.e., the solver was able to find at least one solution.
 The solution is printed in the square brackets.
 The last two lines are the input/output pair in hexadecimal form.
 Yes, indeed, if we run our function with \texttt{0x12EE577B63E80B73} as input, the algorithm will produce the value we were looking for.
 
 But, as we noticed before, the function we work with is not bijective, so there may be other correct input values.
-The Z3 SMT solver is not capable of producing more than one result, but let's hack our example slightly, 
+The Z3 \ac{SMT} solver is not capable of producing more than one result, but let's hack our example slightly, 
 by adding line 19, which implies ``look for any other results than this'':
 
 \lstinputlisting[numbers=left]{SMT/hash/2.py}
@@ -169,7 +169,7 @@ So there are 16 correct input values for \texttt{0x92EE577B63E80B73} as a result
 The second is 1234567890---it is indeed the value which was used by me originally while preparing this example.
 
 Let's also try to research our algorithm a bit more.
-Acting on a sadistic whim, let's find if the there are any possible input/output pairs in 
+Acting on a sadistic whim, let's find if there are any possible input/output pairs in 
 which the lower 32-bit parts are equal to each other?
 
 Let's remove the \textit{outp} constraint and add another, at line 17:
@@ -219,5 +219,5 @@ but these are so huge that they are impossible to work with on computers, now or
 Of course, cryptographers are fully aware of this.
 
 Summarizing, when dealing with amateur crypto, 
-it's a very good idea to try a SMT/SAT solver (like Z3).
+it's a very good idea to try a \ac{SMT}/\ac{SAT} solver (like Z3).
 

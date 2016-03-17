@@ -1,4 +1,4 @@
-\section{SMT-solvers}
+\section{\ac{SMT}-solvers}
 
 \subsection{School-level system of equations}
 
@@ -36,11 +36,11 @@ sat
 
 If we change equation in some way so it will have no solution, s.check() will return ``unsat''.
 
-I've used ``Real'' \textit{sort} (some kind of data type in SMT-solvers) because the last expression has $\frac{1}{2}$, which is, of course, a real number.
+I've used ``Real'' \textit{sort} (some kind of data type in \ac{SMT}-solvers) because the last expression has $\frac{1}{2}$, which is, of course, a real number.
 For the integer system of equations, ``Int'' \textit{sort} would work fine.
 
 Python (and other high-level PLs like C\#) interface is highly popular, because it's practical, but in fact, 
-there is a standard language for SMT-solvers named SMT-LIB\cite{SMTLIB}.
+there is a standard language for \ac{SMT}-solvers named SMT-LIB\cite{SMTLIB}.
 Our example rewritten to it looks like this:
 
 \begin{lstlisting}
@@ -97,7 +97,7 @@ I've found this somewhere at Facebook:
 \caption{System of equations}
 \end{figure}
 
-It's that easy to solve it in Z3 SMT-solver:
+It's that easy to solve it in Z3 \ac{SMT}-solver:
 
 \begin{lstlisting}
 #!/usr/bin/python
@@ -119,12 +119,12 @@ sat
 
 \input{SMT/mod_inv.tex}
 
-\subsection{Connection between SAT and SMT solvers}
+\subsection{Connection between \ac{SAT} and \ac{SMT} solvers}
 
-Early SMT-solvers were frontends to SAT solvers, i.e., they translating input SMT expressions into \ac{CNF} and feed SAT-solver with it.
+Early \ac{SMT}-solvers were frontends to \ac{SAT} solvers, i.e., they translating input SMT expressions into \ac{CNF} and feed SAT-solver with it.
 Conversion process is sometimes called ``bit blasting''.
-Some SMT-solvers still works in that way: STP uses MiniSAT or CryptoMiniSAT as backend SAT-solver.
-Some other SMT-solvers are more advanced (like Z3), so they use something even more complex.
+Some \ac{SMT}-solvers still works in that way: STP uses MiniSAT or CryptoMiniSAT as backend SAT-solver.
+Some other \ac{SMT}-solvers are more advanced (like Z3), so they use something even more complex.
 
 % subsections
 \input{SMT/zebra.tex}

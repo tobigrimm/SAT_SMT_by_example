@@ -1,5 +1,5 @@
 % FIXME \ac{}
-\subsection{Cracking LCG with Z3 SMT solver}
+\subsection{Cracking LCG with Z3 \ac{SMT} solver}
 
 % FIXME first appeared in blog...
 
@@ -8,7 +8,7 @@ There are well-known weaknesses of LCG (
 \href{http://www.reteam.org/papers/e59.pdf}{2}, % FIXME \cite
 \href{http://stackoverflow.com/questions/8569113/why-1103515245-is-used-in-rand/8574774#8574774}{3}
 ), but let's see, if it would be possible to crack it straightforwardly, without any special knowledge.
-We would define all relations between LCG states in term of Z3 SMT solver.
+We would define all relations between LCG states in term of Z3 \ac{SMT} solver.
 (I first made attempt to do it using \href{https://reference.wolfram.com/language/ref/FindInstance.html}{FindInstance} in Wolfram Mathematica, but failed, perhaps, made a mistake somewhere).
 Here is a test progam:
 
@@ -131,7 +131,7 @@ sat
 I added ~10 states to be sure result will be correct. It may be not if you supply lesser amount of PRNG numbers.
 
 That is the reason why LCG is not suitable for any security-related task.
-This is why \href{https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator}{cryptographically secure pseudorandom number generators} are exist: they are designed to be protected against such simple attack.
+This is why \href{https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator}{cryptographically secure pseudorandom number generators} exist: they are designed to be protected against such simple attack.
 Well, at least if \href{https://en.wikipedia.org/wiki/Dual_EC_DRBG}{NSA is not involved}.
 
 As far, as I can understand, \href{http://en.wikipedia.org/wiki/Security_token}{security tokens} like \href{http://en.wikipedia.org/wiki/RSA_SecurID}{RSA SecurID} can be viewed just as \ac{CPRNG} with a secret seed.

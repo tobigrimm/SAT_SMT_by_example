@@ -50,7 +50,7 @@ Maybe it's slow, but definitely faster than bruteforce.
 Indeed, $log_2{26^{14}} \approx 65.8$
 which is close to 64 bits.
 In other words, one need $\approx 14$ latin characters to encode 64 bits.
-And KLEE + SMT solver needs 64 bits at some place it can alter to make final CRC64 value equal to what we defined.
+And KLEE + \ac{SMT} solver needs 64 bits at some place it can alter to make final CRC64 value equal to what we defined.
 
 I tried to reduce length of the \textit{middle block} to 13 characters: no luck for KLEE then, it has no space enough.
 

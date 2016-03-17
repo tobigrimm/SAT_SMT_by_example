@@ -1,4 +1,4 @@
-\section{SAT-solvers}
+\section{\ac{SAT}-solvers}
 
 \subsection{CNF form}
 
@@ -31,7 +31,7 @@ $\neg$ is negation (NOT).
 \subsection{Example: 2-bit adder}
 \label{adder}
 
-SAT-solver is merely a solver of huge boolean equations in CNF form.
+\ac{SAT}-solver is merely a solver of huge boolean equations in CNF form.
 It just gives the answer, if there is a set of input variables which can satisfy CNF expression, and what input values must be.
 
 Here is a 2-bit adder for example:
@@ -74,7 +74,7 @@ Here is also truth table, with these rows highlighted:
 \end{doublespace}
 \end{center}
 
-Let's find, what SAT-solver can say about it?
+Let's find, what \ac{SAT}-solver can say about it?
 
 First, we should represent our 2-bit adder as CNF expression.
 
@@ -93,7 +93,7 @@ Let's use Wolfram Mathematica find all instances of such expression (I glueled b
 \textbf{\texttt{Out[]:=\{1,1,0,0\},\{1,0,0,1\},\{0,1,1,0\},\{0,0,1,1\}}} \\
 \\
 Yes, indeed, Mathematica says, there are 4 inputs which will lead to the result we need.
-So, Mathematica can also be used as SAT solver.
+So, Mathematica can also be used as \ac{SAT} solver.
 
 Nevertheless, let's proceed to CNF form. Using Mathematica again, let's convert our expression to CNF form:\\
 \\
@@ -147,7 +147,7 @@ This means, if the first two variables (aH and aL) will be \textit{false}, and t
 the whole CNF expression is satisfiable.
 Seems to be true: if bH and bL are the only inputs set to \textit{true}, both resulting bits are also has \textit{true} states.
 
-Now how to get other instances? SAT solvers, like SMT solvers, produce only one solution (or \textit{instance}).
+Now how to get other instances? \ac{SAT}-solvers, like \ac{SMT} solvers, produce only one solution (or \textit{instance}).
 
 MiniSat uses PRNG and its initial seed can be set explicitely. I tried different values, but result is still the same.
 Nevertheless, CryptoMiniSat in this case was able to show all possible 4 instances, in chaotic order, though.

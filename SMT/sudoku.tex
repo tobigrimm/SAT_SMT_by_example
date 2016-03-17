@@ -43,7 +43,7 @@ Sudoku puzzle is a 9*9 grid with some cells filled, some are left to be found:
 Numbers of each row must be unique, i.e., must contain all 9 numbers in range of 1..9 without repetition.
 Same story for each column and also for each 3*3 square.
 
-This puzzle is good candidate to try SMT solver on, because it's essentially an unsolved system of equations.
+This puzzle is good candidate to try \ac{SMT} solver on, because it's essentially an unsolved system of equations.
 
 \subsubsection{The first idea}
 
@@ -156,7 +156,7 @@ That's much faster.
 
 \subsubsection{Conclusion}
 
-The awesomeness of SMT-solvers is that our Sudoku solver has nothing else, we have just defined relationships between variables (cells).
+The awesomeness of \ac{SMT}-solvers is that our Sudoku solver has nothing else, we have just defined relationships between variables (cells).
 
 \subsubsection{Homework}
 
@@ -169,12 +169,12 @@ try to find more solutions, or prove that the solution you have just found is th
 
 \url{http://www.norvig.com/sudoku.html}
 
-\subsubsection{Sudoku as SAT problem}
+\subsubsection{Sudoku as a \ac{SAT} problem}
 
-It's also possible to represend Sudoku puzzle as a huge \ac{CNF} equation and use SAT-solver to find solution, but it's just trickier.
+It's also possible to represend Sudoku puzzle as a huge \ac{CNF} equation and use \ac{SAT}-solver to find solution, but it's just trickier.
 
 Some articles about it\footnote{Another one: \url{http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-005-elements-of-software-construction-fall-2011/assignments/MIT6_005F11_ps4.pdf}}: \cite{Sudoku1}, \cite{Sudoku2}, \cite{Sudoku3}.
 
-SMT-solver can also use SAT-solver in its core, so it does all mundane translating work.
+\ac{SMT}-solver can also use \ac{SAT}-solver in its core, so it does all mundane translating work.
 As a ``compiler'', it may not do this in the most efficient way, though.
 
