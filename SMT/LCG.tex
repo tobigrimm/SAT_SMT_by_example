@@ -1,11 +1,10 @@
-% FIXME \ac{}
-\subsection{Cracking LCG with Z3 \ac{SMT} solver}
+\subsection{Cracking \ac{LCG} with Z3 \ac{SMT} solver}
 
-% FIXME first appeared in blog...
+This part is first appeared in my blog in June 2015 at \url{http://yurichev.com/blog/modulo/}.
 
 There are well-known weaknesses of LCG (
 \href{http://en.wikipedia.org/wiki/Linear_congruential_generator#Advantages_and_disadvantages_of_LCGs}{1},
-\href{http://www.reteam.org/papers/e59.pdf}{2}, % FIXME \cite
+\href{http://www.reteam.org/papers/e59.pdf}{2},
 \href{http://stackoverflow.com/questions/8569113/why-1103515245-is-used-in-rand/8574774#8574774}{3}
 ), but let's see, if it would be possible to crack it straightforwardly, without any special knowledge.
 We would define all relations between LCG states in term of Z3 \ac{SMT} solver.

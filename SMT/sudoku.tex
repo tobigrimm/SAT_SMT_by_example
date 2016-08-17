@@ -72,6 +72,7 @@ The effect is just the same, but the final value is in base 2 instead of 10.
 Now a working example:
 
 \lstinputlisting{SMT/sudoku_plus.py}
+( \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/sudoku_plus.py} )
 
 \begin{lstlisting}
 \$ time python sudoku_plus.py
@@ -96,8 +97,9 @@ Even more, we can replace summing operation to logical OR:
 \underbrace{2^{i_1} \vee 2^{i_2} \vee \cdots \vee 2^{i_9}}_9 = 1111111110_2
 \end{equation}
 
-% FIXME: только часть исходника + ссылка на github
+% FIXME: только часть исходника
 \lstinputlisting{SMT/sudoku_or.py}
+( \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/sudoku_or.py} )
 
 Now it works much faster. Z3 handles OR operation over bit vectors better than addition?
 
@@ -120,7 +122,7 @@ sys     0m0.036s
 
 The puzzle I used as example is dubbed as one of the hardest known
 \footnote{\url{http://www.mirror.co.uk/news/weird-news/worlds-hardest-sudoku-can-you-242294}} (well, for humans).
-It took ~1.4 seconds on my Intel Core i3-3110M 2.4GHz notebook to solve it. % FIXME tilde
+It took \~1.4 seconds on my Intel Core i3-3110M 2.4GHz notebook to solve it.
 
 \subsubsection{The second idea}
 
@@ -132,8 +134,9 @@ I've rewritten my first Sudoku solver, now it operates over \textit{Int} \textit
 and now also other constaint added: each cell value must be in 1..9 range, because, otherwise, Z3 will offer (although correct) solution with too big
 and/or negative numbers.
 
-% FIXME: только часть исходника + ссылка на github
+% FIXME: только часть исходника
 \lstinputlisting{SMT/sudoku2.py}
+( \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/sudoku2.py} )
 
 \begin{lstlisting}
 \$ time python sudoku2.py
@@ -173,7 +176,11 @@ try to find more solutions, or prove that the solution you have just found is th
 
 It's also possible to represend Sudoku puzzle as a huge \ac{CNF} equation and use \ac{SAT}-solver to find solution, but it's just trickier.
 
-Some articles about it\footnote{Another one: \url{http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-005-elements-of-software-construction-fall-2011/assignments/MIT6_005F11_ps4.pdf}}: \cite{Sudoku1}, \cite{Sudoku2}, \cite{Sudoku3}.
+Some articles about it:
+\textit{Building a Sudoku Solver with SAT}\footnote{\url{http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-005-elements-of-software-construction-fall-2011/assignments/MIT6_005F11_ps4.pdf}},
+Tjark Weber, \textit{A SAT-based Sudoku Solver}\footnote{\url{https://www.lri.fr/~conchon/mpri/weber.pdf}},
+Ines Lynce, Joel Ouaknine, \textit{Sudoku as a SAT Problem}\footnote{\url{http://sat.inesc-id.pt/~ines/publications/aimath06.pdf}},
+Gihwon Kwon, Himanshu Jain, \textit{Optimized CNF Encoding for Sudoku Puzzles}\footnote{\url{http://www.cs.cmu.edu/~hjain/papers/sudoku-as-SAT.pdf}}.
 
 \ac{SMT}-solver can also use \ac{SAT}-solver in its core, so it does all mundane translating work.
 As a ``compiler'', it may not do this in the most efficient way, though.
