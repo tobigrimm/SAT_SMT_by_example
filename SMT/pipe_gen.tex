@@ -1,0 +1,37 @@
+\pgfmathsetmacro\Width{16}
+\pgfmathsetmacro\Height{8}
+%\pgfmathsetmacro\Width{10}
+%\pgfmathsetmacro\Height{5}
+\pgfmathtruncatemacro\WidthMinusI{\Width - 1}
+\pgfmathtruncatemacro\WidthMinusII{\Width - 2}
+\pgfmathtruncatemacro\HeightMinusI{\Height - 1}
+\pgfmathtruncatemacro\HeightMinusII{\Height - 2}
+\pgfmathtruncatemacro\HeightPlusII{\Height + 2}
+\pgfmathsetmacro\HeightPlusIi{\Height + 1.5}
+
+% see also: http://www.texample.net/tikz/examples/euclid-algorithm/
+\begin{center}
+\begin{tikzpicture}[set style={{help lines}+=[dashed]},scale=0.7]
+
+	\draw[style=help lines] (0,0) grid +(\Width,\Height);
+
+	\foreach \c in {0,...,\WidthMinusI}
+	{
+		\foreach \r in {0,...,\HeightMinusII}
+			\draw   [red,very thick,-] (\c+0.5,\r+0.75) -- (\c+0.5,\r+1.25);
+		%\node[rotate=90] at (\c+0.5,\HeightPlusII) {\Large vjoints[\dots, \c] \normalsize};
+		\node[rotate=90] at (\c+0.5,\HeightPlusII) {vjoints[\dots, \c]};
+	}
+
+	\foreach \r in {0,...,\HeightMinusI}
+	{
+		\foreach \c in {0,...,\WidthMinusII}
+			\draw   [blue,very thick,-] (\c+0.75,\r+0.5) -- (\c+1.25,\r+0.5);
+		\pgfmathtruncatemacro\hjointslabel{\HeightMinusI - \r}
+		%\node at (-1.5,\r+0.5) {\large hjoints[\hjointslabel, \dots] \normalsize};
+		\node at (-1.5,\r+0.5) {hjoints[\hjointslabel, \dots]};
+	}
+
+\end{tikzpicture}
+\end{center}
+

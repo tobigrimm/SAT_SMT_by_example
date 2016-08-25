@@ -10,6 +10,8 @@
 \usepackage[table]{xcolor}% http://ctan.org/pkg/xcolor
 
 \usepackage{listings}
+\usepackage{longtable}
+\usepackage{pmboxdraw}
 \usepackage{url}
 \usepackage[cm]{fullpage}
 \usepackage{graphicx}
@@ -17,6 +19,7 @@
 \usepackage{color}
 \usepackage{float}
 \usepackage{tikz}
+\usepackage[margin=0.5in,headheight=12.5pt]{geometry}
 \usepackage[footnote,printonlyused,withpage]{acronym}
 \usetikzlibrary{arrows}
 \usepackage[nottoc]{tocbibind}
@@ -49,11 +52,13 @@
     breaklines=true,
     frame=single,
     columns=fullflexible,keepspaces,
+    escapeinside=§§,
+    inputencoding=utf8
 }
 
 \author{\AUTHOR}
 \title{\TITLE}
-\date{December 2015 -- February 2016}
+\date{December 2015 -- August 2016}
 
 \begin{document}
 

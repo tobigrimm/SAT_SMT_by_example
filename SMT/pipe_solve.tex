@@ -1,0 +1,28 @@
+% see also: http://www.texample.net/tikz/examples/euclid-algorithm/
+\begin{center}
+\begin{tikzpicture}[set style={{help lines}+=[dashed]},scale=0.7]
+
+	\draw[style=help lines] (0,0) grid +(\Width,\Height);
+	
+	\foreach \c in {0,...,\WidthMinusI}
+		%\node[rotate=90] at (\c+0.5,\HeightPlusIi) {\Large [\dots, \c] \normalsize};
+		\node[rotate=90] at (\c+0.5,\HeightPlusIi) {[\dots, \c]};
+	
+	\foreach \r in {0,...,\HeightMinusI}
+	{
+		\pgfmathtruncatemacro\hlabel{\HeightMinusI - \r}
+		%\node at (-1.5,\r+0.5) {\large [\hlabel, \dots] \normalsize};
+		\node at (-1.5,\r+0.5) {[\hlabel, \dots]};
+	
+		\pgfmathsetmacro\Shift{0.325}
+		\foreach \c in {0,...,\WidthMinusI}
+		{
+			\node at (\c+0.5,\r+0.5 + \Shift) {\footnotesize T \normalsize};
+			\node at (\c+0.5,\r+0.5 - \Shift) {\footnotesize B \normalsize};
+			\node at (\c+0.5 - \Shift,\r+0.5) {\footnotesize L \normalsize};
+			\node at (\c+0.5 + \Shift,\r+0.5) {\footnotesize R \normalsize};
+		}
+	}
+
+\end{tikzpicture}
+\end{center}
