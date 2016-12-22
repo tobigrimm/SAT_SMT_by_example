@@ -188,3 +188,6 @@ KLEE is very slow and I had success only with small pieces of text, and also rin
 Nevertheless, it's very impressive, taking into account the fact that we're not getting into internals of this specific LZSS decompressor.
 Once more time, we've created \textit{antipode} of decompressor, or \textit{inverse function}.
 
+Also, as it seems, KLEE isn't very good so far with decompression algorithms (but who's good then?).
+I've also tried various JPEG/PNG/GIF decoders (which, of course, has decompressors), starting with simplest possible, and KLEE had stuck.
+

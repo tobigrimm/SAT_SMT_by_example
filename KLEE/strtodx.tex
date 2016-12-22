@@ -1,0 +1,33 @@
+\subsection{strtodx() from RetroBSD}
+
+Just found this function in RetroBSD:
+\url{https://github.com/RetroBSD/retrobsd/blob/master/src/libc/stdlib/strtod.c}.
+It converts a string into floating point number for given radix.
+
+\lstinputlisting[numbers=left]{KLEE/strtodx.c}
+% FIXME add URL to github
+
+Interestinly, KLEE cannot handle floating-point arithmetic, but nevertheless, found something:
+
+\begin{lstlisting}
+...
+
+KLEE: ERROR: /home/klee/klee_test.c:202: memory error: out of bound pointer
+
+...
+
+\$ ktest-tool klee-last/test003483.ktest
+ktest file : 'klee-last/test003483.ktest'
+args       : ['klee_test.bc']
+num objects: 1
+object    0: name: b'buf'
+object    0: size: 10
+object    0: data: b'-.0E-66\x00\x00\x00'
+\end{lstlisting}
+
+As it seems, string ``-.0E-66'' makes out of bounds array access (read) at line 202.
+While further investigation, I've found that powersOf10[] array is too short: 6th element (started at 0th) has been accessed.
+And here we see part of array commented (line 79)!
+Probably someone's mistake?
+
+
