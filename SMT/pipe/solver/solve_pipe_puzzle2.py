@@ -41,7 +41,6 @@ s=Solver()
 HEIGHT=8
 WIDTH=16
 
-# if T/B/R/L is Bool instead of Int, Z3 solver will work faster
 T=[[Bool('cell_%d_%d_top' % (r, c)) for c in range(WIDTH)] for r in range(HEIGHT)]
 B=[[Bool('cell_%d_%d_bottom' % (r, c)) for c in range(WIDTH)] for r in range(HEIGHT)]
 R=[[Bool('cell_%d_%d_right' % (r, c)) for c in range(WIDTH)] for r in range(HEIGHT)]
