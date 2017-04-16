@@ -1,0 +1,47 @@
+python td.py --show-registers --python-expr tests/fahr_to_celsius.s
+
+...
+
+line=[mov	rax, rdi]
+rcx=('EXPR_SYMBOL', 'arg4')
+rsi=('EXPR_SYMBOL', 'arg2')
+rbx=('EXPR_SYMBOL', 'initial_RBX')
+rdx=('EXPR_SYMBOL', 'arg3')
+rdi=('EXPR_SYMBOL', 'arg1')
+rax=('EXPR_SYMBOL', 'arg1')
+
+line=[sub	rax, 32]
+rcx=('EXPR_SYMBOL', 'arg4')
+rsi=('EXPR_SYMBOL', 'arg2')
+rbx=('EXPR_SYMBOL', 'initial_RBX')
+rdx=('EXPR_SYMBOL', 'arg3')
+rdi=('EXPR_SYMBOL', 'arg1')
+rax=('EXPR_OP', '-', ('EXPR_SYMBOL', 'arg1'), ('EXPR_VALUE', 32))
+
+line=[imul	rax, 5]
+rcx=('EXPR_SYMBOL', 'arg4')
+rsi=('EXPR_SYMBOL', 'arg2')
+rbx=('EXPR_SYMBOL', 'initial_RBX')
+rdx=('EXPR_SYMBOL', 'arg3')
+rdi=('EXPR_SYMBOL', 'arg1')
+rax=('EXPR_OP', '*', ('EXPR_OP', '-', ('EXPR_SYMBOL', 'arg1'), ('EXPR_VALUE', 32)), ('EXPR_VALUE', 5))
+
+line=[mov	rbx, 9]
+rcx=('EXPR_SYMBOL', 'arg4')
+rsi=('EXPR_SYMBOL', 'arg2')
+rbx=('EXPR_VALUE', 9)
+rdx=('EXPR_SYMBOL', 'arg3')
+rdi=('EXPR_SYMBOL', 'arg1')
+rax=('EXPR_OP', '*', ('EXPR_OP', '-', ('EXPR_SYMBOL', 'arg1'), ('EXPR_VALUE', 32)), ('EXPR_VALUE', 5))
+
+line=[idiv	rbx]
+rcx=('EXPR_SYMBOL', 'arg4')
+rsi=('EXPR_SYMBOL', 'arg2')
+rbx=('EXPR_VALUE', 9)
+rdx=('EXPR_OP', '%', ('EXPR_OP', '*', ('EXPR_OP', '-', ('EXPR_SYMBOL', 'arg1'), ('EXPR_VALUE', 32)), ('EXPR_VALUE', 5)), ('EXPR_VALUE', 9))
+rdi=('EXPR_SYMBOL', 'arg1')
+rax=('EXPR_OP', '/', ('EXPR_OP', '*', ('EXPR_OP', '-', ('EXPR_SYMBOL', 'arg1'), ('EXPR_VALUE', 32)), ('EXPR_VALUE', 5)), ('EXPR_VALUE', 9))
+
+...
+
+result=('EXPR_OP', '/', ('EXPR_OP', '*', ('EXPR_OP', '-', ('EXPR_SYMBOL', 'arg1'), ('EXPR_VALUE', 32)), ('EXPR_VALUE', 5)), ('EXPR_VALUE', 9))

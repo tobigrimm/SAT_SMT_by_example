@@ -47,8 +47,8 @@
 
 \lstset{
     %backgroundcolor=\color{lstbgcolor},
-    backgroundcolor=\color{light-gray},
-    basicstyle=\ttfamily, 
+    %backgroundcolor=\color{light-gray},
+    basicstyle=\ttfamily\small, 
     breaklines=true,
     frame=single,
     columns=fullflexible,keepspaces,
@@ -58,7 +58,7 @@
 
 \author{\AUTHOR}
 \title{\TITLE}
-\date{December 2015 -- August 2016}
+\date{December 2015 -- April 2017}
 
 \begin{document}
 
@@ -68,10 +68,13 @@
 
 % sections
 \input{intro}
-\input{SAT/main.tex}
 \input{SMT/main.tex}
+\input{pgm_synth/main.tex}
+\input{toy_decompiler/main.tex}
 \input{symbolic/main.tex}
 \input{KLEE/main.tex}
+\input{crypto/main.tex}
+\input{SAT/main.tex}
 
 \section{Acronyms used}
 
@@ -83,6 +86,10 @@
 \acro{SMT}{Satisfiability modulo theories}
 \acro{SAT}{Boolean satisfiability problem}
 \acro{LCG}{Linear congruential generator}
+\acro{PL}{Programming Language}
+\acro{OOP}{Object-oriented programming}
+\acro{SSA}{Static single assignment form}
+
 \end{acronym}
 
 \end{document}

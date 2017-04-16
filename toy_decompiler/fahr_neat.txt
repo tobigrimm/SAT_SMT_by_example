@@ -1,0 +1,47 @@
+python td.py --show-registers tests/fahr_to_celsius.s
+
+...
+
+line=[mov	rax, rdi]
+rcx=arg4
+rsi=arg2
+rbx=initial_RBX
+rdx=arg3
+rdi=arg1
+rax=arg1
+
+line=[sub	rax, 32]
+rcx=arg4
+rsi=arg2
+rbx=initial_RBX
+rdx=arg3
+rdi=arg1
+rax=(arg1 - 32)
+
+line=[imul	rax, 5]
+rcx=arg4
+rsi=arg2
+rbx=initial_RBX
+rdx=arg3
+rdi=arg1
+rax=((arg1 - 32) * 5)
+
+line=[mov	rbx, 9]
+rcx=arg4
+rsi=arg2
+rbx=9
+rdx=arg3
+rdi=arg1
+rax=((arg1 - 32) * 5)
+
+line=[idiv	rbx]
+rcx=arg4
+rsi=arg2
+rbx=9
+rdx=(((arg1 - 32) * 5) % 9)
+rdi=arg1
+rax=(((arg1 - 32) * 5) / 9)
+
+...
+
+result=(((arg1 - 32) * 5) / 9)

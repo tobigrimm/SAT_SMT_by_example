@@ -1,0 +1,55 @@
+#!/bin/bash
+function test
+{
+	TMP=$(./decompiler $1 | grep RAX)
+	if [ "$TMP" != "$2" ]
+	then
+		echo "fail"
+		echo "fname:    $1"
+		echo "output:   $TMP"
+		echo "must be:  $2"
+	fi
+}
+
+test "tests/AND_by_shifts.s" "RAX=(arg1 & 0xfffffff8)"
+test "tests/AND_by_shifts2.s" "RAX=(arg1 & 0xfffffff0)"
+test "tests/AND_by_shifts3.s" "RAX=(arg1 & 0xfffffffe)"
+test "tests/De_Morgan1.s" "RAX=(~ (arg2 & arg1))"
+test "tests/De_Morgan2.s" "RAX=(~ (arg2 | arg1))"
+test "tests/XOR1.s" "RAX=(~ arg1)"
+test "tests/XOR1_v2.s" "RAX=(~ arg1)"
+test "tests/add.s" "RAX=(arg1 + arg2)"
+test "tests/add1.s" "RAX=(arg1 * 2)"
+test "tests/add2.s" "RAX=(arg1 * 8)"
+test "tests/add_by_not_neg.s" "RAX=(arg1 + 2)"
+test "tests/add_by_sub.s" "RAX=(arg1 + arg2)"
+test "tests/align2grain.s" "RAX=((arg1 + (arg2 - 1)) & (~ (arg2 - 1)))"
+test "tests/div_by_mult10_unsigned.s" "RAX=(arg1 / 10)"
+test "tests/div_by_mult1234_unsigned.s" "RAX=(arg1 / 1234)"
+test "tests/fahr_to_celsius.s" "RAX=(((arg1 - 32) * 5) / 9)"
+test "tests/mul.s" "RAX=(arg1 * arg2)"
+test "tests/mul19.s" "RAX=(arg1 * 19)"
+test "tests/mul19_2.s" "RAX=(arg1 * 19)"
+test "tests/mul19_3.s" "RAX=(arg1 * 19)"
+test "tests/mul19_comm_test.s" "RAX=(arg1 * 19)"
+test "tests/mul2.s" "RAX=(arg1 * 123)"
+test "tests/mul21.s" "RAX=(arg1 * 21)"
+test "tests/mul_add.s" "RAX=((arg1 * arg2) + arg3)"
+test "tests/mul_add2.s" "RAX=((arg3 + ((arg1 * 1000) * arg2)) + 1234)"
+test "tests/mul_add3.s" "RAX=((arg1 * 1234) + (arg2 * 5678))"
+test "tests/neg.s" "RAX=((- arg1) * arg2)"
+test "tests/neg2.s" "RAX=(-(arg1 + arg2))"
+test "tests/neg3.s" "RAX=(- arg1)"
+test "tests/neg4.s" "RAX=(- arg1)"
+test "tests/neg4_v2.s" "RAX=(- arg1)"
+test "tests/remainder.s" "RAX=(arg1 % 3)"
+test "tests/shift.s" "RAX=(arg1 << arg2)"
+test "tests/sub_by_not_neg.s" "RAX=(arg1 - 2)"
+test "tests/t10_obf.s" "RAX=arg1"
+test "tests/t11_obf.s" "RAX=arg1"
+test "tests/t5_obf.s" "RAX=arg1"
+test "tests/t6_obf.s" "RAX=arg1"
+test "tests/t7_obf.s" "RAX=(arg1 ^ 1)"
+test "tests/t8_obf.s" "RAX=(~ arg1)"
+test "tests/t9_obf.s" "RAX=arg1"
+

@@ -1,0 +1,1 @@
+	lea	rax, [rdi+rsi]

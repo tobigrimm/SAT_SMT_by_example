@@ -1,0 +1,60 @@
+merge_sort() begin. input:
+input1 (22)
+input2 (7)
+input3 (2)
+input4 (1)
+input5 (8)
+input6 (4)
+	merge_sort() begin. input:
+	input1 (22)
+	input2 (7)
+	input3 (2)
+		merge_sort() begin. input:
+		input1 (22)
+		merge_sort() end. returning single element
+		merge_sort() begin. input:
+		input2 (7)
+		input3 (2)
+			merge_sort() begin. input:
+			input2 (7)
+			merge_sort() end. returning single element
+			merge_sort() begin. input:
+			input3 (2)
+			merge_sort() end. returning single element
+		merge_sort() end. returning:
+		input3 (2)
+		input2 (7)
+	merge_sort() end. returning:
+	input3 (2)
+	input2 (7)
+	input1 (22)
+	merge_sort() begin. input:
+	input4 (1)
+	input5 (8)
+	input6 (4)
+		merge_sort() begin. input:
+		input4 (1)
+		merge_sort() end. returning single element
+		merge_sort() begin. input:
+		input5 (8)
+		input6 (4)
+			merge_sort() begin. input:
+			input5 (8)
+			merge_sort() end. returning single element
+			merge_sort() begin. input:
+			input6 (4)
+			merge_sort() end. returning single element
+		merge_sort() end. returning:
+		input6 (4)
+		input5 (8)
+	merge_sort() end. returning:
+	input4 (1)
+	input6 (4)
+	input5 (8)
+merge_sort() end. returning:
+input4 (1)
+input3 (2)
+input6 (4)
+input2 (7)
+input5 (8)
+input1 (22)

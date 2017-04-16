@@ -1,0 +1,26 @@
+﻿\begin{center}
+\begin{tikzpicture}
+[
+	grow                    = down,
+	sibling distance        = 8em,
+	level distance          = 5em,
+	edge from parent/.style = {draw, -latex},
+	every node/.style       = {font=\footnotesize},
+	sloped
+]
+\node [env] {"EXPR\_OP"\\"/"}
+	child
+	{
+		node [env] {"EXPR\_OP"\\"*"}
+		child { 
+			node [env] {"EXPR\_OP"\\"-"}
+			child { node [env] {"EXPR\_SYMBOL"\\"arg1"} }
+			child { node [env] {"EXPR\_VALUE"\\32} }
+			}
+		child { node [env] {"EXPR\_VALUE"\\5} }
+	}
+	child { node [env] {"EXPR\_VALUE"\\9} }
+	;
+
+\end{tikzpicture}
+\end{center}

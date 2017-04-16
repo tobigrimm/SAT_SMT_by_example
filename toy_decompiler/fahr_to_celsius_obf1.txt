@@ -1,0 +1,67 @@
+working out tests/fahr_to_celsius_obf1.s
+line=[mov	rbx, 12345h]
+rcx=arg4
+rsi=arg2
+rbx=0x12345
+rdx=arg3
+rdi=arg1
+rax=initial_RAX
+
+line=[mov	rax, rdi]
+rcx=arg4
+rsi=arg2
+rbx=0x12345
+rdx=arg3
+rdi=arg1
+rax=arg1
+
+line=[sub	rax, 32]
+rcx=arg4
+rsi=arg2
+rbx=0x12345
+rdx=arg3
+rdi=arg1
+rax=(arg1 - 32)
+
+line=[add	rbx, rax]
+rcx=arg4
+rsi=arg2
+rbx=(0x12345 + (arg1 - 32))
+rdx=arg3
+rdi=arg1
+rax=(arg1 - 32)
+
+line=[imul	rax, 5]
+rcx=arg4
+rsi=arg2
+rbx=(0x12345 + (arg1 - 32))
+rdx=arg3
+rdi=arg1
+rax=((arg1 - 32) * 5)
+
+line=[mov	rbx, 9]
+rcx=arg4
+rsi=arg2
+rbx=9
+rdx=arg3
+rdi=arg1
+rax=((arg1 - 32) * 5)
+
+line=[idiv	rbx]
+rcx=arg4
+rsi=arg2
+rbx=9
+rdx=(((arg1 - 32) * 5) % 9)
+rdi=arg1
+rax=(((arg1 - 32) * 5) / 9)
+
+line=[sub	rdx, rax]
+rcx=arg4
+rsi=arg2
+rbx=9
+rdx=((((arg1 - 32) * 5) % 9) - (((arg1 - 32) * 5) / 9))
+rdi=arg1
+rax=(((arg1 - 32) * 5) / 9)
+
+going to reduce (((arg1 - 32) * 5) / 9)
+result=(((arg1 - 32) * 5) / 9)

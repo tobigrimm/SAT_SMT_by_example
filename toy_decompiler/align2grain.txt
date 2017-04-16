@@ -1,0 +1,45 @@
+...
+
+line=[sub	rsi, 1]
+rcx=arg4
+rsi=(arg2 - 1)
+rbx=initial_RBX
+rdx=arg3
+rdi=arg1
+rax=initial_RAX
+
+line=[add	rdi, rsi]
+rcx=arg4
+rsi=(arg2 - 1)
+rbx=initial_RBX
+rdx=arg3
+rdi=(arg1 + (arg2 - 1))
+rax=initial_RAX
+
+line=[not	rsi]
+rcx=arg4
+rsi=(~(arg2 - 1))
+rbx=initial_RBX
+rdx=arg3
+rdi=(arg1 + (arg2 - 1))
+rax=initial_RAX
+
+line=[and	rdi, rsi]
+rcx=arg4
+rsi=(~(arg2 - 1))
+rbx=initial_RBX
+rdx=arg3
+rdi=((arg1 + (arg2 - 1)) & (~(arg2 - 1)))
+rax=initial_RAX
+
+line=[mov	rax, rdi]
+rcx=arg4
+rsi=(~(arg2 - 1))
+rbx=initial_RBX
+rdx=arg3
+rdi=((arg1 + (arg2 - 1)) & (~(arg2 - 1)))
+rax=((arg1 + (arg2 - 1)) & (~(arg2 - 1)))
+
+...
+
+result=((arg1 + (arg2 - 1)) & (~(arg2 - 1)))
