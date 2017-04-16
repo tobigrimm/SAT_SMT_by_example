@@ -179,7 +179,7 @@ odd number of times (1, 3, 5, etc).
         sys.stdout.write ("\n")
 \end{lstlisting}
 
-( URL: ....symbolic/4\_CRC/2.py )
+( \url{https://github.com/dennis714/SAT_SMT_article/blob/master/symbolic/4_CRC/2.py} )
 
 Now this how each input bit of 1-byte input buffer affects each bit of the final CRC state:
 
@@ -246,7 +246,7 @@ First, let's build expression of $wday$ variable:
 (((input/86400)+4)%7)
 \end{lstlisting}
 
-In order to execute the block, we should solve this equation: $((\frac{input}{86400}+4) mod 7)==5$.
+In order to execute the block, we should solve this equation: $((\frac{input}{86400}+4) \equiv 5 \mod 7$.
 
 So far, this is easy task for Z3:
 
@@ -294,8 +294,8 @@ else:
     print "Got to wait a little"
 \end{lstlisting}
 
-Now we have two blocks: for the first we should solve this equation: $((\frac{input}{86400}+4) mod 7)==5$.
-But for the second we should solve inverted equation: $((\frac{input}{86400}+4) mod 7)!=5$.
+Now we have two blocks: for the first we should solve this equation: $((\frac{input}{86400}+4) \equiv 5 \mod 7$.
+But for the second we should solve inverted equation: $((\frac{input}{86400}+4) \not\equiv 5 \mod 7$.
 By solving these equations, we will find two paths into both blocks.
 
 KLEE (or similar tool) tries to find path to each [basic] block and produces ``ideal'' unit test.
@@ -360,7 +360,7 @@ Maybe someone will want to do this as an exercise.
 For the sake of demonstration, I made things as simple as possible.
 But reality is always harsh and inconvenient, so all this shouldn't be taken as a silver bullet.
 
-The files used in this part: URL ... /symbolic
+The files used in this part: \url{https://github.com/dennis714/SAT_SMT_article/tree/master/symbolic}.
 
 As you noticed in my simple examples, expression is represented as a plain string, for the sake of simplicity.
 Advanced symbolic execution engines uses \ac{AST}, which are much better and efficient.

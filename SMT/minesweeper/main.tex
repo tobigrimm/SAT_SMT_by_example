@@ -37,10 +37,10 @@ Let's first pick top/left cell:
 Then we will try to solve the following system of equations (\textit{RrCc} is cell of row r and column c):
 
 \begin{lstlisting}
-R1C2+R2C1+R2C2=1                               (because we placed bomb at R1C1)
-R2C1+R2C2+R3C1=1                               (because we have "1" at R3C2)
-R1C1+R1C2+R1C3+R2C1+R2C2+R2C3+R3C1+R3C2+R3C3=3 (because we have "3" at R2C2)
-R1C2+R1C3+R2C2+R2C3+R3C2+R3C3=0                (because we have "." at R2C3)
+R1C2+R2C1+R2C2=1                               (because we placed bomb at R1C1)	
+R2C1+R2C2+R3C1=1                               (because we have "1" at R3C2)	
+R1C1+R1C2+R1C3+R2C1+R2C2+R2C3+R3C1+R3C2+R3C3=3 (because we have "3" at R2C2)	
+R1C2+R1C3+R2C2+R2C3+R3C2+R3C3=0                (because we have "." at R2C3)	
 R2C2+R2C3+R3C2+R3C3=0                          (because we have "." at R3C3)
 \end{lstlisting}
 
@@ -164,7 +164,7 @@ Voila!
 \includegraphics[scale=0.75]{SMT/minesweeper/5.png}
 \end{figure}
 
-The source code: URL
+The source code: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/minesweeper/minesweeper_solver.py}.
 
 Some discussion on HN: \url{https://news.ycombinator.com/item?id=13797375}.
 

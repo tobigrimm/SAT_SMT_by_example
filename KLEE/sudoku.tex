@@ -1,6 +1,6 @@
 \subsection{Sudoku}
 
-I've also rewritten Sudoku example (XXX) for KLEE: % FIXME \ref{}
+I've also rewritten Sudoku example (\ref{sudoku_SMT}) for KLEE:
 
 \lstinputlisting[numbers=left]{KLEE/klee_sudoku_or1.c}
 
@@ -27,7 +27,7 @@ user    3m43.319s
 sys     0m0.951s
 \end{lstlisting}
 
-Now this is really slower (on my Intel Core i3-3110M 2.4GHz notebook) in comparison to Z3Py solution (XXX). % FIXME \ref{}
+Now this is really slower (on my Intel Core i3-3110M 2.4GHz notebook) in comparison to Z3Py solution (\ref{sudoku_SMT}).
 
 But the answer is correct:
 
@@ -48,7 +48,7 @@ object    0: data: b'\x01\x04\x05\x03\x02\x07\x06\t\x08\x08\x03\t\x06\x05\x04\x0
 % FIXME backslash
 \TT{\\t} is character with ASCII code of 9 in C/C++, and KLEE attempts to treat byte array as C/C++ string, so it shows some values in such way.
 We can just remember that there is 9 at the each place where we see \TT{\\t}.
-The solution, while not properly formatted, correct indeed (XXX).\\ % FIXME \ref{}
+The solution, while not properly formatted, correct indeed. \\
 \\
 By the way, at lines 42, 43 you may see how we tell to KLEE that all array elements must be within some limits.
 If we comment these lines out, we've got this:

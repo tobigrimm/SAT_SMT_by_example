@@ -46,38 +46,10 @@ There are 384 of all possible instructions in format reg=reg,op,reg for 4 regist
 
 So, here 6528 all possible instructions. This mean, there are about 11854977354713530368 5-instruction algorithms. Wow! That's too much. I don't even know a precise name for such numbers. That's about 11 quintillions (thanks to Wikipedia).
 
-Now let's try to use real heavy machinery:
-
-\begin{framed}
-\begin{quotation}
-Constraint satisfaction problems (CSPs) are mathematical problems defined as a set of objects whose state must satisfy a number of constraints or limitations. CSPs represent the entities in a problem as a homogeneous collection of finite constraints over variables, which is solved by constraint satisfaction methods. CSPs are the subject of intense research in both artificial intelligence and operations research, since the regularity in their formulation provides a common basis to analyze and solve problems of many unrelated families. CSPs often exhibit high complexity, requiring a combination of heuristics and combinatorial search methods to be solved in a reasonable time. The boolean satisfiability problem (SAT), the Satisfiability Modulo Theories (SMT) and answer set programming (ASP) can be roughly thought of as certain forms of the constraint satisfaction problem.
-\end{quotation}
-\end{framed}\footnote{\url{http://en.wikipedia.org/wiki/Constraint_satisfaction_problem}}
-
-... and:
-
-\begin{framed}
-\begin{quotation}
-In computer science and mathematical logic, the Satisfiability Modulo Theories (SMT) problem is a decision problem for logical formulas with respect to combinations of background theories expressed in classical first-order logic with equality. Examples of theories typically used in computer science are the theory of real numbers, the theory of integers, and the theories of various data structures such as lists, arrays, bit vectors and so on. SMT can be thought of as a form of the constraint satisfaction problem and thus a certain formalized approach to constraint programming.
-\end{quotation}
-\end{framed}\footnote{\url{http://en.wikipedia.org/wiki/Satisfiability_Modulo_Theories}}
-
-I'll use Z3 Theorem Prover
-\footnote{\url{http://research.microsoft.com/en-us/um/redmond/projects/z3/}} from Microsoft Research with excellent 
-Python bindings, working like \ac{SMT} solver.
-
-It can be said, \ac{SMT} solver is just solver of very big system of equations. 
-By the way, its sibling \ac{SAT}-solver is intended for solving very big boolean system of equations.
-
-Needless to say, a lot of tasks can be expressed as system of equations. 
-One very simple example is Sudoku: \url{https://sites.google.com/site/modante/sudokusolver}
-
-So let's back to our toy CPU inside of Rockey 4 dongle.
-
 How can we express each instruction as system of equations? While remembering some school math, I wrote this:
 
 % WAT THIS IS?
-Function one\_step()=
+% Function one\_step()=
 
 \begin{lstlisting}
 Each Bx is integer, but may be only 0 or 1.
