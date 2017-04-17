@@ -8,10 +8,10 @@ We will force KLEE to find a path, where all the constraints are satisfied:
 
 % FIXME:
 \begin{lstlisting}
-\$ clang -emit-llvm -c -g klee_eq.c
+% clang -emit-llvm -c -g klee_eq.c
 ...
 
-\$ klee klee_eq.bc
+% klee klee_eq.bc
 KLEE: output directory is "/home/klee/klee-out-93"
 KLEE: WARNING: undefined reference to function: klee_assert
 KLEE: WARNING ONCE: calling external: klee_assert(0)
@@ -27,10 +27,10 @@ Let's find out, where \TT{klee\_assert()} has been triggered:
 
 % FIXME:
 \begin{lstlisting}
-\$ ls klee-last | grep err
+% ls klee-last | grep err
 test000001.external.err
 
-\$ ktest-tool --write-ints klee-last/test000001.ktest
+% ktest-tool --write-ints klee-last/test000001.ktest
 ktest file : 'klee-last/test000001.ktest'
 args       : ['klee_eq.bc']
 num objects: 3

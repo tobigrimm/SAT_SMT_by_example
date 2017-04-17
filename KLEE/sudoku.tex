@@ -8,7 +8,7 @@ Let's run it:
 
 % FIXME:
 \begin{lstlisting}
-\$ clang -emit-llvm -c -g klee_sudoku_or1.c
+% clang -emit-llvm -c -g klee_sudoku_or1.c
 ...
 
 \$ time klee klee_sudoku_or1.bc
@@ -33,10 +33,10 @@ But the answer is correct:
 
 % FIXME:
 \begin{lstlisting}
-\$ ls klee-last | grep err
+% ls klee-last | grep err
 test000161.external.err
 
-\$ ktest-tool --write-ints klee-last/test000161.ktest
+% ktest-tool --write-ints klee-last/test000161.ktest
 ktest file : 'klee-last/test000161.ktest'
 args       : ['klee_sudoku_or1.bc']
 num objects: 1
@@ -46,8 +46,8 @@ object    0: data: b'\x01\x04\x05\x03\x02\x07\x06\t\x08\x08\x03\t\x06\x05\x04\x0
 \end{lstlisting}
 
 % FIXME backslash
-\TT{\\t} is character with ASCII code of 9 in C/C++, and KLEE attempts to treat byte array as C/C++ string, so it shows some values in such way.
-We can just remember that there is 9 at the each place where we see \TT{\\t}.
+\TT{\textbackslash{}t} is character with ASCII code of 9 in C/C++, and KLEE attempts to treat byte array as C/C++ string, so it shows some values in such way.
+We can just remember that there is 9 at the each place where we see \TT{\textbackslash{}t}.
 The solution, while not properly formatted, correct indeed. \\
 \\
 By the way, at lines 42, 43 you may see how we tell to KLEE that all array elements must be within some limits.
@@ -55,7 +55,7 @@ If we comment these lines out, we've got this:
 
 % FIXME:
 \begin{lstlisting}
-\$ time klee klee_sudoku_or1.bc
+% time klee klee_sudoku_or1.bc
 KLEE: output directory is "/home/klee/klee-out-100"
 KLEE: WARNING: undefined reference to function: klee_assert
 KLEE: ERROR: /home/klee/klee_sudoku_or1.c:51: overshift error
@@ -76,7 +76,7 @@ Now let's use \TT{klee\_assume()} again:
 
 % FIXME:
 \begin{lstlisting}
-\$ time klee klee_sudoku_or2.bc
+% time klee klee_sudoku_or2.bc
 KLEE: output directory is "/home/klee/klee-out-99"
 KLEE: WARNING: undefined reference to function: klee_assert
 KLEE: WARNING ONCE: calling external: klee_assert(0)

@@ -77,7 +77,7 @@ Now a working example:
 ( \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/sudoku_plus.py} )
 
 \begin{lstlisting}
-\$ time python sudoku_plus.py
+% time python sudoku_plus.py
 1 4 5 3 2 7 6 9 8
 8 3 9 6 5 4 1 2 7
 6 7 2 9 1 8 5 4 3
@@ -106,7 +106,7 @@ Even more, we can replace summing operation to logical OR:
 Now it works much faster. Z3 handles OR operation over bit vectors better than addition?
 
 \begin{lstlisting}
-\$ time python sudoku_or.py
+% time python sudoku_or.py
 1 4 5 3 2 7 6 9 8
 8 3 9 6 5 4 1 2 7
 6 7 2 9 1 8 5 4 3
@@ -129,10 +129,10 @@ It took \~1.4 seconds on my Intel Core i3-3110M 2.4GHz notebook to solve it.
 \subsubsection{The second idea}
 
 My first approach is far from effective, I did what first came to my mind and worked.
-Another approach is to use \texttt{distinct} command from SMTLIB, which tells Z3 that some variables (of unspecific number) must be distinct (or unique).
+Another approach is to use \TT{distinct} command from SMTLIB, which tells Z3 that some variables (of unspecific number) must be distinct (or unique).
 This command is also available in Z3 Python interface.
 
-I've rewritten my first Sudoku solver, now it operates over \textit{Int} \textit{sort}, it has \texttt{distinct} commands instead of bit operations,
+I've rewritten my first Sudoku solver, now it operates over \textit{Int} \textit{sort}, it has \TT{distinct} commands instead of bit operations,
 and now also other constaint added: each cell value must be in 1..9 range, because, otherwise, Z3 will offer (although correct) solution with too big
 and/or negative numbers.
 
@@ -141,7 +141,7 @@ and/or negative numbers.
 ( \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/sudoku2.py} )
 
 \begin{lstlisting}
-\$ time python sudoku2.py
+% time python sudoku2.py
 1 4 5 3 2 7 6 9 8
 8 3 9 6 5 4 1 2 7
 6 7 2 9 1 8 5 4 3

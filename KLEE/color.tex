@@ -14,9 +14,9 @@ It's indeed so:
 
 % FIXME:
 \begin{lstlisting}
-\$ clang -emit-llvm -c -g color.c
+% clang -emit-llvm -c -g color.c
 
-\$ klee color.bc
+% klee color.bc
 KLEE: output directory is "/home/klee/klee-out-134"
 KLEE: WARNING: undefined reference to function: sprintf
 KLEE: WARNING: undefined reference to function: strcpy
@@ -37,7 +37,7 @@ So there are exactly 5 paths:
 
 % FIXME:
 \begin{lstlisting}
-\$ ls klee-last
+% ls klee-last
 assembly.ll   run.stats            test000003.ktest     test000005.ktest
 info          test000001.ktest     test000003.pc        test000005.pc
 messages.txt  test000002.ktest     test000004.ktest     warnings.txt
@@ -48,7 +48,7 @@ run.istats    test000003.exec.err  test000005.exec.err
 
 % FIXME:
 \begin{lstlisting}
-\$ ktest-tool --write-ints klee-last/test000001.ktest
+% ktest-tool --write-ints klee-last/test000001.ktest
 ktest file : 'klee-last/test000001.ktest'
 args       : ['color.bc']
 num objects: 3
@@ -67,7 +67,7 @@ object    2: data: b'\x00'
 
 % FIXME:
 \begin{lstlisting}
-\$ ktest-tool --write-ints klee-last/test000002.ktest
+% ktest-tool --write-ints klee-last/test000002.ktest
 ktest file : 'klee-last/test000002.ktest'
 args       : ['color.bc']
 num objects: 3
@@ -86,7 +86,7 @@ object    2: data: b'\x00'
 
 % FIXME:
 \begin{lstlisting}
-\$ ktest-tool --write-ints klee-last/test000003.ktest
+% ktest-tool --write-ints klee-last/test000003.ktest
 ktest file : 'klee-last/test000003.ktest'
 args       : ['color.bc']
 num objects: 3
@@ -105,7 +105,7 @@ object    2: data: b'\x00'
 
 % FIXME:
 \begin{lstlisting}
-\$ ktest-tool --write-ints klee-last/test000004.ktest
+% ktest-tool --write-ints klee-last/test000004.ktest
 ktest file : 'klee-last/test000004.ktest'
 args       : ['color.bc']
 num objects: 3
@@ -124,7 +124,7 @@ object    2: data: b'\xff'
 
 % FIXME:
 \begin{lstlisting}
-\$ ktest-tool --write-ints klee-last/test000005.ktest
+% ktest-tool --write-ints klee-last/test000005.ktest
 ktest file : 'klee-last/test000005.ktest'
 args       : ['color.bc']
 num objects: 3

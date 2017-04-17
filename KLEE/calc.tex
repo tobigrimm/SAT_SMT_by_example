@@ -11,7 +11,7 @@ KLEE found buffer overflow with little effort (65 zero digits + one tabulation s
 
 % FIXME:
 \begin{lstlisting}
-\$ ktest-tool --write-ints klee-last/test000468.ktest
+% ktest-tool --write-ints klee-last/test000468.ktest
 ktest file : 'klee-last/test000468.ktest'
 args       : ['calc.bc']
 num objects: 1
@@ -20,13 +20,13 @@ object    0: size: 128
 object    0: data: b'0\t0000000000000000000000000000000000000000000000000000000000000000\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff'
 \end{lstlisting}
 
-Hard to say, how tabulation symbol (\textbackslash{}t) got into input[] array, but KLEE achieved what has been desired: buffer overflown.\\
+Hard to say, how tabulation symbol (\TT{\textbackslash{}t}) got into input[] array, but KLEE achieved what has been desired: buffer overflown.\\
 \\
 KLEE also found two expression strings which leads to division error (``0/0'' and ``0\%0''):
 
 % FIXME:
 \begin{lstlisting}
-\$ ktest-tool --write-ints klee-last/test000326.ktest
+% ktest-tool --write-ints klee-last/test000326.ktest
 ktest file : 'klee-last/test000326.ktest'
 args       : ['calc.bc']
 num objects: 1
@@ -34,7 +34,7 @@ object    0: name: b'input'
 object    0: size: 128
 object    0: data: b'0/0\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff'
 
-\$ ktest-tool --write-ints klee-last/test000557.ktest
+% ktest-tool --write-ints klee-last/test000557.ktest
 ktest file : 'klee-last/test000557.ktest'
 args       : ['calc.bc']
 num objects: 1

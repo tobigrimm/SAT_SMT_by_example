@@ -33,14 +33,14 @@ It's a very good example of constraint satisfaction problem (CSP). % FIXME \ac
 
 We would encode each entity as integer variable, representing number of house.
 
-Then, to define that Englishman lives in red house, we will define this constraint: \texttt{Englishman == Red}, meaning that number of a house where Englishmen resides and where tea is drunk is the same.
+Then, to define that Englishman lives in red house, we will define this constraint: \TT{Englishman == Red}, meaning that number of a house where Englishmen resides and where tea is drunk is the same.
 
 To define that Norwegian lives next to the blue house, we don't realy know, if it is at left side of blue house or at right side, but we know that house numbers are different by just 1.
-So we will define this constraint: \texttt{Norwegian==Blue-1 OR Norwegian==Blue+1}.
+So we will define this constraint: \TT{Norwegian==Blue-1 OR Norwegian==Blue+1}.
 
 We will also need to limit all house numbers, so they will be in range of 1..5.
 
-We will also use \texttt{Distinct} to show that all various entities of the same type are all has different house numbers.
+We will also use \TT{Distinct} to show that all various entities of the same type are all has different house numbers.
 
 \lstinputlisting{SMT/zebra.py}
 

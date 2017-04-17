@@ -13,10 +13,10 @@ Let's run it:
 
 % FIXME:
 \begin{lstlisting}
-\$ clang -emit-llvm -c -g klee_zebra1.c
+% clang -emit-llvm -c -g klee_zebra1.c
 ...
 
-\$ klee klee_zebra1.bc
+% klee klee_zebra1.bc
 KLEE: output directory is "/home/klee/klee-out-97"
 KLEE: WARNING: undefined reference to function: klee_assert
 KLEE: WARNING ONCE: calling external: klee_assert(0)
@@ -33,10 +33,10 @@ Let's find out path, where \TT{klee\_assert()} has been executed:
 
 % FIXME:
 \begin{lstlisting}
-\$ ls klee-last | grep err
+% ls klee-last | grep err
 test000051.external.err
 
-\$ ktest-tool --write-ints klee-last/test000051.ktest | less
+% ktest-tool --write-ints klee-last/test000051.ktest | less
 
 ktest file : 'klee-last/test000051.ktest'
 args       : ['klee_zebra1.bc']
@@ -76,6 +76,6 @@ This is indeed correct solution.
 
 \lstinputlisting{KLEE/klee_zebra2.c}
 
-... and this version works slightly faster (~5 seconds), % FIXME tilde
+\dots and this version works slightly faster ($\approx 5$ seconds),
 maybe because KLEE is aware of this intrinsic and handles it in a special way?
 

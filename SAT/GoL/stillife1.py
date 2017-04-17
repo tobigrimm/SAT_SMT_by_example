@@ -10,45 +10,61 @@ VARS_TOTAL=W*H+1
 VAR_FALSE=str(VARS_TOTAL)
 
 def stillife (center, a):
-    s="(!a||!b||!c||!center||!d)&&(!a||!b||!c||!center||!e)&&(!a||!b||!c||!center||!f)&&(!a||!b||!c||!center||!g)&&" \
-      "(!a||!b||!c||!center||!h)&&(!a||!b||!c||center||d||e||f||g||h)&&(!a||!b||c||center||!d||e||f||g||h)&&" \
-      "(!a||!b||c||center||d||!e||f||g||h)&&(!a||!b||c||center||d||e||!f||g||h)&&(!a||!b||c||center||d||e||f||!g||h)&&" \
+    s="(!a||!b||!c||!center||!d)&&(!a||!b||!c||!center||!e)&&(!a||!b||!c||!center||!f)&&" \
+      "(!a||!b||!c||!center||!g)&&(!a||!b||!c||!center||!h)&&(!a||!b||!c||center||d||e||f||g||h)&&" \
+      "(!a||!b||c||center||!d||e||f||g||h)&&(!a||!b||c||center||d||!e||f||g||h)&&" \
+      "(!a||!b||c||center||d||e||!f||g||h)&&(!a||!b||c||center||d||e||f||!g||h)&&" \
       "(!a||!b||c||center||d||e||f||g||!h)&&(!a||!b||!center||!d||!e)&&(!a||!b||!center||!d||!f)&&" \
-      "(!a||!b||!center||!d||!g)&&(!a||!b||!center||!d||!h)&&(!a||!b||!center||!e||!f)&&(!a||!b||!center||!e||!g)&&" \
-      "(!a||!b||!center||!e||!h)&&(!a||!b||!center||!f||!g)&&(!a||!b||!center||!f||!h)&&(!a||!b||!center||!g||!h)&&" \
-      "(!a||b||!c||center||!d||e||f||g||h)&&(!a||b||!c||center||d||!e||f||g||h)&&(!a||b||!c||center||d||e||!f||g||h)&&" \
-      "(!a||b||!c||center||d||e||f||!g||h)&&(!a||b||!c||center||d||e||f||g||!h)&&(!a||b||c||center||!d||!e||f||g||h)&&" \
-      "(!a||b||c||center||!d||e||!f||g||h)&&(!a||b||c||center||!d||e||f||!g||h)&&(!a||b||c||center||!d||e||f||g||!h)&&" \
-      "(!a||b||c||center||d||!e||!f||g||h)&&(!a||b||c||center||d||!e||f||!g||h)&&(!a||b||c||center||d||!e||f||g||!h)&&" \
-      "(!a||b||c||center||d||e||!f||!g||h)&&(!a||b||c||center||d||e||!f||g||!h)&&(!a||b||c||center||d||e||f||!g||!h)&&" \
-      "(!a||!c||!center||!d||!e)&&(!a||!c||!center||!d||!f)&&(!a||!c||!center||!d||!g)&&(!a||!c||!center||!d||!h)&&" \
-      "(!a||!c||!center||!e||!f)&&(!a||!c||!center||!e||!g)&&(!a||!c||!center||!e||!h)&&(!a||!c||!center||!f||!g)&&" \
-      "(!a||!c||!center||!f||!h)&&(!a||!c||!center||!g||!h)&&(!a||!center||!d||!e||!f)&&(!a||!center||!d||!e||!g)&&" \
-      "(!a||!center||!d||!e||!h)&&(!a||!center||!d||!f||!g)&&(!a||!center||!d||!f||!h)&&(!a||!center||!d||!g||!h)&&" \
-      "(!a||!center||!e||!f||!g)&&(!a||!center||!e||!f||!h)&&(!a||!center||!e||!g||!h)&&(!a||!center||!f||!g||!h)&&" \
-      "(a||!b||!c||center||!d||e||f||g||h)&&(a||!b||!c||center||d||!e||f||g||h)&&(a||!b||!c||center||d||e||!f||g||h)&&" \
-      "(a||!b||!c||center||d||e||f||!g||h)&&(a||!b||!c||center||d||e||f||g||!h)&&(a||!b||c||center||!d||!e||f||g||h)&&" \
-      "(a||!b||c||center||!d||e||!f||g||h)&&(a||!b||c||center||!d||e||f||!g||h)&&(a||!b||c||center||!d||e||f||g||!h)&&" \
-      "(a||!b||c||center||d||!e||!f||g||h)&&(a||!b||c||center||d||!e||f||!g||h)&&(a||!b||c||center||d||!e||f||g||!h)&&" \
-      "(a||!b||c||center||d||e||!f||!g||h)&&(a||!b||c||center||d||e||!f||g||!h)&&(a||!b||c||center||d||e||f||!g||!h)&&" \
-      "(a||b||!c||center||!d||!e||f||g||h)&&(a||b||!c||center||!d||e||!f||g||h)&&(a||b||!c||center||!d||e||f||!g||h)&&" \
-      "(a||b||!c||center||!d||e||f||g||!h)&&(a||b||!c||center||d||!e||!f||g||h)&&(a||b||!c||center||d||!e||f||!g||h)&&" \
-      "(a||b||!c||center||d||!e||f||g||!h)&&(a||b||!c||center||d||e||!f||!g||h)&&(a||b||!c||center||d||e||!f||g||!h)&&" \
-      "(a||b||!c||center||d||e||f||!g||!h)&&(a||b||c||!center||d||e||f||g)&&(a||b||c||!center||d||e||f||h)&&" \
-      "(a||b||c||!center||d||e||g||h)&&(a||b||c||!center||d||f||g||h)&&(a||b||c||!center||e||f||g||h)&&" \
-      "(a||b||c||center||!d||!e||!f||g||h)&&(a||b||c||center||!d||!e||f||!g||h)&&(a||b||c||center||!d||!e||f||g||!h)&&" \
-      "(a||b||c||center||!d||e||!f||!g||h)&&(a||b||c||center||!d||e||!f||g||!h)&&(a||b||c||center||!d||e||f||!g||!h)&&" \
-      "(a||b||c||center||d||!e||!f||!g||h)&&(a||b||c||center||d||!e||!f||g||!h)&&(a||b||c||center||d||!e||f||!g||!h)&&" \
-      "(a||b||c||center||d||e||!f||!g||!h)&&(a||b||!center||d||e||f||g||h)&&(a||c||!center||d||e||f||g||h)&&" \
-      "(!b||!c||!center||!d||!e)&&(!b||!c||!center||!d||!f)&&(!b||!c||!center||!d||!g)&&(!b||!c||!center||!d||!h)&&" \
-      "(!b||!c||!center||!e||!f)&&(!b||!c||!center||!e||!g)&&(!b||!c||!center||!e||!h)&&(!b||!c||!center||!f||!g)&&" \
-      "(!b||!c||!center||!f||!h)&&(!b||!c||!center||!g||!h)&&(!b||!center||!d||!e||!f)&&(!b||!center||!d||!e||!g)&&" \
-      "(!b||!center||!d||!e||!h)&&(!b||!center||!d||!f||!g)&&(!b||!center||!d||!f||!h)&&(!b||!center||!d||!g||!h)&&" \
-      "(!b||!center||!e||!f||!g)&&(!b||!center||!e||!f||!h)&&(!b||!center||!e||!g||!h)&&(!b||!center||!f||!g||!h)&&" \
-      "(b||c||!center||d||e||f||g||h)&&(!c||!center||!d||!e||!f)&&(!c||!center||!d||!e||!g)&&(!c||!center||!d||!e||!h)&&" \
-      "(!c||!center||!d||!f||!g)&&(!c||!center||!d||!f||!h)&&(!c||!center||!d||!g||!h)&&(!c||!center||!e||!f||!g)&&" \
-      "(!c||!center||!e||!f||!h)&&(!c||!center||!e||!g||!h)&&(!c||!center||!f||!g||!h)&&(!center||!d||!e||!f||!g)&&" \
-      "(!center||!d||!e||!f||!h)&&(!center||!d||!e||!g||!h)&&(!center||!d||!f||!g||!h)&&(!center||!e||!f||!g||!h)"
+      "(!a||!b||!center||!d||!g)&&(!a||!b||!center||!d||!h)&&(!a||!b||!center||!e||!f)&&" \
+      "(!a||!b||!center||!e||!g)&&(!a||!b||!center||!e||!h)&&(!a||!b||!center||!f||!g)&&" \
+      "(!a||!b||!center||!f||!h)&&(!a||!b||!center||!g||!h)&&(!a||b||!c||center||!d||e||f||g||h)&&" \
+      "(!a||b||!c||center||d||!e||f||g||h)&&(!a||b||!c||center||d||e||!f||g||h)&&" \
+      "(!a||b||!c||center||d||e||f||!g||h)&&(!a||b||!c||center||d||e||f||g||!h)&&" \
+      "(!a||b||c||center||!d||!e||f||g||h)&&(!a||b||c||center||!d||e||!f||g||h)&&" \
+      "(!a||b||c||center||!d||e||f||!g||h)&&(!a||b||c||center||!d||e||f||g||!h)&&" \
+      "(!a||b||c||center||d||!e||!f||g||h)&&(!a||b||c||center||d||!e||f||!g||h)&&" \
+      "(!a||b||c||center||d||!e||f||g||!h)&&(!a||b||c||center||d||e||!f||!g||h)&&" \
+      "(!a||b||c||center||d||e||!f||g||!h)&&(!a||b||c||center||d||e||f||!g||!h)&&" \
+      "(!a||!c||!center||!d||!e)&&(!a||!c||!center||!d||!f)&&(!a||!c||!center||!d||!g)&&" \
+      "(!a||!c||!center||!d||!h)&&(!a||!c||!center||!e||!f)&&(!a||!c||!center||!e||!g)&&" \
+      "(!a||!c||!center||!e||!h)&&(!a||!c||!center||!f||!g)&&(!a||!c||!center||!f||!h)&&" \
+      "(!a||!c||!center||!g||!h)&&(!a||!center||!d||!e||!f)&&(!a||!center||!d||!e||!g)&&" \
+      "(!a||!center||!d||!e||!h)&&(!a||!center||!d||!f||!g)&&(!a||!center||!d||!f||!h)&&" \
+      "(!a||!center||!d||!g||!h)&&(!a||!center||!e||!f||!g)&&(!a||!center||!e||!f||!h)&&" \
+      "(!a||!center||!e||!g||!h)&&(!a||!center||!f||!g||!h)&&(a||!b||!c||center||!d||e||f||g||h)&&" \
+      "(a||!b||!c||center||d||!e||f||g||h)&&(a||!b||!c||center||d||e||!f||g||h)&&" \
+      "(a||!b||!c||center||d||e||f||!g||h)&&(a||!b||!c||center||d||e||f||g||!h)&&" \
+      "(a||!b||c||center||!d||!e||f||g||h)&&(a||!b||c||center||!d||e||!f||g||h)&&" \
+      "(a||!b||c||center||!d||e||f||!g||h)&&(a||!b||c||center||!d||e||f||g||!h)&&" \
+      "(a||!b||c||center||d||!e||!f||g||h)&&(a||!b||c||center||d||!e||f||!g||h)&&" \
+      "(a||!b||c||center||d||!e||f||g||!h)&&(a||!b||c||center||d||e||!f||!g||h)&&" \
+      "(a||!b||c||center||d||e||!f||g||!h)&&(a||!b||c||center||d||e||f||!g||!h)&&" \
+      "(a||b||!c||center||!d||!e||f||g||h)&&(a||b||!c||center||!d||e||!f||g||h)&&" \
+      "(a||b||!c||center||!d||e||f||!g||h)&&(a||b||!c||center||!d||e||f||g||!h)&&" \
+      "(a||b||!c||center||d||!e||!f||g||h)&&(a||b||!c||center||d||!e||f||!g||h)&&" \
+      "(a||b||!c||center||d||!e||f||g||!h)&&(a||b||!c||center||d||e||!f||!g||h)&&" \
+      "(a||b||!c||center||d||e||!f||g||!h)&&(a||b||!c||center||d||e||f||!g||!h)&&" \
+      "(a||b||c||!center||d||e||f||g)&&(a||b||c||!center||d||e||f||h)&&" \
+      "(a||b||c||!center||d||e||g||h)&&(a||b||c||!center||d||f||g||h)&&" \
+      "(a||b||c||!center||e||f||g||h)&&(a||b||c||center||!d||!e||!f||g||h)&&" \
+      "(a||b||c||center||!d||!e||f||!g||h)&&(a||b||c||center||!d||!e||f||g||!h)&&" \
+      "(a||b||c||center||!d||e||!f||!g||h)&&(a||b||c||center||!d||e||!f||g||!h)&&" \
+      "(a||b||c||center||!d||e||f||!g||!h)&&(a||b||c||center||d||!e||!f||!g||h)&&" \
+      "(a||b||c||center||d||!e||!f||g||!h)&&(a||b||c||center||d||!e||f||!g||!h)&&" \
+      "(a||b||c||center||d||e||!f||!g||!h)&&(a||b||!center||d||e||f||g||h)&&" \
+      "(a||c||!center||d||e||f||g||h)&&(!b||!c||!center||!d||!e)&&(!b||!c||!center||!d||!f)&&" \
+      "(!b||!c||!center||!d||!g)&&(!b||!c||!center||!d||!h)&&(!b||!c||!center||!e||!f)&&" \
+      "(!b||!c||!center||!e||!g)&&(!b||!c||!center||!e||!h)&&(!b||!c||!center||!f||!g)&&" \
+      "(!b||!c||!center||!f||!h)&&(!b||!c||!center||!g||!h)&&(!b||!center||!d||!e||!f)&&" \
+      "(!b||!center||!d||!e||!g)&&(!b||!center||!d||!e||!h)&&(!b||!center||!d||!f||!g)&&" \
+      "(!b||!center||!d||!f||!h)&&(!b||!center||!d||!g||!h)&&(!b||!center||!e||!f||!g)&&" \
+      "(!b||!center||!e||!f||!h)&&(!b||!center||!e||!g||!h)&&(!b||!center||!f||!g||!h)&&" \
+      "(b||c||!center||d||e||f||g||h)&&(!c||!center||!d||!e||!f)&&(!c||!center||!d||!e||!g)&&" \
+      "(!c||!center||!d||!e||!h)&&(!c||!center||!d||!f||!g)&&(!c||!center||!d||!f||!h)&&" \
+      "(!c||!center||!d||!g||!h)&&(!c||!center||!e||!f||!g)&&(!c||!center||!e||!f||!h)&&" \
+      "(!c||!center||!e||!g||!h)&&(!c||!center||!f||!g||!h)&&(!center||!d||!e||!f||!g)&&" \
+      "(!center||!d||!e||!f||!h)&&(!center||!d||!e||!g||!h)&&(!center||!d||!f||!g||!h)&&" \
+      "(!center||!e||!f||!g||!h)"
 
     return mathematica_to_CNF(s, center, a)
 

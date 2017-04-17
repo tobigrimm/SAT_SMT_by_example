@@ -279,8 +279,7 @@ D = A * C
 A = A | A
 \end{lstlisting}
 
-... and that's really fun, because last instruction do nothing with value in register A, it's like "no operation" 
---- but still, algorithm is correct for values given!
+\dots and that's really fun, because last instruction do nothing with value in register A, it's like "no operation"---but still, algorithm is correct for values given!
 
 Here is another 5-step algorithm: "B=B\^{}D, C=A*22, A=B*19, A=A\&42, D=B\&C" and values:
 
@@ -338,7 +337,7 @@ Of course it's still not possible to reveal some harder algorithm, but this meth
 
 Now, files: Rockey 4 dongle programmer and reader, Rockey 4 manual, Z3Py script for finding algorithms, input/output pairs, and also fixed z3.py file from Z3 (my script may fail to work with unfixed z3.py coming with Z3 4.0 installation, so I got another, you may try to use it too):
 
-\url{http://yurichev.com/non-wiki-files/rockey4_algo_search.zip}
+\url{https://github.com/dennis714/SAT_SMT_article/tree/master/pgm_synth/rockey_files}.
 
 \subsubsection{Future work}
 

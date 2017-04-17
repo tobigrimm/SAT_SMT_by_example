@@ -135,7 +135,7 @@ in the input file.
 The following file I named as \textit{adder.cnf} and now let's try MiniSat:
 
 \begin{lstlisting}
-\$ minisat -verb=0 adder.cnf results.txt
+% minisat -verb=0 adder.cnf results.txt
 SATISFIABLE
 \end{lstlisting}
 
@@ -157,8 +157,8 @@ Nevertheless, CryptoMiniSat in this case was able to show all possible 4 instanc
 So this is not very robust way.
 
 Perhaps, the only known way is to negate solution clause and add it to the input expression.
-We've got \colorbox{light-gray}{\texttt{-1 -2 3 4}}, 
-now we can negate all variables in it (just toggle minuses: \colorbox{light-gray}{\texttt{1 2 -3 -4}} and add it to the end of the input file:
+We've got \TT{-1 -2 3 4}, 
+now we can negate all variables in it (just toggle minuses: \TT{1 2 -3 -4} and add it to the end of the input file:
 
 \begin{lstlisting}
 p cnf 4 5
@@ -251,7 +251,7 @@ As of 2-bit adder, this smallest possible XOR-CNF expression can be used to find
 
 $(aH \oplus bH) \wedge (aL \oplus bL)$
 
-This is 2-bit adder \texttt{.cnf} file for CryptoMiniSat:
+This is 2-bit adder \TT{.cnf} file for CryptoMiniSat:
 
 \begin{lstlisting}
 p cnf 4 2
@@ -261,36 +261,35 @@ x2 4 0
 
 Now I run CryptoMiniSat with various random seeds...
 
-% FIXME:
 \begin{lstlisting}
-\$ cryptominisat4 --verb 0 --random 0 XOR_adder.cnf
+% cryptominisat4 --verb 0 --random 0 XOR_adder.cnf
 s SATISFIABLE
 v 1 2 -3 -4 0
-\$ cryptominisat4 --verb 0 --random 1 XOR_adder.cnf
+% cryptominisat4 --verb 0 --random 1 XOR_adder.cnf
 s SATISFIABLE
 v -1 -2 3 4 0
-\$ cryptominisat4 --verb 0 --random 2 XOR_adder.cnf
+% cryptominisat4 --verb 0 --random 2 XOR_adder.cnf
 s SATISFIABLE
 v 1 -2 -3 4 0
-\$ cryptominisat4 --verb 0 --random 3 XOR_adder.cnf
+% cryptominisat4 --verb 0 --random 3 XOR_adder.cnf
 s SATISFIABLE
 v 1 2 -3 -4 0
-\$ cryptominisat4 --verb 0 --random 4 XOR_adder.cnf
+% cryptominisat4 --verb 0 --random 4 XOR_adder.cnf
 s SATISFIABLE
 v -1 2 3 -4 0
-\$ cryptominisat4 --verb 0 --random 5 XOR_adder.cnf
+% cryptominisat4 --verb 0 --random 5 XOR_adder.cnf
 s SATISFIABLE
 v -1 2 3 -4 0
-\$ cryptominisat4 --verb 0 --random 6 XOR_adder.cnf
+% cryptominisat4 --verb 0 --random 6 XOR_adder.cnf
 s SATISFIABLE
 v -1 -2 3 4 0
-\$ cryptominisat4 --verb 0 --random 7 XOR_adder.cnf
+% cryptominisat4 --verb 0 --random 7 XOR_adder.cnf
 s SATISFIABLE
 v 1 -2 -3 4 0
-\$ cryptominisat4 --verb 0 --random 8 XOR_adder.cnf
+% cryptominisat4 --verb 0 --random 8 XOR_adder.cnf
 s SATISFIABLE
 v 1 2 -3 -4 0
-\$ cryptominisat4 --verb 0 --random 9 XOR_adder.cnf
+% cryptominisat4 --verb 0 --random 9 XOR_adder.cnf
 s SATISFIABLE
 v 1 2 -3 -4 0
 \end{lstlisting}

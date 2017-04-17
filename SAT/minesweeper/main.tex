@@ -120,7 +120,7 @@ SAT
 1 2 -3 -4 -5 -6 -7 -8 0
 \end{lstlisting}
 
-By the way, <i>population count</i> function for 8 neighbours in CNF form is simplest:
+By the way, \textit{population count} function for 8 neighbours in CNF form is simplest:
 
 \begin{lstlisting}
 a&&b&&c&&d&&e&&f&&g&&h
@@ -178,8 +178,12 @@ Then we execute external minisat process.
 The only thing we need from it is exit code.
 If an input CNF is UNSAT, it returns 20:
 
+We use here the information from the previous attempt to solve Minesweeper: \ref{minesweeper_SMT}.
+
 \lstinputlisting{SAT/minesweeper/minesweeper_SAT.py}
 
+( \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SAT/minesweeper/minesweeper_SAT.py} ) \\
+\\
 The output CNF file can be large, up to ~2000 clauses, or more, here is an example: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SAT/minesweeper/sample.cnf}.
 
 Anyway, it works just like my previous Z3Py script:

@@ -575,8 +575,7 @@ Dictionary has keys we supplied plus expressions it found.
 We then can use them to create new expression and return it.
 Numbers are just summed while forming second operand to ``*'' opeartion.
 
-Now a real-world optimization technique --
-optimizing GCC replaced multiplication by 31 by shifting and subtraction operations:
+Now a real-world optimization technique---optimizing GCC replaced multiplication by 31 by shifting and subtraction operations:
 
 \begin{lstlisting}
         mov     rax, rdi
@@ -903,7 +902,7 @@ I also used \textit{aha!}\footnote{\url{http://www.hackersdelight.org/aha/aha.pd
 to find shortest possible alternative for some mathematical operation.
 While sane compiler developers use superoptimizers for this task, I tried it in opposite way, to find oddest
 pieces of code for some simple operations, including \textit{do nothing} operation.
-In past, I used it to find weird alternative to XOR operation\footnote{\url{https://yurichev.com/tmp/SAT_SMT_DRAFT.pdf}}.)
+In past, I used it to find weird alternative to XOR operation (\ref{weird_XOR}).
 
 So here is what \textit{aha!} can find for \textit{do nothing} operation:
 
@@ -1061,7 +1060,7 @@ Now let's add some fake luggage to fahrenheit-to-celsius example:
         sub     rdx, rax
 \end{lstlisting}
 
-It's not a problem for our decompiler, because this noise is left in RDX register, and not used at all:
+It's not a problem for our decompiler, because the noise is left in RDX register, and not used at all:
 
 \lstinputlisting{toy_decompiler/fahr_to_celsius_obf1.txt}
 
@@ -1316,12 +1315,10 @@ As Z3 developers mentioned, such expressions are hard for Z3 so far:
 
 Still, division by multiplication can be tested using previously described brute-force check.
 
-Some of my other Z3 examples and explanations can be found here: \url{https://yurichev.com/tmp/SAT_SMT_DRAFT.pdf}.
-
 \subsection{My other implementations of toy decompiler}
 
 When I made attempt to write it in C++, of course, node in expression was represented using class.
-There is also implementation in pure C\footnote{\url{https://github.com/dennis714/random_notes/tree/master/toy\%20decompiler/C}}, node is represented using structure.
+There is also implementation in pure C\footnote{\url{https://github.com/dennis714/SAT_SMT_article/tree/master/toy_decompiler/files/C}}, node is represented using structure.
 
 Matchers in both C++ and C versions doesn't return any dictionary, but instead, \textit{bind\_value()}
 functions takes pointer to a value which will contain value after successful matching.
@@ -1359,7 +1356,7 @@ I have also a blog post about LLVM obfuscator, in which LLVM matcher is mentione
 Python version of toy decompiler uses strings in place where enumerate data type is used in C version
 (like OP\_AND, OP\_MUL, etc) and
 symbols used in Racket version\footnote{Racket is Scheme (which is, in turn, LISP dialect) dialect.
-\url{https://github.com/dennis714/random_notes/tree/master/toy\%20decompiler/Racket}} (like \textit{'OP\_DIV}, etc).
+\url{https://github.com/dennis714/SAT_SMT_article/tree/master/toy_decompiler/files/Racket}} (like \textit{'OP\_DIV}, etc).
 This may be seen as inefficient, nevertheless, thanks to strings interning, only address of strings are compared in
 Python version, not strings as a whole. So strings in Python can be seen as possible replacement for LISP symbols.
 
@@ -1393,14 +1390,15 @@ switch (ins, op1, op2)
 Now you'll have long expressions for each register, represented as strings.
 For reducing them, you can use plain simple regular expression matcher.
 
-For example, for the rule \textit{(X*n)+(X*m) -> X*(n+m)}, you can match (sub)string using the following
-regular expression: ``((.*)*(.*))+((.*)*(.*))''
+For example, for the rule \TT{(X*n)+(X*m) -> X*(n+m)}, you can match (sub)string using the following
+regular expression: \\
+\TT{((.*)*(.*))+((.*)*(.*))}
 \footnote{This regular expression string hasn't been properly escaped,
 for the reason of easier readability and understanding.}.
 If the string is matched, you're getting 4 groups (or substrings).
 You then just compare 1st and 3rd using string comparison function, then you check if
 the 2nd and 4th are numbers, you convert them to numbers, sum them and you make new string, consisting
-of 1st group and sum, like this: ``"(" + X + "*" + (int(n) + int(m)) + ")"''.
+of 1st group and sum, like this: \TT{(" + X + "*" + (int(n) + int(m)) + ")}.
 
 It was naïve, clumsy, it was source of great embarrassment, but it worked correctly.
 
@@ -1424,7 +1422,7 @@ is present in binary files.
 \footnote{\url{https://yurichev.com/mirrors/vanEmmerik_ssa.pdf}} shows how this can be tackled using \ac{SSA} forms
 (which are also heavily used in compilers).
 
-\item Memory support, incluing local stack. Keep in mind pointer aliasing problem.
+\item Memory support, including local stack. Keep in mind pointer aliasing problem.
 Again, decompilers of JVM and .NET files are simpler here.
 \end{itemize}
 

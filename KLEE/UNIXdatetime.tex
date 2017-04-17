@@ -12,10 +12,10 @@ Let's try it:
 
 % FIXME:
 \begin{lstlisting}
-\$ clang -emit-llvm -c -g klee_time1.c
+% clang -emit-llvm -c -g klee_time1.c
 ...
 
-\$ klee klee_time1.bc
+% klee klee_time1.bc
 KLEE: output directory is "/home/klee/klee-out-107"
 KLEE: WARNING: undefined reference to function: printf
 KLEE: ERROR: /home/klee/klee_time1.c:86: external call with symbolic argument: printf
@@ -33,11 +33,11 @@ Let's see a value of UNIX time which triggers it:
 
 % FIXME:
 \begin{lstlisting}
-\$ ls klee-last | grep err
+% ls klee-last | grep err
 test000001.exec.err
 test000002.assert.err
 
-\$ ktest-tool --write-ints klee-last/test000002.ktest
+% ktest-tool --write-ints klee-last/test000002.ktest
 ktest file : 'klee-last/test000002.ktest'
 args       : ['klee_time1.bc']
 num objects: 1
@@ -50,7 +50,7 @@ Let's decode this value using UNIX date utility:
 
 % FIXME:
 \begin{lstlisting}
-\$ date -u --date='@978278400'
+% date -u --date='@978278400'
 Sun Dec 31 16:00:00 UTC 2000
 \end{lstlisting}
 
@@ -93,7 +93,7 @@ KLEE detects attempt to read beyond array boundaries:
 
 % FIXME:
 \begin{lstlisting}
-\$ klee klee_time2.bc
+% klee klee_time2.bc
 KLEE: output directory is "/home/klee/klee-out-108"
 KLEE: WARNING: undefined reference to function: printf
 KLEE: ERROR: /home/klee/klee_time2.c:69: external call with symbolic argument: printf
@@ -110,11 +110,11 @@ This is the same UNIX time value we've already seen:
 
 % FIXME:
 \begin{lstlisting}
-\$ ls klee-last | grep err
+% ls klee-last | grep err
 test000001.exec.err
 test000002.ptr.err
 
-\$ ktest-tool --write-ints klee-last/test000002.ktest
+% ktest-tool --write-ints klee-last/test000002.ktest
 ktest file : 'klee-last/test000002.ktest'
 args       : ['klee_time2.bc']
 num objects: 1
@@ -133,10 +133,10 @@ like 2022-February-2?
 
 % FIXME:
 \begin{lstlisting}
-\$ clang -emit-llvm -c -g klee_time3.c
+% clang -emit-llvm -c -g klee_time3.c
 ...
 
-\$ klee klee_time3.bc
+% klee klee_time3.bc
 KLEE: output directory is "/home/klee/klee-out-109"
 KLEE: WARNING: undefined reference to function: klee_assert
 KLEE: WARNING ONCE: calling external: klee_assert(0)
@@ -147,10 +147,10 @@ KLEE: done: total instructions = 101087
 KLEE: done: completed paths = 1635
 KLEE: done: generated tests = 1635
 
-\$ ls klee-last | grep err
+% ls klee-last | grep err
 test000587.external.err
 
-\$ ktest-tool --write-ints klee-last/test000587.ktest
+% ktest-tool --write-ints klee-last/test000587.ktest
 ktest file : 'klee-last/test000587.ktest'
 args       : ['klee_time3.bc']
 num objects: 1
@@ -158,7 +158,7 @@ object    0: name: b'time'
 object    0: size: 4
 object    0: data: 1645488640
 
-\$ date -u --date='@1645488640'
+% date -u --date='@1645488640'
 Tue Feb 22 00:10:40 UTC 2022
 \end{lstlisting}
 
@@ -181,7 +181,7 @@ Let's run it and check...
 
 % FIXME:
 \begin{lstlisting}
-\$ ktest-tool --write-ints klee-last/test000597.ktest
+% ktest-tool --write-ints klee-last/test000597.ktest
 ktest file : 'klee-last/test000597.ktest'
 args       : ['klee_time3.bc']
 num objects: 1
@@ -189,7 +189,7 @@ object    0: name: b'time'
 object    0: size: 4
 object    0: data: 1645568542
 
-\$ date -u --date='@1645568542'
+% date -u --date='@1645568542'
 Tue Feb 22 22:22:22 UTC 2022
 \end{lstlisting}
 

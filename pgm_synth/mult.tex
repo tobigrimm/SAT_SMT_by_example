@@ -15,7 +15,7 @@ I will use electronics analogy here, it can make things a little simpler.
 
 First of all, what our program could be? There will be 3 operations allowed: ADD/SUB/SHL.
 Only registers allowed as operands, except for the second operand of SHL (which could be in 1..31 range).
-Each register will be assigned only once (as in SSA (Static single assignment form)).
+Each register will be assigned only once (as in \ac{SSA}).
 
 And there will be some magic block, which takes all previous register states, it also takes operation type,
 operands and produces a value of next register's state.
@@ -241,7 +241,7 @@ Or maybe I wrong?
 
 Of course, for another job you'll need to add support of immediates and other operations.
 But at the same time, it will work slower and slower.
-So I had to keep ISA (instruction set architecture) of this toy CPU as compact as possible.
+So I had to keep \ac{ISA} of this toy CPU as compact as possible.
 
 \subsubsection{The code}
 

@@ -31,7 +31,8 @@
 \definecolor{lstbgcolor}{rgb}{0.94,0.94,0.94}
 \definecolor{light-gray}{gray}{0.87}
 
-\newcommand{\TT}[1]{\texttt{#1}}
+%\newcommand{\TT}[1]{\texttt{#1}}
+\newcommand*{\TT}[1]{\colorbox{light-gray}{\texttt{#1}}}
 
 \newcommand{\TITLE}{Quick introduction into SAT/SMT solvers and symbolic execution}
 \newcommand{\AUTHOR}{Dennis Yurichev \TT{<dennis(a)yurichev.com>}}
@@ -49,6 +50,7 @@
     %backgroundcolor=\color{lstbgcolor},
     %backgroundcolor=\color{light-gray},
     basicstyle=\ttfamily\small, 
+    literate={~} {$\sim$}{1},
     breaklines=true,
     frame=single,
     columns=fullflexible,keepspaces,
@@ -96,6 +98,8 @@
 \acro{CRC}{Cyclic redundancy check}
 \acro{AST}{Abstract syntax tree}
 \acro{AKA}{Also Known As}
+\acro{CTF}{Capture the Flag}
+\acro{ISA}{Instruction Set Architecture}
 \end{acronym}
 
 \end{document}

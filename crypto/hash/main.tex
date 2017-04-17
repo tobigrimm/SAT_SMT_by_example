@@ -83,7 +83,7 @@ This is going to be our first solver.
 
 We see the variable definitions on line 7.
 These are just 64-bit variables.
-\texttt{i1..i6} are intermediate variables, representing the values in the registers between instruction executions.
+\TT{i1..i6} are intermediate variables, representing the values in the registers between instruction executions.
 
 Then we add the so-called constraints on lines 10..15.
 The last constraint at 17 is the most important one: 
@@ -112,7 +112,7 @@ outp=0x961C69FF0AEFD7E4
 ``sat'' mean ``satisfiable'', i.e., the solver was able to find at least one solution.
 The solution is printed in the square brackets.
 The last two lines are the input/output pair in hexadecimal form.
-Yes, indeed, if we run our function with \texttt{0x12EE577B63E80B73} as input, the algorithm will produce the value we were looking for.
+Yes, indeed, if we run our function with \TT{0x12EE577B63E80B73} as input, the algorithm will produce the value we were looking for.
 
 But, as we noticed before, the function we work with is not bijective, so there may be other correct input values.
 The Z3 \ac{SMT} solver is not capable of producing more than one result, but let's hack our example slightly, 
@@ -164,7 +164,7 @@ We got:
 results total= 16
 \end{lstlisting}
 
-So there are 16 correct input values for \texttt{0x92EE577B63E80B73} as a result.
+So there are 16 correct input values for \TT{0x92EE577B63E80B73} as a result.
 
 The second is 1234567890---it is indeed the value which was used by me originally while preparing this example.
 
@@ -191,7 +191,7 @@ sat
 outp=0xC9D3C17A12C00535
 \end{lstlisting}
 
-Let's be more sadistic and add another constraint: last 16 bits must be \texttt{0x1234}:
+Let's be more sadistic and add another constraint: last 16 bits must be \TT{0x1234}:
 
 \lstinputlisting[numbers=left]{crypto/hash/5.py}
 

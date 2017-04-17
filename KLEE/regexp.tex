@@ -22,16 +22,16 @@ The whole string must have size of 5 characters.
 
 % FIXME:
 \begin{lstlisting}
-\$ klee --libc=uclibc slre.bc
+% klee --libc=uclibc slre.bc
 ...
 KLEE: ERROR: /home/klee/slre.c:445: failed external call: klee_assert
 KLEE: NOTE: now ignoring this error at this location
 ...
 
-\$ ls klee-last | grep err
+% ls klee-last | grep err
 test000014.external.err
 
-\$ ktest-tool --write-ints klee-last/test000014.ktest
+% ktest-tool --write-ints klee-last/test000014.ktest
 ktest file : 'klee-last/test000014.ktest'
 args       : ['slre.bc']
 num objects: 1
@@ -60,7 +60,7 @@ int main(void)
 
 % FIXME:
 \begin{lstlisting}
-\$ ktest-tool --write-ints klee-last/test000014.ktest
+% ktest-tool --write-ints klee-last/test000014.ktest
 ktest file : 'klee-last/test000014.ktest'
 args       : ['slre.bc']
 num objects: 1
@@ -89,7 +89,7 @@ KLEE found a way to circumvent our new constraint:
 
 % FIXME:
 \begin{lstlisting}
-\$ ktest-tool --write-ints klee-last/test000014.ktest
+% ktest-tool --write-ints klee-last/test000014.ktest
 ktest file : 'klee-last/test000014.ktest'
 args       : ['slre.bc']
 num objects: 1

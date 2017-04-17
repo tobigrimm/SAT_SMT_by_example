@@ -11,9 +11,9 @@ I intentionaly made things simpler for KLEE by limiting input arrays to two 2 by
 
 % FIXME:
 \begin{lstlisting}[basicstyle=\ttfamily, mathescape]
-$\$$ clang -emit-llvm -c -g strcmp.c
+% clang -emit-llvm -c -g strcmp.c
 
-$\$$ klee strcmp.bc
+% klee strcmp.bc
 KLEE: output directory is "/home/klee/klee-out-131"
 KLEE: ERROR: /home/klee/strcmp.c:35: invalid klee_assume call (provably false)
 KLEE: NOTE: now ignoring this error at this location
@@ -24,7 +24,7 @@ KLEE: done: total instructions = 137
 KLEE: done: completed paths = 5
 KLEE: done: generated tests = 5
 
-$\$$ ls klee-last
+% ls klee-last
 assembly.ll   run.stats            test000002.ktest     test000004.ktest
 info          test000001.ktest     test000002.pc        test000005.ktest
 messages.txt  test000001.pc        test000002.user.err  warnings.txt
@@ -37,7 +37,7 @@ We can ignore them, or take a peek out of curiosity:
 
 % FIXME:
 \begin{lstlisting}
-\$ ktest-tool --write-ints klee-last/test000001.ktest
+% ktest-tool --write-ints klee-last/test000001.ktest
 ktest file : 'klee-last/test000001.ktest'
 args       : ['strcmp.bc']
 num objects: 2
@@ -48,7 +48,7 @@ object    1: name: b'input2'
 object    1: size: 2
 object    1: data: b'\x00\x00'
 
-\$ ktest-tool --write-ints klee-last/test000002.ktest
+% ktest-tool --write-ints klee-last/test000002.ktest
 ktest file : 'klee-last/test000002.ktest'
 args       : ['strcmp.bc']
 num objects: 2
@@ -64,7 +64,7 @@ Three rest files are the input values for each path inside of my implementation 
 
 % FIXME:
 \begin{lstlisting}
-\$ ktest-tool --write-ints klee-last/test000003.ktest
+% ktest-tool --write-ints klee-last/test000003.ktest
 ktest file : 'klee-last/test000003.ktest'
 args       : ['strcmp.bc']
 num objects: 2
@@ -75,7 +75,7 @@ object    1: name: b'input2'
 object    1: size: 2
 object    1: data: b'c\x00'
 
-\$ ktest-tool --write-ints klee-last/test000004.ktest
+% ktest-tool --write-ints klee-last/test000004.ktest
 ktest file : 'klee-last/test000004.ktest'
 args       : ['strcmp.bc']
 num objects: 2
@@ -86,7 +86,7 @@ object    1: name: b'input2'
 object    1: size: 2
 object    1: data: b'a\x00'
 
-\$ ktest-tool --write-ints klee-last/test000005.ktest
+% ktest-tool --write-ints klee-last/test000005.ktest
 ktest file : 'klee-last/test000005.ktest'
 args       : ['strcmp.bc']
 num objects: 2

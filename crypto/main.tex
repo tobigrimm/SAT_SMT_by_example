@@ -16,8 +16,8 @@ Now results for just one round, for each of 4 outputs:
 
 Somehow, size of expression for each subsequent output is bigger. I hope I haven't been mistaken?
 And this is just for 1 round.
-For 2 rounds, size of all 4 expression is ~970KB.
-For 3 rounds, this is ~115MB.
+For 2 rounds, size of all 4 expression is $\approx 970KB$.
+For 3 rounds, this is $\approx 115MB$.
 For 4 rounds, I have not enough RAM on my computer.
 Expressions exploding exponentially.
 And there are 19 rounds.
@@ -60,7 +60,7 @@ CryptoMiniSat itself exist to support XOR operation, which is ubiquitous in cryp
 
 \subsection{Amateur cryptography}
 
-This is what you can find in serial numbers, license keys, executable file packers, CTF, malware, etc.
+This is what you can find in serial numbers, license keys, executable file packers, \ac{CTF}, malware, etc.
 Sometimes even ransomware (but rarely nowadays).
 
 Amateur cryptography is often can be broken using SMT solver, or even KLEE.
@@ -72,7 +72,7 @@ This is also sometimes called ``The Fallacy of Complex Manipulation'' (see \href
 Devising your own cryptoalgorithm is very tricky thing to do.
 This can be compared to devising your own pseudorandom number generator.
 Even famous Donald Knuth in 1959 constructed one, and it was visually very complex, but, as it turns out in practice, it has very short cycle of length 3178.
-See also: TAOCP volume II page 4, (1997).
+[See also: The Art of Computer Programming vol.II page 4, (1997).]
 
 The very first problem is that making an algorithm which can generate very long expressions is tricky thing itself.
 Common error is to use operations like XOR and rotations/permutations, which can't help much.
