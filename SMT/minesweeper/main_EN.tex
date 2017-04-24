@@ -3,7 +3,7 @@
 
 For those who are not very good at playing Minesweeper (like me), it's possible to predict bombs' placement without touching debugger.
 
-Here is a clicked somewhere and I see revealed empty cells and cells with known number of "neighbours":
+Here is a clicked somewhere and I see revealed empty cells and cells with known number of ``neighbours'':
 
 \begin{figure}[H]
 \centering
@@ -11,11 +11,12 @@ Here is a clicked somewhere and I see revealed empty cells and cells with known 
 \end{figure}
 
 What we have here, actually? Hidden cells, empty cells (where bombs are not present), and empty cells with numbers, which shows how many bombs are placed nearby.
-Here is what we can do: we will try to place a bomb to all possible hidden cells and ask Z3 SMT solver, if it can disprove the very fact that the bomb can be placed there.
 
 \subsubsection{The method}
 
-Take a look at this fragment. "?" mark is for unknown cell, "." is for empty cell, digit is a number of neighbours.
+Here is what we can do: we will try to place a bomb to all possible hidden cells and ask Z3 SMT solver, if it can disprove the very fact that the bomb can be placed there.
+
+Take a look at this fragment. "?" mark is for hidden cell, "." is for empty cell, number is a number of neighbours.
 
 \begin{center}
 \begin{tabular}{ | c | c | c | c | }
@@ -31,8 +32,8 @@ R3 & ? & 1 & . \\
 \end{tabular}
 \end{center}
 
-So there are 5 unknown cells.
-We will try each unknown cell by placing a bomb there.
+So there are 5 hidden cells.
+We will check each hidden cell by placing a bomb there.
 Let's first pick top/left cell:
 
 \begin{center}
@@ -49,7 +50,7 @@ R3 & ? & 1 & . \\
 \end{tabular}
 \end{center}
 
-Then we will try to solve the following system of equations (\textit{RrCc} is cell of row r and column c):
+Then we will try to solve the following system of equations (\textit{RrCc} is cell of row $r$ and column $c$):
 
 \begin{itemize}
 \item R1C2+R2C1+R2C2=1                               (because we placed bomb at R1C1)	
@@ -61,7 +62,8 @@ Then we will try to solve the following system of equations (\textit{RrCc} is ce
 
 As it turns out, this system of equations is satisfiable, so there could be a bomb at this cell.
 But this information is not interesting to us, since we want to find cells we can freely click on.
-And we will try another one...
+And we will try another one.
+And if the equation will be unsatisfiable, that would imply that a bomb cannot be there and we can click on it.
 
 \subsubsection{The code}
 
@@ -71,7 +73,7 @@ The code is almost self-explanatory.
 We need border for the same reason, why Conway's "Game of Life" implementations also has border (to make calculation
 function simpler).
 Whenever we know that the cell is free of bomb, we put zero there.
-Whenever we know number of neighbours, we add a constraint, again, just like in "Game of Life": number of neighbours must be equal to the number we got from the Minesweeper.
+Whenever we know number of neighbours, we add a constraint, again, just like in "Game of Life": number of neighbours must be equal to the number we have seen in the Minesweeper.
 Then we place bomb somewhere and check.
 
 Let's run:
@@ -165,7 +167,7 @@ known=[
 "???322?10"]
 \end{lstlisting}
 
-... last result:
+\dots last result:
 
 \begin{lstlisting}
 row=9 col=1, unsat!
@@ -183,5 +185,5 @@ The source code: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/S
 
 Some discussion on HN: \url{https://news.ycombinator.com/item?id=13797375}.
 
-See also: cracking it using SAT solver: \ref{minesweeper_SAT}.
+See also: cracking Minesweeper using SAT solver: \ref{minesweeper_SAT}.
 

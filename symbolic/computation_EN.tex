@@ -1,17 +1,16 @@
-% TODO tree example
 \subsection{Symbolic computation}
 
 Let's first start with symbolic computation\footnote{\url{https://en.wikipedia.org/wiki/Symbolic_computation}}.
 
 Some numbers can only be represented in binary system approximately, like $\frac{1}{3}$ and $\pi$.
-If we calculate $\frac{1}{3} \cdot 3$ step-by-step, we may have some undesirable noise.
+If we calculate $\frac{1}{3} \cdot 3$ step-by-step, we may have some undesirable noise. % FIXME term!
 We also know that $sin(\frac{\pi}{2}) = 1$, but calculating this expression in usual way, we can also have some noise in result.
 Arbitrary-precision arithmetic\footnote{\url{https://en.wikipedia.org/wiki/Arbitrary-precision_arithmetic}} is not a solution,
-because these numbers cannot be stored as a finite binary number in memory.
+because these numbers cannot be stored in memory as a binary number of finite length.
 
 How we could tackle this problem?
 Humans reduce such expressions using paper and pencil without any calculations.
-We can mimic human behaviour programmatically if we will store expression as tree and numbers like $\pi$ will be converted into number at the very last step(s).
+We can mimic human behaviour programmatically if we will store expression as tree and symbols like $\pi$ will be converted into number at the very last step(s).
 
 This is what Wolfram Mathematica\footnote{Another well-known symbolic computation system are 
 \href{https://en.wikipedia.org/wiki/Maxima_\%28software\%29}{Maxima} and 
@@ -25,7 +24,7 @@ Out[]= 16 + x
 
 Since Mathematica has no clue what $x$ is, it's left \textit{as is}, but $2 \cdot 8$ can be reduced easily, both by Mathematica and by humans,
 so that is what has done.
-In some time in near future, Mathematica's user may assign some number to $x$ and then, Mathematica will reduce the expression even further.
+In some point of time in future, Mathematica's user may assign some number to $x$ and then, Mathematica will reduce the expression even further.
 
 Mathematica does this because it parses the expression and finds some known patterns.
 This is also called \textit{term rewriting}\footnote{\url{https://en.wikipedia.org/wiki/Rewriting}}.
