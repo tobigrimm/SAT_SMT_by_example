@@ -1,10 +1,10 @@
 \subsection{Symbolic execution}
 \label{symbolic_exec}
 
-\subsubsection{XOR swap}
+\subsubsection{Swapping two values using XOR}
 
-There is a well-known counterintuitive algorithm for swapping two variables using XOR operation without any additional
-memory/register:
+There is a well-known (but counterintuitive) algorithm for swapping two values in two variables
+using XOR operation without use of any additional memory/register:
 
 \begin{lstlisting}
 X=X^Y
@@ -17,8 +17,8 @@ It would be better to construct an expression at each step of execution.
 
 \lstinputlisting{symbolic/1_XOR/xor_swap.py}
 
-It would work, because Python dynamicaly typed language, so the function doesn't care what to operate on,
-numerical values, or Expr() class.
+It works, because Python is dynamicaly typed \ac{PL}, so the function doesn't care what to operate on,
+numerical values, or on objects of Expr() class.
 
 Here is result:
 
@@ -73,7 +73,7 @@ I run it:
 Now this is something more readable, however, a bit LISPy at first sight.
 In fact, this is a function which change endianness in 32-bit word.
 
-By the way, my Toy Decompiler can do this job as well, but operates on AST (Abstract Syntax Tree) instead
+By the way, my Toy Decompiler can do this job as well, but operates on \ac{AST} instead
 of plain strings: \ref{toy_decompiler}.
 
 \subsubsection{Fast Fourier transform}
@@ -123,9 +123,9 @@ Also, we can reduce subexpressions like $x \cdot 1$ to just $x$.
 
 I've always been wondering, which input bit affects which bit in the final CRC32 value.
 
-From CRC theory (good and concise introduction:
+From the \ac{CRC} theory (good and concise introduction:
 \url{http://web.archive.org/web/20161220015646/http://www.hackersdelight.org/crc.pdf}
-) we know that CRC is shifting register with taps.
+) we know that \ac{CRC} is shifting register with taps.
 
 We will track each bit rather than byte or word, which is highly inefficient, but serves our purpose better:
 
@@ -157,7 +157,8 @@ state 0=((((((((((((((in_0_0^1)^(in_0_1^1))^(in_0_2^1))^(in_0_4^1))^(in_0_5^1))^
 (in_0_2^1))^(in_0_5^1))))^(in_1_6^(((1^(in_0_4^1))^(in_0_5^1))^(in_1_0^(1^(in_0_2^1))))))))))
 \end{lstlisting}
 
-Expression for the 0th bit of the final state for 8-byte buffer has length of ~350KiB, which is, of course, can be reduced
+Expression for the 0th bit of the final state for 8-byte buffer has length of $\approx 350KiB$,
+which is, of course, can be reduced
 significantly (because this expression is basically XOR tree), but you can feel the weight of it.
 
 Now we can process this expressions somehow to get a smaller picture on what is affecting what.
@@ -165,7 +166,7 @@ Let's say, if we can find ``in\_2\_3'' substring in expression, this means that 
 affects this expression.
 But even more than that: since this is XOR tree (i.e., expression consisting only of XOR operations),
 if some input variable is occurring twice, it's \textit{annihilated}, since $x \oplus x=0$.
-More than that: if some vairables occurred even number of times (2, 4, 8, etc), it's annihilated, but left if it's occurred
+More than that: if a vairable occurred even number of times (2, 4, 8, etc), it's annihilated, but left if it's occurred
 odd number of times (1, 3, 5, etc).
 
 \begin{lstlisting}
@@ -184,7 +185,7 @@ odd number of times (1, 3, 5, etc).
 
 ( \url{https://github.com/dennis714/SAT_SMT_article/blob/master/symbolic/4_CRC/2.py} )
 
-Now this how each input bit of 1-byte input buffer affects each bit of the final CRC state:
+Now this how each bit of 1-byte input buffer affects each bit of the final CRC32 state:
 
 \lstinputlisting{symbolic/4_CRC/1byte_tbl.txt}
 
@@ -221,7 +222,7 @@ As it turns out, Z3 can solve this system correctly using only two equations:
 [x = 11223344]
 \end{lstlisting}
 
-(Though, it takes ~20s on my ancient Intel Atom netbook.)
+(Though, it takes $\approx 20$ seconds on my ancient Intel Atom netbook.)
 
 \subsubsection{Path constraint}
 
@@ -268,8 +269,7 @@ Fri Jan  2 03:00:38 MSK 1970
 
 Though the date back in year 1970, but it's still correct!
 
-This is also called ``path constraint'', i.e., what constraint must be satisified to execute the path into
-specific block?
+This is also called ``path constraint'', i.e., what constraint must be satisified to execute specific block?
 Several tools has ``path'' in their names, like
 ``pathgrind'', 
 \href{http://babelfish.arc.nasa.gov/trac/jpf/wiki/projects/jpf-symbc}{Symbolic PathFinder}, etc.
@@ -278,9 +278,9 @@ Like the shell game, this task is also often encounters in practice.
 You can see that something dangerous can be executed inside some basic block and you're trying to deduce,
 what input values can cause execution of it.
 It may be buffer overflow, etc.
-Input values are sometimes also called "inputs of death".
+Such input values are sometimes also called ``inputs of death''.
 
-Many crackmes are solved in this way, all you need is find a path into block which prints "key is correct"
+Many crackmes are solved in this way, all you need is find a path into block which prints ``key is correct''
 or something like that.
 
 We can extend this tiny example:
@@ -306,18 +306,18 @@ Hence, KLEE can find a path into the block which crashes everything, or reportin
 key/license, etc.
 Surprisingly, KLEE can find backdoors in the very same manner.
 
-KLEE is also called ``KLEE Symbolic Virtual Machine'' -- by that its creators mean that the KLEE is VM which executes a code symbolically rather than numerically.
+KLEE is also called ``KLEE Symbolic Virtual Machine'' -- by that its creators mean that the KLEE is \ac{VM} which executes a code symbolically rather than numerically (like usual \ac{CPU}).
 
 \subsubsection{Division by zero}
 
-If division by zero is unwrapped and exception isn't caught, it can crash process.
+If division by zero is unwrapped by sanitizing check, and exception isn't caught, it can crash process.
 
 Let's calculate simple expression $\frac{x}{2y + 4z - 12}$.
 We can add a warning into \TT{\_\_div\_\_} method:
 
 \lstinputlisting{symbolic/7_div/1.py}
 
-... so it will report about dangerous condition:
+\dots so it will report about dangerous states and conditions:
 
 \begin{lstlisting}
 warning: division by zero if (((y*2)+(z*4))-12)==0
@@ -353,10 +353,12 @@ Result:
 
 \subsubsection{Extending Expr class}
 
-This is somewhat senseless, nevertheless, it's easy task to extend my Expr class to support AST trees instead of
+This is somewhat senseless, nevertheless, it's easy task to extend my Expr class to support \ac{AST} instead of
 plain strings.
 It's also possible to add folding steps (like I demonstrated in Toy Decompiler: \ref{toy_decompiler}).
 Maybe someone will want to do this as an exercise.
+By the way, the toy decompiler can be used as simple symbolic engine as well,
+just feed all the instructions to it and it will track contents of each register.
 
 \subsubsection{Conclusion}
 
@@ -364,9 +366,4 @@ For the sake of demonstration, I made things as simple as possible.
 But reality is always harsh and inconvenient, so all this shouldn't be taken as a silver bullet.
 
 The files used in this part: \url{https://github.com/dennis714/SAT_SMT_article/tree/master/symbolic}.
-
-As you noticed in my simple examples, expression is represented as a plain string, for the sake of simplicity.
-Advanced symbolic execution engines uses \ac{AST}, which are much better and efficient.
-\ac{AST} in its simplest form is used in my toy decompiler (\ref{toy_decompiler}).
-The toy decompiler can be used as simple symbolic engine as well, just feed all the instructions to it and it will track contents of each register.
 
