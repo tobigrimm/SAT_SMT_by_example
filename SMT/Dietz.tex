@@ -32,7 +32,7 @@ But how to prove it?
 We will place Dietz's formula on the left side of equation and $x+y/2$ (or $x+y>>1$) on the right side:
 
 \begin{center}
-$\forall n \in 0..2^{64}-1\; ( (x\&y) + (x \oplus y)>>1 = x+y>>1)$
+$\forall n \in 0..2^{64}-1 . (x\&y) + (x \oplus y)>>1 = x+y>>1$
 \end{center}
 
 One important thing is that we can't operate on 64-bit values on right side, because result will overflow.

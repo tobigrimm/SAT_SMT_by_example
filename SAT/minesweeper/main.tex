@@ -8,9 +8,9 @@ SAT solvers are very different in that sense that they are at low-level, and can
 \subsubsection{Simple population count function}
 
 First of all, somehow we need to count neighbour bombs.
-The counting function is very similar to \textit{population count} function.
+The counting function is similar to \textit{population count} function.
 
-We can try to make CNF expression in Wolfram Mathematica.
+We can try to make \ac{CNF} expression using Wolfram Mathematica.
 This will be a function, returning True if any of 2 bits of 8 inputs bits are True and others are False.
 First, we make truth table of such function:
 
@@ -31,7 +31,7 @@ Out[]= {{0, 0, 0, 0, 0, 0, 0, 0} -> 0, {0, 0, 0, 0, 0, 0, 0, 1} -> 0,
 {1, 1, 1, 1, 1, 1, 1, 0} -> 0, {1, 1, 1, 1, 1, 1, 1, 1} -> 0}
 \end{lstlisting}
 
-Now we can make CNF expression using this truth table:
+Now we can make \ac{CNF} expression using this truth table:
 
 \begin{lstlisting}
 In[]:= BooleanConvert[
@@ -176,7 +176,7 @@ Whenever we try to place bomb, we add its variable as clause without minus sign,
 
 Then we execute external minisat process.
 The only thing we need from it is exit code.
-If an input CNF is UNSAT, it returns 20:
+If an input \ac{CNF} is UNSAT, it returns 20:
 
 We use here the information from the previous attempt to solve Minesweeper: \ref{minesweeper_SMT}.
 
@@ -184,7 +184,7 @@ We use here the information from the previous attempt to solve Minesweeper: \ref
 
 ( \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SAT/minesweeper/minesweeper_SAT.py} ) \\
 \\
-The output CNF file can be large, up to ~2000 clauses, or more, here is an example: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SAT/minesweeper/sample.cnf}.
+The output \ac{CNF} file can be large, up to $\approx 2000$ clauses, or more, here is an example: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SAT/minesweeper/sample.cnf}.
 
 Anyway, it works just like my previous Z3Py script:
 
@@ -197,7 +197,7 @@ row=7, col=9, unsat!
 row=8, col=9, unsat!
 \end{lstlisting}
 
-... but it runs way faster, even considering overhead of executing external program.
+\dots but it runs way faster, even considering overhead of executing external program.
 Perhaps, Z3Py version could be optimized much better?
 
 The files, including Wolfram Mathematica notebook: \url{https://github.com/dennis714/SAT_SMT_article/tree/master/SAT/minesweeper}.

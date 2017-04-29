@@ -89,7 +89,7 @@ int main()
 					1<<cells[r+2][c+2])==0x3FE ); // 11 1111 1110
 		};
 
-	// at this point, all constraints should be satisfied
+	// at this point, all constraints must be satisfied
 	klee_assert(0);
 };
 
