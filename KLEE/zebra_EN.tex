@@ -28,7 +28,7 @@ KLEE: done: completed paths = 55
 KLEE: done: generated tests = 55
 \end{lstlisting}
 
-It works for ~7 seconds on my Intel Core i3-3110M 2.4GHz notebook.
+It works for $\approx 7$ seconds on my Intel Core i3-3110M 2.4GHz notebook.
 Let's find out path, where \TT{klee\_assert()} has been executed:
 
 % FIXME:
@@ -77,5 +77,5 @@ This is indeed correct solution.
 \lstinputlisting{KLEE/klee_zebra2.c}
 
 \dots and this version works slightly faster ($\approx 5$ seconds),
-maybe because KLEE is aware of this intrinsic and handles it in a special way?
+maybe because KLEE is aware of this \textit{intrinsic} and handles it in a special way?
 

@@ -29,11 +29,11 @@ In the interest of clarity, it must be added that each of the five houses is pai
 \end{framed}
 ( \url{https://en.wikipedia.org/wiki/Zebra_Puzzle} ) \\
 \\
-It's a very good example of constraint satisfaction problem (CSP). % FIXME \ac
+It's a very good example of \ac{CSP}.
 
 We would encode each entity as integer variable, representing number of house.
 
-Then, to define that Englishman lives in red house, we will define this constraint: \TT{Englishman == Red}, meaning that number of a house where Englishmen resides and where tea is drunk is the same.
+Then, to define that Englishman lives in red house, we will add this constraint: \TT{Englishman == Red}, meaning that number of a house where Englishmen resides and which is painted in red is the same.
 
 To define that Norwegian lives next to the blue house, we don't realy know, if it is at left side of blue house or at right side, but we know that house numbers are different by just 1.
 So we will define this constraint: \TT{Norwegian==Blue-1 OR Norwegian==Blue+1}.

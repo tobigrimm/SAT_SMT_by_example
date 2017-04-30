@@ -27,7 +27,7 @@ Let's try to find a way to solve it.
 First, we need to generate it.
 Here is my quick idea on it.
 Take 8*16 array of cells.
-Each cell may contain some kind of block.
+Each cell may contain some type of block.
 There are joints between cells:
 
 \input{SMT/pipe_gen.tex}
@@ -60,13 +60,13 @@ There are:
 \end{longtable}
 \end{center}
 
-Dangling joints are possible at the first stage (i.e., cell with only one joint), but they are removed recursively,
+\textit{Dangling} joints can be preset at a first stage (i.e., cell with only one joint), but they are removed recursively,
 these cells are transforming into empty cells.
 Hence, at the end, all cells has at least two joints, and the whole plumbing system has no connections with outer
 world---I hope this would make things clearer.
 
 The C source code of generator is here: \url{https://github.com/dennis714/SAT_SMT_article/tree/master/SMT/pipe/generator}.
-All horizontal joints are in global array \textit{hjoints[]} and vertical in \textit{vjoints[]}.
+All horizontal joints are stored in the global array \textit{hjoints[]} and vertical in \textit{vjoints[]}.
 
 The C program generates ANSI-colored output like it has been showed above (\ref{fig:pipe_shuffled}, \ref{fig:pipe_solved}) plus
 an array of types, with no angle information about each cell:
@@ -109,7 +109,7 @@ L=[[Bool('cell_%d_%d_left' % (r, c)) for c in range(WIDTH)] for r in range(HEIGH
 A=[[Int('cell_%d_%d_angle' % (r, c)) for c in range(WIDTH)] for r in range(HEIGHT)]
 \end{lstlisting}
 
-We know that if each half-joint is present, corresponding half-joint must be also present, and vice versa.
+We know that if each of half-joints is present, corresponding half-joint must be also present, and vice versa.
 We define this using these constraints:
 
 \begin{lstlisting}
@@ -149,7 +149,7 @@ Now we'll enumerate all cells in the initial array (\ref{init_cells}).
 First two cells are empty there. And the third one has type ``2b''.
 This is ``\pmboxdrawuni{250F}'' % ┏
 and it can be oriented in 4 possible ways.
-And if it has angle 0$^{\circ}$, bottom half-joint and right one are present, others are absent.
+And if it has angle 0$^{\circ}$, bottom and right half-joints are present, others are absent.
 If it has angle 90$^{\circ}$, it looks like 
 ``\pmboxdrawuni{2513}'', % ┓
 and bottom and left half-joints are present, others are absent.
@@ -189,7 +189,7 @@ for r in range(HEIGHT):
             s.add(T[r][c]==t, B[r][c]==t, L[r][c]==t, R[r][c]==t) # §\pmboxdrawuni{254B}§
 \end{lstlisting}
 
-Full listing is here: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/pipe/solver/solve_pipe_puzzle1.py}.
+Full source code is here: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/pipe/solver/solve_pipe_puzzle1.py}.
 
 It produces this result (prints angle for each cell and (pseudo)graphical representation):
 
@@ -199,9 +199,9 @@ It produces this result (prints angle for each cell and (pseudo)graphical repres
 \caption{Solver script output}
 \end{figure}
 
-It worked ~4 seconds on my old and slow Intel Atom N455 1.66GHz.
+It worked $\approx 4$ seconds on my old and slow Intel Atom N455 1.66GHz.
 Is it fast? I don't know, but again, what is really cool, we do not know about any mathematical background
-of all this, we just defined cells, (half)-joints and defined relations between them.
+of all this, we just defined cells, (half-)joints and defined relations between them.
 
 Now the next question is, how many solutions are possible?
 Using method described earlier (\ref{SMTEnumerate}), I've altered solver script
@@ -216,11 +216,11 @@ Let's compare these two solutions using gvimdiff:
 \caption{gvimdiff output (pardon my red cursor at left pane at left-bottom corner)}
 \end{figure}
 
-4 cells in the middle orientated differently.
+4 cells in the middle can be orientated differently.
 Perhaps, other puzzles may produce different results.
 
 P.S.
-\textit{Half-joints} are defined using boolean type.
+\textit{Half-joint} is defined as boolean type.
 But in fact, the first version of the solver has been written using integer type for half-joints,
 and 0 was used for False and 1 for True.
 I did it so because I wanted to make source code tidier and narrower without using long words like ``False'' and ``True''.

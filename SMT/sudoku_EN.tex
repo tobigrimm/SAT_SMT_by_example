@@ -1,7 +1,7 @@
 \subsection{Sudoku puzzle}
 \label{sudoku_SMT}
 
-Sudoku puzzle is a 9*9 grid with some cells filled, some are left to be found:
+Sudoku puzzle is a 9*9 grid with some cells filled with values, some are empty:
 
 % copypasted from http://www.texample.net/tikz/examples/sudoku/
 \newcounter{row}
@@ -42,14 +42,14 @@ Sudoku puzzle is a 9*9 grid with some cells filled, some are left to be found:
 \end{tikzpicture}
 \end{center}
 
-Numbers of each row must be unique, i.e., must contain all 9 numbers in range of 1..9 without repetition.
+Numbers of each row must be unique, i.e., it must contain all 9 numbers in range of 1..9 without repetition.
 Same story for each column and also for each 3*3 square.
 
 This puzzle is good candidate to try \ac{SMT} solver on, because it's essentially an unsolved system of equations.
 
 \subsubsection{The first idea}
 
-The only thing we must solve is that how to determine in one expression, if the input 9 variables has all 9 unique numbers?
+The only thing we must decide is that how to determine in one expression, if the input 9 variables has all 9 unique numbers?
 They are not ordered or sorted, after all.
 
 From the school-level mathematics, we can devise this idea:
@@ -61,7 +61,7 @@ From the school-level mathematics, we can devise this idea:
 Take each input variable, calculate $10^i$ and sum them all.
 If all input values are unique, each will be settled at its own place.
 Even more than that: there will be no holes, i.e., no skipped values.
-So, in case of Sudoku, 1111111110 number will be final result, indicating that all 9 input variables are unique, in range of 1..9.
+So, in case of Sudoku, 1111111110 number will be final result, indicating that all 9 input values are unique, in range of 1..9.
 
 Exponentiation is heavy operation, can we use binary operations? Yes, just replace 10 with 2:
 
@@ -124,12 +124,12 @@ sys     0m0.036s
 
 The puzzle I used as example is dubbed as one of the hardest known
 \footnote{\url{http://www.mirror.co.uk/news/weird-news/worlds-hardest-sudoku-can-you-242294}} (well, for humans).
-It took \~1.4 seconds on my Intel Core i3-3110M 2.4GHz notebook to solve it.
+It took $\approx 1.4$ seconds on my Intel Core i3-3110M 2.4GHz notebook to solve it.
 
 \subsubsection{The second idea}
 
 My first approach is far from effective, I did what first came to my mind and worked.
-Another approach is to use \TT{distinct} command from SMTLIB, which tells Z3 that some variables (of unspecific number) must be distinct (or unique).
+Another approach is to use \TT{distinct} command from SMTLIB, which tells Z3 that some variables must be distinct (or unique).
 This command is also available in Z3 Python interface.
 
 I've rewritten my first Sudoku solver, now it operates over \textit{Int} \textit{sort}, it has \TT{distinct} commands instead of bit operations,
@@ -161,12 +161,12 @@ That's much faster.
 
 \subsubsection{Conclusion}
 
-The awesomeness of \ac{SMT}-solvers is that our Sudoku solver has nothing else, we have just defined relationships between variables (cells).
+\ac{SMT}-solvers are so helpful, is that our Sudoku solver has nothing else, we have just defined relationships between variables (cells).
 
 \subsubsection{Homework}
 
 As it seems, true Sudoku puzzle is the one which has only one solution.
-The piece of code I've included in this article shows only the first one.
+The piece of code I've included here shows only the first one.
 Using the method described earlier (\ref{SMTEnumerate}, also called ``model counting''), 
 try to find more solutions, or prove that the solution you have just found is the only one possible.
 

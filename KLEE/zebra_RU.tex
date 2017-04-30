@@ -1,0 +1,79 @@
+\subsection{Головоломка зебры}
+
+Снова вернемся к головоломке зебры (\ref{xebra_SMT}).
+
+Мы просто определяем все переменные и добавляем констрайнты:
+
+\lstinputlisting{KLEE/klee_zebra1.c}
+
+Я заставил KLEE находить отличные друг от друга значения для цветов, национальностей, сигарет, итд, точно также,
+как я раннее сделал это для Судоку: (\ref{sudoku_SMT}).
+
+Запускаем:
+
+\begin{lstlisting}
+% clang -emit-llvm -c -g klee_zebra1.c
+...
+
+% klee klee_zebra1.bc
+KLEE: output directory is "/home/klee/klee-out-97"
+KLEE: WARNING: undefined reference to function: klee_assert
+KLEE: WARNING ONCE: calling external: klee_assert(0)
+KLEE: ERROR: /home/klee/klee_zebra1.c:130: failed external call: klee_assert
+KLEE: NOTE: now ignoring this error at this location
+
+KLEE: done: total instructions = 761
+KLEE: done: completed paths = 55
+KLEE: done: generated tests = 55
+\end{lstlisting}
+
+Работает $\approx 7$ секунд на моем ноутбуке с Intel Core i3-3110M 2.4GHz.
+Найдем путь, где был исполнен \TT{klee\_assert()}:
+
+\begin{lstlisting}
+% ls klee-last | grep err
+test000051.external.err
+
+% ktest-tool --write-ints klee-last/test000051.ktest | less
+
+ktest file : 'klee-last/test000051.ktest'
+args       : ['klee_zebra1.bc']
+num objects: 25
+object    0: name: b'Yellow'
+object    0: size: 4
+object    0: data: 1
+object    1: name: b'Blue'
+object    1: size: 4
+object    1: data: 2
+object    2: name: b'Red'
+object    2: size: 4
+object    2: data: 3
+object    3: name: b'Ivory'
+object    3: size: 4
+object    3: data: 4
+
+...
+
+object   21: name: b'Horse'
+object   21: size: 4
+object   21: data: 2
+object   22: name: b'Snails'
+object   22: size: 4
+object   22: data: 3
+object   23: name: b'Dog'
+object   23: size: 4
+object   23: data: 4
+object   24: name: b'Zebra'
+object   24: size: 4
+object   24: data: 5
+\end{lstlisting}
+
+Это действительно корректное решение.
+
+В этот раз можно также использовать \TT{klee\_assume()}:
+
+\lstinputlisting{KLEE/klee_zebra2.c}
+
+\dots и эта версия работает немного быстрее ($\approx 5$ секунд),
+может быть потому что KLEE знает об этой \textit{intrinsic} и обращается с ним особым образом?
+
