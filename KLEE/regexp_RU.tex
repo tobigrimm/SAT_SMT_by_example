@@ -1,0 +1,116 @@
+\subsection{Регулярные выражения}
+
+Я всегда хотел как-нибудь сгенерировать возможные строки для определенного регулярного выражения.
+Это не очень трудно, если окунуться в теорию стояющую за матчером регулярных выражений, но можно ли заставить
+этот матчер сделать это?
+
+Я нашел самый легковесный RE-движок здесь: \url{https://github.com/cesanta/slre}, и написал вот это:
+
+\begin{lstlisting}
+int main(void)
+{
+	char s[6];
+	klee_make_symbolic(s, sizeof s, "s");
+	s[5]=0;
+	if (slre_match("^\\d[a-c]+(x|y|z)", s, 5, NULL, 0, 0)==5)
+		klee_assert(0);
+}
+\end{lstlisting}
+
+Так что я хотел строку состоящую из цифры, буквы ``a'' или ``b'' или ``c'' (как минимум один символ) и ``x'' или ``y'' или ``z'' (oдин символ).
+Вся строка должна иметь размер в 5 символов.
+
+\begin{lstlisting}
+% klee --libc=uclibc slre.bc
+...
+KLEE: ERROR: /home/klee/slre.c:445: failed external call: klee_assert
+KLEE: NOTE: now ignoring this error at this location
+...
+
+% ls klee-last | grep err
+test000014.external.err
+
+% ktest-tool --write-ints klee-last/test000014.ktest
+ktest file : 'klee-last/test000014.ktest'
+args       : ['slre.bc']
+num objects: 1
+object    0: name: b's'
+object    0: size: 6
+object    0: data: b'5aaax\xff'
+\end{lstlisting}
+
+Это действительно корректная строка, а на месте терминирующего нулевого байта находится ``\textbackslash{}xff'',
+но RE-движок, который мы используем, игнорирует последний нулевой байт, потому ему передается длина буфера в отдельном параметре.
+Следовательно, KLEE не \textit{реконструирует} последний байт.
+
+Можем ли получить еще?
+Добавляем дополнительный констрайнт:
+
+\begin{lstlisting}
+int main(void)
+{
+	char s[6];
+	klee_make_symbolic(s, sizeof s, "s");
+	s[5]=0;
+	if (slre_match("^\\d[a-c]+(x|y|z)", s, 5, NULL, 0, 0)==5 &&
+			strcmp(s, "5aaax")!=0)
+		klee_assert(0);
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+% ktest-tool --write-ints klee-last/test000014.ktest
+ktest file : 'klee-last/test000014.ktest'
+args       : ['slre.bc']
+num objects: 1
+object    0: name: b's'
+object    0: size: 6
+object    0: data: b'7aaax\xff'
+\end{lstlisting}
+
+Скажем так, просто из прихоти, нам не нравится буква ``a'' на второй позиции (если считать начиная с нулевой):
+
+\begin{lstlisting}
+int main(void)
+{
+	char s[6];
+	klee_make_symbolic(s, sizeof s, "s");
+	s[5]=0;
+	if (slre_match("^\\d[a-c]+(x|y|z)", s, 5, NULL, 0, 0)==5 &&
+			strcmp(s, "5aaax")!=0 &&
+			s[2]!='a')
+		klee_assert(0);
+}
+\end{lstlisting}
+
+KLEE нашел способ удовлетворить этот новый констрайнт:
+
+\begin{lstlisting}
+% ktest-tool --write-ints klee-last/test000014.ktest
+ktest file : 'klee-last/test000014.ktest'
+args       : ['slre.bc']
+num objects: 1
+object    0: name: b's'
+object    0: size: 6
+object    0: data: b'7abax\xff'
+\end{lstlisting}
+
+Попробуем также определить констрайнт, который KLEE не сможет удовлетворить:
+
+\begin{lstlisting}
+int main(void)
+{
+	char s[6];
+	klee_make_symbolic(s, sizeof s, "s");
+	s[5]=0;
+	if (slre_match("^\\d[a-c]+(x|y|z)", s, 5, NULL, 0, 0)==5 &&
+			strcmp(s, "5aaax")!=0 &&
+			s[2]!='a' &&
+			s[2]!='b' &&
+			s[2]!='c')
+		klee_assert(0);
+}
+\end{lstlisting}
+
+Действительно не может, и KLEE заканчивает работу без сообщения о входе в \TT{klee\_assert()}.
+

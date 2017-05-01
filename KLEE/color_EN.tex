@@ -1,4 +1,4 @@
-\subsection{Unit test: HTML color}
+\subsection{Unit test: HTML/CSS color}
 
 The most popular ways to represent HTML/CSS color is by English name (e.g., ``red'') and by 6-digit hexadecimal number (e.g., ``\#0077CC'').
 There is third, less popular way: if each byte in hexadecimal number has two doubling digits, it can be \textit{abbreviated}, thus, 
@@ -9,7 +9,7 @@ or as 6-digit hexadecimal form (as a last resort).
 
 \lstinputlisting{KLEE/color.c}
 
-There are 5 paths in function, and let's see, if KLEE could find them all?
+There are 5 possible paths in function, and let's see, if KLEE could find them all?
 It's indeed so:
 
 % FIXME:

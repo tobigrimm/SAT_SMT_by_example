@@ -54,7 +54,7 @@ Let's decode this value using UNIX date utility:
 Sun Dec 31 16:00:00 UTC 2000
 \end{lstlisting}
 
-After may investigation, I've found that \TT{month} variable can hold incorrect value of 12 (while 11 is maximal, for December), 
+After my investigation, I've found that \TT{month} variable can hold incorrect value of 12 (while 11 is maximal, for December), 
 because LEAPYEAR() macro should receive year number as 2000, not as 100.
 So I've introduced a bug during rewritting this function, and KLEE found it!
 
@@ -162,7 +162,7 @@ object    0: data: 1645488640
 Tue Feb 22 00:10:40 UTC 2022
 \end{lstlisting}
 
-Success, but hours/minutes/seconds are seems random -- they are random indeed, because, KLEE satisfied all constraints we've put, nothing else.
+Success, but hours/minutes/seconds are seems random---they are random indeed, because, KLEE satisfied all constraints we've put, nothing else.
 We didn't ask it to set hours/minutes/seconds to zeroes.
 
 Let's add constraints to hours/minutes/seconds as well:
@@ -177,7 +177,7 @@ Let's add constraints to hours/minutes/seconds as well:
 	...
 \end{lstlisting}
 
-Let's run it and check...
+Let's run it and check \dots
 
 % FIXME:
 \begin{lstlisting}

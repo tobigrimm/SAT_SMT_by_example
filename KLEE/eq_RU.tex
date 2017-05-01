@@ -1,12 +1,11 @@
-\subsection{School-level equation}
+\subsection{Школьное уравнение}
 
-Let's revisit school-level system of equations from (\ref{eq2_SMT}).
+Снова вернемся к школьной системы уравнений из (\ref{eq2_SMT}).
 
-We will force KLEE to find a path, where all the constraints are satisfied:
+Заставим KLEE найти путь, где все констрайнты будут удовлетворены:
 
 \lstinputlisting{KLEE/klee_eq1.c}
 
-% FIXME:
 \begin{lstlisting}
 % clang -emit-llvm -c -g klee_eq.c
 ...
@@ -23,9 +22,8 @@ KLEE: done: completed paths = 1
 KLEE: done: generated tests = 1
 \end{lstlisting}
 
-Let's find out, where \TT{klee\_assert()} has been triggered:
+Найдем, где сработал \TT{klee\_assert()}:
 
-% FIXME:
 \begin{lstlisting}
 % ls klee-last | grep err
 test000001.external.err
@@ -45,10 +43,10 @@ object    2: size: 4
 object    2: data: 1
 \end{lstlisting}
 
-This is indeed correct solution to the system of equations.
+Это действительно правильное решение системы уравнений.
 
-KLEE has intrinsic \TT{klee\_assume()} which tells KLEE to cut path if some constraint is not true.
-So we can rewrite our example in such cleaner way:
+В KLEE есть \textit{intrinsic} \TT{klee\_assume()} который указывает KLEE обрезать путь, если некоторый констрайнт не удовлетворен.
+Так что мы можем переписать наш пример в более чистом виде:
 
 \lstinputlisting{KLEE/klee_eq2.c}
 

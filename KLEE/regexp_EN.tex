@@ -85,7 +85,7 @@ int main(void)
 }
 \end{lstlisting}
 
-KLEE found a way to circumvent our new constraint:
+KLEE found a way to satisfy our new constraint:
 
 % FIXME:
 \begin{lstlisting}
@@ -98,7 +98,7 @@ object    0: size: 6
 object    0: data: b'7abax\xff'
 \end{lstlisting}
 
-Let's also define constraint KLEE cannot solve:
+Let's also define constraint KLEE cannot satisfy:
 
 \begin{lstlisting}
 int main(void)
