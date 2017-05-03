@@ -10,7 +10,7 @@ Likewise, commercial decompiler like Hex-Rays can be extremely complex,
 while toy decompiler like this one, can be easy to understand and remake.
 
 The following decompiler written in Python, supports only short basic blocks, with no jumps.
-Memory is not supported as well.
+Memory is also not supported.
 
 \subsection{Data structure}
 
@@ -27,7 +27,7 @@ This expression can be represented as a tree:
 \input{toy_decompiler/fahr1}
 
 How to store it in memory?
-We see here 3 types of nodes: 1) numbers (or values); 2) arithmetical operations; 3) symbols (``INPUT'').
+We see here 3 types of nodes: 1) numbers (or values); 2) arithmetical operations; 3) symbols (like ``INPUT'').
 
 Many developers with \ac{OOP} in their mind will create some kind of class.
 Other developer maybe will use ``variant type''.
@@ -38,7 +38,7 @@ either ``EXPR\_OP'' for operations, ``EXPR\_SYMBOL'' for symbol or ``EXPR\_VALUE
 In case of symbol or value, it follows the string.
 In case of operation, the string followed by another tuples.
 
-Node type and operation type is stored as plain string -- to make debugging output easier to read.
+Node type and operation type is stored as plain string---to make debugging output easier to read.
 
 There are \textit{constructors} in our code, in \ac{OOP} sense, like these:
 
@@ -87,7 +87,7 @@ The conversion expression we just saw will be represented as:
 
 \input{toy_decompiler/fahr2}
 
-... or as Python expression:
+\dots or as Python expression:
 
 \begin{lstlisting}
 ('EXPR_OP', '/', 
@@ -97,8 +97,8 @@ The conversion expression we just saw will be represented as:
 ('EXPR_VALUE', 9))
 \end{lstlisting}
 
-In fact, this is AST (Abstract Syntax Tree) in its simplest form.
-ASTs are heavily used in compilers.
+In fact, this is \ac{AST} in its simplest form.
+\ac{AST}s are used heavily in compilers.
 
 \subsection{Simple examples}
 
@@ -150,12 +150,12 @@ result=('EXPR_OP', '*', ('EXPR_SYMBOL', 'arg1'), ('EXPR_SYMBOL', 'arg2'))
 \end{lstlisting}
 
 IMUL instruction is mapped to ``*'' string, and then new expression is constructed in 
-handle\_binary\_op(), which puts result into RAX.
+\TT{handle\_binary\_op()}, which puts result into RAX.
 
-In this output, the data structures are dumped using Python str() function, which does mostly the same, as print().
+In this output, the data structures are dumped using Python \TT{str()} function, which does mostly the same, as \TT{print()}.
 
-Output is bukly, and we can turn off Python expressions and see how this internal data structure can be rendered neatly
-using our internal expr\_to\_string() function:
+Output is bulky, and we can turn off Python expressions and see how this internal data structure can be rendered neatly
+using our internal \TT{expr\_to\_string()} function:
 
 \begin{lstlisting}
 python td.py --show-registers tests/mul.s
@@ -270,7 +270,7 @@ rax=('EXPR_OP', '+', ('EXPR_OP', '*', ('EXPR_SYMBOL', 'arg1'), ('EXPR_VALUE', 12
 result=('EXPR_OP', '+', ('EXPR_OP', '*', ('EXPR_SYMBOL', 'arg1'), ('EXPR_VALUE', 1234)), ('EXPR_OP', '*', ('EXPR_SYMBOL', 'arg2'), ('EXPR_VALUE', 5678)))
 \end{lstlisting}
 
-... and now neat output:
+\dots and now neat output:
 
 \begin{lstlisting}
 python td.py --show-registers tests/mul_add3.s
@@ -313,7 +313,7 @@ def handle_unary_DIV_IDIV (registers, op1):
     registers["rdx"]=create_binary_expr ("%", current_RAX, op1_expr)
 \end{lstlisting}
 
-Now this is align2grain() function\footnote{Taken from \url{https://docs.oracle.com/javase/specs/jvms/se6/html/Compiling.doc.html}}:
+Now this is \TT{align2grain()} function\footnote{Taken from \url{https://docs.oracle.com/javase/specs/jvms/se6/html/Compiling.doc.html}}:
 
 \begin{lstlisting}
         ; uint64_t align2grain (uint64_t i, uint64_t grain)
@@ -333,16 +333,16 @@ Now this is align2grain() function\footnote{Taken from \url{https://docs.oracle.
 
 \subsection{Dealing with compiler optimizations}
 
-The following piece of code...
+The following piece of code \dots
 
 \begin{lstlisting}
         mov     rax, rdi
         add     rax, rax
 \end{lstlisting}
 
-... will be transormed into \textit{(arg1 + arg1)} expression.
+\dots will be transormed into \textit{(arg1 + arg1)} expression.
 It can be reduced to \textit{(arg1 * 2)}.
-Our toy decompiler can indetify such patterns and rewrite them.
+Our toy decompiler can indetify patterns like such and rewrite them.
 
 \begin{lstlisting}
 # X+X -> X*2
@@ -356,12 +356,11 @@ def reduce_ADD1 (expr):
 This function will just test, if the current node has \textit{EXPR\_OP} type,
 operation is ``+'' and both children are equal to each other.
 By the way, since our data structure is just tuple of tuples, Python can compare them using plain ``=='' operation.
-If the testing is finished successfully, current node is then replaced with new expression:
+If the testing is finished successfully, current node is then replaced with a new expression:
 we take one of children, we construct \textit{EXPR\_VALUE} node with ``2'' number in it,
 and then we construct \textit{EXPR\_OP} node with ``*'' string as operation.
 
-\textit{dbg\_print\_reduced\_expr()} serving solely debugging purposes --
-it just prints the old and the new (reduced) expressions.
+\TT{dbg\_print\_reduced\_expr()} serving solely debugging purposes---it just prints the old and the new (reduced) expressions.
 
 Decompiler is then traverse expression tree recursively in \textit{deep-first search} fashion.
 
@@ -440,7 +439,7 @@ result=(((arg1 * 2) * 2) * 2)
 This is correct, but too verbose.
 
 We would like to rewrite \textit{(X*n)*m} expression to \textit{X*(n*m)}, where $n$ and $m$ are numbers.
-We can do this by adding another function like \textit{reduce\_ADD1()}, but there is much better option:
+We can do this by adding another function like \TT{reduce\_ADD1()}, but there is much better option:
 we can make matcher for tree.
 You can think about it as regular expression matcher, but over trees.
 
@@ -539,13 +538,14 @@ When matcher encounters \textit{EXPR\_WILDCARD}, it just stashes current express
 If matcher encounters \textit{EXPR\_WILDCARD\_VALUE}, matcher do the same, but only in case the current node
 has \textit{EXPR\_VALUE} type.
 
-bind\_expr() and bind\_value() functions create nodes with the types we have seen.
+\TT{bind\_expr()} and \TT{bind\_value()} are functions which create nodes with the types we have seen.
 
-All this means, reduce\_MUL1() function will search for the expression in form \textit{(X*A)*B}, where $A$ and $B$
+All this means, \TT{reduce\_MUL1()} function will search for the expression in form \textit{(X*A)*B}, where $A$ and $B$
 are numbers. In other cases, matcher will return input expression untouched, so these reducing function can be chained.
 
-Now when reduce\_MUL1 encounters (sub)expression we are interesting in, it will return dictionary with keys and expressions.
-Let's add \textit{print m} expression somewhere before return and rerun:
+Now when \TT{reduce\_MUL1()} encounters (sub)expression we are interesting in,
+it will return dictionary with keys and expressions.
+Let's add \TT{print m} call somewhere before return and rerun:
 
 \begin{lstlisting}
 python td.py tests/add2.s
@@ -614,12 +614,12 @@ def reduce_SUB3 (expr):
 
 Matcher will return two X's, and we must be assured that they are equal.
 In fact, in previous versions of this toy decompiler, I did comparison with plain ``=='', and it worked.
-But we can reuse match() function for the same purpose, because it will process commutative operations better.
+But we can reuse \TT{match()} function for the same purpose, because it will process commutative operations better.
 For example, if X1 is ``Q+1'' and X2 is ``1+Q'', expressions are equal, but plain ``=='' will not work.
 On the other side, match() function, when encounter ``+'' operation (or another commutative operation),
 and it fails with comparison, it will also try swapped operand and recheck again.
 
-However, to understand it easier, for a moment, you can imagine there is ``=='' instead of the second match().
+However, to understand it easier, for a moment, you can imagine there is ``=='' instead of the second \TT{match()}.
 
 Anyway, here is what we've got:
 
@@ -646,7 +646,7 @@ This code is quite common in ARM thumb code, because it's a headache to encode 3
 thumb instructions, while single 16-bit instruction can shift by 4 bits left or right.
 
 Also, the expression \textit{(x>>4)<<4} can be jokingly called as ``twitching operator'':
-I've heard the ``-{}-i++'' expression was called like this in russian-speaking social networks, it was some kind of meme
+I've heard the ``-{}-i++'' expression was called like this in Russian-speaking social networks, it was some kind of meme
 (``operator podergivaniya'').
 
 Anyway, these reduction functions will be used:
@@ -811,7 +811,7 @@ Or maybe we could support float numbers in expressions?
 
 Couple of words about better understanding division by multiplication.
 Many people miss ``hidden'' division by $2^{32}$ or $2^{64}$,
-when lower 32-bit part (or 64-bit part) of product is not used.
+when lower 32-bit part (or 64-bit part) of product is not used (or just dropped).
 Also, there is misconception that modulo inverse is used here. This is close, but not the same thing.
 Extended Euclidean algorithm is usually used to find \textit{magic coefficient}, but in fact,
 this algorithm is rather used to solve the equation. You can solve it using any other method.
@@ -901,10 +901,10 @@ I also used \textit{aha!}\footnote{\url{http://www.hackersdelight.org/aha/aha.pd
 \textit{Aha!} is so called superoptimizer, it tries various piece of codes in brute-force manner, in attempt
 to find shortest possible alternative for some mathematical operation.
 While sane compiler developers use superoptimizers for this task, I tried it in opposite way, to find oddest
-pieces of code for some simple operations, including \textit{do nothing} operation.
-In past, I used it to find weird alternative to XOR operation (\ref{weird_XOR}).
+pieces of code for some simple operations, including \ac{NOP} operation.
+In past, I've used it to find weird alternative to XOR operation (\ref{weird_XOR}).
 
-So here is what \textit{aha!} can find for \textit{do nothing} operation:
+So here is what \textit{aha!} can find for \ac{NOP}:
 
 \begin{lstlisting}
 ; do nothing (as found by aha)
@@ -1086,7 +1086,7 @@ We can try to pretend we affect result with noise:
         and     rax, rcx
 \end{lstlisting}
 
-... but in fact, it's all reduced by reduce\_AND2() function we already saw (\ref{AND2}):
+\dots but in fact, it's all \TT{reduced by reduce\_AND2()} function we already saw (\ref{AND2}):
 
 \begin{lstlisting}
 working out tests/fahr_to_celsius_obf2.s
@@ -1180,7 +1180,7 @@ def do_selftest(old, new):
 In fact, this is very close to what LISP \textit{EVAL} function does, or even LISP interpreter.
 However, not all symbols are set.
 If the code is using initial RAX or RBX (to which symbols ``initial\_RAX'' and ``initial\_RBX'' are assigned,
-decompiler will stopped with exception, because no random values assigned to these registers,
+decompiler will stop with exception, because no random values assigned to these registers,
 and these symbols are absent in \textit{symbols} dictionary.
 
 Using this test, I've suddenly found a bug here (despite simplicity of all these reduction rules).
@@ -1193,10 +1193,10 @@ Mentioned above \textit{aha!} superoptimizer tries at least these values as argu
 -64, 64, -5, -31415.
 
 Still, you cannot be sure.
-So here we will try Z3 SMT-solver.
 
 \subsubsection{Using Z3 SMT-solver for testing}
 
+So here we will try Z3 SMT-solver.
 SMT-solver can \textit{prove} that two expressions are equivalent to each other.
 
 For example, with the help of \textit{aha!}, I've found another weird piece of code, which does nothing:
@@ -1239,10 +1239,10 @@ result=arg1
 \end{lstlisting}
 
 But is it correct?
-I've added a function which can output expression(s) to SMT-format, it's as simple as a function which converts
+I've added a function which can output expression(s) to SMTLIB-format, it's as simple as a function which converts
 expression to string.
 
-And this is SMT-file to be Z3 solver:
+And this is SMTLIB-file to be Z3 solver:
 
 \begin{lstlisting}
 (assert
@@ -1283,7 +1283,7 @@ Z3 to find at least one set of input arguments, for which expressions are not eq
     )
 )
 (check-sat)
-\end{lstlisting}
+B\end{lstlisting}
 
 Z3 says ``unsat'', meaning, it couldn't find any such counterexample.
 In other words, for all possible input arguments, results of these two expressions are always equal to each other.
@@ -1306,7 +1306,7 @@ First of all, I extended it so boths results will have size of 128 bit instead o
 (get-model)
 \end{lstlisting}
 
-(\textit{bv17} is just 64-bit number 17, etc.)
+(\textit{bv17} is just 64-bit number 17, etc. ``bv'' stands for ``bit vector'', as opposed to integer value.)
 
 Z3 works too long without any answer, and I had to interrupt it.
 
@@ -1320,9 +1320,9 @@ Still, division by multiplication can be tested using previously described brute
 When I made attempt to write it in C++, of course, node in expression was represented using class.
 There is also implementation in pure C\footnote{\url{https://github.com/dennis714/SAT_SMT_article/tree/master/toy_decompiler/files/C}}, node is represented using structure.
 
-Matchers in both C++ and C versions doesn't return any dictionary, but instead, \textit{bind\_value()}
+Matchers in both C++ and C versions doesn't return any dictionary, but instead, \TT{bind\_value()}
 functions takes pointer to a value which will contain value after successful matching.
-\textit{bind\_expr()} takes pointer to a pointer, which will points to the part of expressions, again, in case of success.
+\TT{bind\_expr()} takes pointer to a pointer, which will points to the part of expressions, again, in case of success.
 I took this idea from LLVM.
 
 Here are two pieces of code from LLVM source code with couple of reducing rules:
@@ -1354,7 +1354,7 @@ What I call \textit{reduction} is called \textit{folding} in LLVM.
 I have also a blog post about LLVM obfuscator, in which LLVM matcher is mentioned: \url{https://yurichev.com/blog/llvm/}.
 
 Python version of toy decompiler uses strings in place where enumerate data type is used in C version
-(like OP\_AND, OP\_MUL, etc) and
+(like \textit{OP\_AND}, \textit{OP\_MUL}, etc) and
 symbols used in Racket version\footnote{Racket is Scheme (which is, in turn, LISP dialect) dialect.
 \url{https://github.com/dennis714/SAT_SMT_article/tree/master/toy_decompiler/files/Racket}} (like \textit{'OP\_DIV}, etc).
 This may be seen as inefficient, nevertheless, thanks to strings interning, only address of strings are compared in
@@ -1410,7 +1410,7 @@ This is tricky, but doable.
 
 Another task may be support of FPU x86 instructions (FPU stack modeling isn't a big deal).
 
-The gap between toy decompiler and decompiler like Hex-Rays is still enormous.
+The gap between toy decompiler and a commercial decompiler like Hex-Rays is still enormous.
 Several tricky problems must be solved, at least these:
 
 \begin{itemize}
@@ -1420,7 +1420,7 @@ is present in binary files.
 
 \item Basic blocks, C/C++ statements. Mike Van Emmerik in his thesis
 \footnote{\url{https://yurichev.com/mirrors/vanEmmerik_ssa.pdf}} shows how this can be tackled using \ac{SSA} forms
-(which are also heavily used in compilers).
+(which are also used heavily in compilers).
 
 \item Memory support, including local stack. Keep in mind pointer aliasing problem.
 Again, decompilers of JVM and .NET files are simpler here.
@@ -1463,5 +1463,5 @@ Python version and tests: \url{https://github.com/dennis714/SAT_SMT_article/tree
 
 There are also C and Racket versions, but outdated.
 
-Keep in mind -- this decompiler is still at toy level, and it was tested only on tiny test files supplied.
+Keep in mind---this decompiler is still at toy level, and it was tested only on tiny test files supplied.
 
