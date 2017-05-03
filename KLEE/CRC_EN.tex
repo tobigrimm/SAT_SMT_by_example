@@ -1,4 +1,4 @@
-\subsection{CRC} % FIXME full name
+\subsection{CRC (Cyclic redundancy check}}
 
 \subsubsection{Buffer alteration case \#1}
 
@@ -12,10 +12,9 @@ Let's see\footnote{There are several slightly different CRC64 implementations, t
 
 \lstinputlisting{KLEE/klee_CRC64.c}
 
-Since our code uses memcmp() standard C/C++ function, we need to add \TT{--libc=uclibc} switch, so KLEE will use its own uClibc % FIXME check spelling
+Since our code uses memcmp() standard C/C++ function, we need to add \TT{--libc=uclibc} switch, so KLEE will use its own uClibc 
 implementation. % \ref{} -> closed programs
 
-% FIXME:
 \begin{lstlisting}
 % clang -emit-llvm -c -g klee_CRC64.c
 
@@ -31,13 +30,13 @@ real    0m52.643s
 user    0m51.232s
 sys     0m0.239s
 ...
-\$ ls klee-last | grep err
+% ls klee-last | grep err
 test000001.user.err
 test000002.user.err
 test000003.user.err
 test000004.external.err
 
-\$ ktest-tool --write-ints klee-last/test000004.ktest
+% ktest-tool --write-ints klee-last/test000004.ktest
 ktest file : 'klee-last/test000004.ktest'
 args       : ['klee_CRC64.bc']
 num objects: 1
@@ -57,16 +56,13 @@ I tried to reduce length of the \textit{middle block} to 13 characters: no luck 
 \subsubsection{Buffer alteration case \#2}
 
 I went sadistic: what if the buffer must contain the CRC64 value which, after calculation of CRC64, will result in the same value?
-Fascinately, % FIXME check spelling
-KLEE can solve this.
+Fascinatedly, KLEE can solve this.
 The buffer will have the following format:
 
-% FIXME:
 \begin{lstlisting}
-Hello, world! <8-bytes (64-bit value)> and goodbye <6 more bytes>
+Hello, world! <8 bytes (64-bit value)> and goodbye <6 more bytes>
 \end{lstlisting}
 
-% FIXME:
 \begin{lstlisting}
 int main()
 {
@@ -97,7 +93,6 @@ int main()
 
 It works:
 
-% FIXME:
 \begin{lstlisting}
 % time klee --libc=uclibc klee_CRC64.bc
 ...
@@ -126,14 +121,13 @@ If to decrease last spare 6-byte buffer to 4 bytes or less, KLEE works so long s
 \subsubsection{Recovering input data for given CRC32 value of it}
 
 I've always wanted to do so, but everyone knows this is impossible for input buffers larger than 4 bytes.
-As my experiments show, it's still possible for tiny input buffers of data, constrained in some way.
+As my experiments show, it's still possible for tiny input buffers of data, which is constrained in some way.
 
 The CRC32 value of 6-byte ``SILVER'' string is known: \TT{0xDFA3DFDD}.
 KLEE can find this 6-byte string, if it knows that each byte of input buffer is in \textit{A..Z} limits:
 
 \lstinputlisting[numbers=left]{KLEE/klee_SILVER.c}
 
-% FIXME:
 \begin{lstlisting}
 % clang -emit-llvm -c -g klee_SILVER.c
 ...
@@ -144,7 +138,7 @@ KLEE can find this 6-byte string, if it knows that each byte of input buffer is 
 % ls klee-last | grep err
 test000013.external.err
 
-\$ ktest-tool --write-ints klee-last/test000013.ktest
+% ktest-tool --write-ints klee-last/test000013.ktest
 ktest file : 'klee-last/test000013.ktest'
 args       : ['klee_SILVER.bc']
 num objects: 1
@@ -160,11 +154,12 @@ It works, because 6 Latin characters in \textit{A..Z} limits contain $\approx 28
 $log_2{26^6} \approx 28.2$, which is even smaller value than 32.
 In other words, the final CRC32 value holds enough bits to recover $\approx 28.2$ bits of input.
 
-The input buffer can be even bigger, if each byte of it will be in even tighter % FIXME spelling
+The input buffer can be even bigger, if each byte of it will be in even tighter
 constraints (decimal digits, binary digits, etc).
 
 \subsubsection{In comparison with other hashing algorithms}
 
-Things are that easy for some other hashing algorithms like \textit{fletcher checksum}, % FIXME URL
-but not for cryptographically secure ones (like MD5, SHA1, etc), they are protected from such simple cryptoanalysis. % FIXME \ref{} -> am.crypto
+Things are that easy for some other hashing algorithms like \textit{Fletcher checksum},
+but not for cryptographically secure ones (like MD5, SHA1, etc), they are protected from such simple cryptoanalysis.
+See also: \ref{crypto}.
 
