@@ -34,13 +34,13 @@ Other developer maybe will use ``variant type''.
 
 I'll use simplest possible way of representing this structure: a Python tuple.
 First element of tuple can be a string:
-either ``EXPR\_OP'' for operations, ``EXPR\_SYMBOL'' for symbol or ``EXPR\_VALUE'' for value.
+either ``EXPR\_OP'' for operation, ``EXPR\_SYMBOL'' for symbol or ``EXPR\_VALUE'' for value.
 In case of symbol or value, it follows the string.
 In case of operation, the string followed by another tuples.
 
-Node type and operation type is stored as plain string---to make debugging output easier to read.
+Node type and operation type are stored as plain strings---to make debugging output easier to read.
 
-There are \textit{constructors} in our code, in \ac{OOP} sense, like these:
+There are \textit{constructors} in our code, in \ac{OOP} sense:
 
 \begin{lstlisting}
 def create_val_expr (val):
@@ -83,7 +83,7 @@ def get_op2 (e):
     return e[3]
 \end{lstlisting}
 
-The conversion expression we just saw will be represented as:
+The temperature conversion expression we just saw will be represented as:
 
 \input{toy_decompiler/fahr2}
 
@@ -109,7 +109,7 @@ Let's start with simplest example:
         imul    rax, rsi
 \end{lstlisting}
 
-Initial register's values are:
+At start, these symbols are assigned to registers:
 RAX=initial\_RAX,
 RBX=initial\_RBX,
 RDI=arg1,
@@ -154,7 +154,7 @@ IMUL instruction is mapped to ``*'' string, and then new expression is construct
 
 In this output, the data structures are dumped using Python \TT{str()} function, which does mostly the same, as \TT{print()}.
 
-Output is bulky, and we can turn off Python expressions and see how this internal data structure can be rendered neatly
+Output is bulky, and we can turn off Python expressions output, and see how this internal data structure can be rendered neatly
 using our internal \TT{expr\_to\_string()} function:
 
 \begin{lstlisting}
@@ -301,7 +301,7 @@ Neat:
 \lstinputlisting{toy_decompiler/fahr_neat.txt}
 
 It is interesting to note that IDIV instruction also calculates reminder of division, and it is placed into RDX register.
-It's not used, but is ready.
+It's not used, but is available for use.
 
 This is how quotient and remainder are stored in registers:
 
@@ -342,7 +342,7 @@ The following piece of code \dots
 
 \dots will be transormed into \textit{(arg1 + arg1)} expression.
 It can be reduced to \textit{(arg1 * 2)}.
-Our toy decompiler can indetify patterns like such and rewrite them.
+Our toy decompiler can identify patterns like such and rewrite them.
 
 \begin{lstlisting}
 # X+X -> X*2
@@ -357,8 +357,8 @@ This function will just test, if the current node has \textit{EXPR\_OP} type,
 operation is ``+'' and both children are equal to each other.
 By the way, since our data structure is just tuple of tuples, Python can compare them using plain ``=='' operation.
 If the testing is finished successfully, current node is then replaced with a new expression:
-we take one of children, we construct \textit{EXPR\_VALUE} node with ``2'' number in it,
-and then we construct \textit{EXPR\_OP} node with ``*'' string as operation.
+we take one of children, we construct a node of \textit{EXPR\_VALUE} type with ``2'' number in it,
+and then we construct a node of \textit{EXPR\_OP} type with ``*''.
 
 \TT{dbg\_print\_reduced\_expr()} serving solely debugging purposes---it just prints the old and the new (reduced) expressions.
 
@@ -532,10 +532,10 @@ def reduce_MUL1 (expr):
 
 We take input expression, and we also construct pattern to be matched.
 Matcher works recursively over both expressions synchronously.
-Pattern is also expression, but can have two additional node types: \textit{EXPR\_WILDCARD} and
-\textit{EXPR\_WILDCARD\_VALUE}. These nodes are supplied by keys (stored as strings).
-When matcher encounters \textit{EXPR\_WILDCARD}, it just stashes current expression and will return it.
-If matcher encounters \textit{EXPR\_WILDCARD\_VALUE}, matcher do the same, but only in case the current node
+Pattern is also expression, but can use two additional node types: \textit{EXPR\_WILDCARD} and
+\textit{EXPR\_WILDCARD\_VALUE}. These nodes are supplied with keys (stored as strings).
+When matcher encounters \textit{EXPR\_WILDCARD} in pattern, it just stashes current expression and will return it.
+If matcher encounters \textit{EXPR\_WILDCARD\_VALUE}, it does the same, but only in case the current node
 has \textit{EXPR\_VALUE} type.
 
 \TT{bind\_expr()} and \TT{bind\_value()} are functions which create nodes with the types we have seen.
@@ -571,7 +571,7 @@ going to reduce (arg1 * 8)
 result=(arg1 * 8)
 \end{lstlisting}
 
-Dictionary has keys we supplied plus expressions it found.
+The dictionary has keys we supplied plus expressions matcher found.
 We then can use them to create new expression and return it.
 Numbers are just summed while forming second operand to ``*'' opeartion.
 
@@ -616,8 +616,8 @@ Matcher will return two X's, and we must be assured that they are equal.
 In fact, in previous versions of this toy decompiler, I did comparison with plain ``=='', and it worked.
 But we can reuse \TT{match()} function for the same purpose, because it will process commutative operations better.
 For example, if X1 is ``Q+1'' and X2 is ``1+Q'', expressions are equal, but plain ``=='' will not work.
-On the other side, match() function, when encounter ``+'' operation (or another commutative operation),
-and it fails with comparison, it will also try swapped operand and recheck again.
+On the other side, \TT{match()} function, when encounter ``+'' operation (or another commutative operation),
+and it fails with comparison, it will also try swapped operand and will try to compare again.
 
 However, to understand it easier, for a moment, you can imagine there is ``=='' instead of the second \TT{match()}.
 
@@ -633,8 +633,8 @@ going to reduce (arg1 * 31)
 result=(arg1 * 31)
 \end{lstlisting}
 
-Another optimization technique is often seen in ARM thumb code: AND-ing a value with number like 0xFFFFFFF0
-is done using shifts:
+Another optimization technique is often seen in ARM thumb code: AND-ing a value with a value like 0xFFFFFFF0,
+is implemented using shifts:
 
 \begin{lstlisting}
         mov rax, rdi
@@ -771,10 +771,10 @@ def reduce_div_by_MUL (expr):
 This works, but we have a problem: this rule takes \textit{(arg1 * 0xcccccccccccccccd) >> 64} expression first and
 finds divisor to be equal to $1.25$.
 This is correct: result is shifted by 3 bits after (or divided by 8), and $1.25 \cdot 8 = 10$.
-But our toy decompiler doesn't support float numbers.
+But our toy decompiler doesn't support real numbers.
 
 We can solve this problem in the following way: if divisor has fractional part, we postpone reducing, with a hope,
-that two subsequent right shift operations will be reduced into single one before:
+that two subsequent right shift operations will be reduced into single one:
 
 \begin{lstlisting}
 # (X*n)>>m, where m>=64 -> X/...
@@ -807,7 +807,7 @@ result=(arg1 / 10)
 I don't know if this is best solution. In early version of this decompiler, it processed input expression in two passes:
 first pass for everything except division by multiplication, and the second pass for the latter.
 I don't know which way is better.
-Or maybe we could support float numbers in expressions?
+Or maybe we could support real numbers in expressions?
 
 Couple of words about better understanding division by multiplication.
 Many people miss ``hidden'' division by $2^{32}$ or $2^{64}$,
@@ -820,7 +820,7 @@ Also, needless to mention, the equation is unsolvable for some divisors, because
 
 \subsection{Obfuscation/deobfuscation}
 
-Despite simplicity of our decompiler, we can see how to deobfuscate (or optimize) several simple tricks.
+Despite simplicity of our decompiler, we can see how to deobfuscate (or optimize) using several simple tricks.
 
 For example, this piece of code does nothing:
 
@@ -874,7 +874,7 @@ going to reduce arg1
 result=arg1
 \end{lstlisting}
 
-This piece of code can be obfuscated (or optimized) as well:
+This piece of code can be deobfuscated (or optimized) as well:
 
 \begin{lstlisting}
 ; toggle last bit
@@ -964,7 +964,7 @@ This is weirder:
         and rax, rdi
 \end{lstlisting}
 
-Rules added (I used ``NEG'' string to represent negation and to be different from subtraction operation,
+Rules added (I used ``NEG'' string to represent sign change and to be different from subtraction operation,
 which is just minus (``-'')):
 
 \label{AND2}
@@ -1041,9 +1041,9 @@ result=(arg1 + 2)
 \end{lstlisting}
 
 This is artifact of two's complement system of signed numbers representation.
-Same can be done for subtraction (just swap negation and NOT operations).
+Same can be done for subtraction (just swap NEG and NOT operations).
 
-Now let's add some fake luggage to fahrenheit-to-celsius example:
+Now let's add some fake luggage to Fahrenheit-to-Celsius example:
 
 \begin{lstlisting}
         ; celsius = 5 * (fahr-32) / 9
@@ -1064,7 +1064,7 @@ It's not a problem for our decompiler, because the noise is left in RDX register
 
 \lstinputlisting{toy_decompiler/fahr_to_celsius_obf1.txt}
 
-We can try to pretend we affect result with noise:
+We can try to pretend we affect the result with the noise:
 
 \begin{lstlisting}
         ; celsius = 5 * (fahr-32) / 9
@@ -1086,7 +1086,7 @@ We can try to pretend we affect result with noise:
         and     rax, rcx
 \end{lstlisting}
 
-\dots but in fact, it's all \TT{reduced by reduce\_AND2()} function we already saw (\ref{AND2}):
+\dots but in fact, it's all reduced by \TT{reduce\_AND2()} function we already saw (\ref{AND2}):
 
 \begin{lstlisting}
 working out tests/fahr_to_celsius_obf2.s
@@ -1179,13 +1179,14 @@ def do_selftest(old, new):
 
 In fact, this is very close to what LISP \textit{EVAL} function does, or even LISP interpreter.
 However, not all symbols are set.
-If the code is using initial RAX or RBX (to which symbols ``initial\_RAX'' and ``initial\_RBX'' are assigned,
+If the expression is using initial values from RAX or RBX
+(to which symbols ``initial\_RAX'' and ``initial\_RBX'' are assigned,
 decompiler will stop with exception, because no random values assigned to these registers,
 and these symbols are absent in \textit{symbols} dictionary.
 
 Using this test, I've suddenly found a bug here (despite simplicity of all these reduction rules).
 Well, no-one protected from eye strain.
-Nevertheless, it has a serious problem: some bugs can be revealed only if one of arguments is $0$, or $1$, or $-1$.
+Nevertheless, the test has a serious problem: some bugs can be revealed only if one of arguments is $0$, or $1$, or $-1$.
 Maybe there are even more special cases exists.
 
 Mentioned above \textit{aha!} superoptimizer tries at least these values as arguments while testing:
@@ -1225,7 +1226,7 @@ For example, with the help of \textit{aha!}, I've found another weird piece of c
         sub rax, rcx
 \end{lstlisting}
 
-Using toy decompiler, I've found that this piece is reduced to single \textit{arg1} expression:
+Using toy decompiler, I've found that this piece is reduced to \textit{arg1} expression:
 
 \begin{lstlisting}
 working out tests/t5_obf.s
@@ -1242,7 +1243,7 @@ But is it correct?
 I've added a function which can output expression(s) to SMTLIB-format, it's as simple as a function which converts
 expression to string.
 
-And this is SMTLIB-file to be Z3 solver:
+And this is SMTLIB-file for Z3:
 
 \begin{lstlisting}
 (assert
@@ -1283,7 +1284,7 @@ Z3 to find at least one set of input arguments, for which expressions are not eq
     )
 )
 (check-sat)
-B\end{lstlisting}
+\end{lstlisting}
 
 Z3 says ``unsat'', meaning, it couldn't find any such counterexample.
 In other words, for all possible input arguments, results of these two expressions are always equal to each other.
@@ -1321,8 +1322,8 @@ When I made attempt to write it in C++, of course, node in expression was repres
 There is also implementation in pure C\footnote{\url{https://github.com/dennis714/SAT_SMT_article/tree/master/toy_decompiler/files/C}}, node is represented using structure.
 
 Matchers in both C++ and C versions doesn't return any dictionary, but instead, \TT{bind\_value()}
-functions takes pointer to a value which will contain value after successful matching.
-\TT{bind\_expr()} takes pointer to a pointer, which will points to the part of expressions, again, in case of success.
+functions takes pointer to a variable which will contain value after successful matching.
+\TT{bind\_expr()} takes pointer to a pointer, which will points to the part of expression, again, in case of success.
 I took this idea from LLVM.
 
 Here are two pieces of code from LLVM source code with couple of reducing rules:
@@ -1350,6 +1351,7 @@ Here are two pieces of code from LLVM source code with couple of reducing rules:
 
 As you can see, my matcher tries to mimic LLVM.
 What I call \textit{reduction} is called \textit{folding} in LLVM.
+Both terms are popular.
 
 I have also a blog post about LLVM obfuscator, in which LLVM matcher is mentioned: \url{https://yurichev.com/blog/llvm/}.
 
@@ -1404,18 +1406,18 @@ It was naïve, clumsy, it was source of great embarrassment, but it worked corre
 
 \subsection{Difference between toy decompiler and commercial-grade one}
 
-Perhaps, someone, who currently reading this article, may rush into extending my source code.
+Perhaps, someone, who currently reading this text, may rush into extending my source code.
 As an exercise, I would say, that the first step could be support of partial registers: i.e., AL, AX, EAX.
 This is tricky, but doable.
 
-Another task may be support of FPU x86 instructions (FPU stack modeling isn't a big deal).
+Another task may be support of \ac{FPU} x86 instructions (\ac{FPU} stack modeling isn't a big deal).
 
 The gap between toy decompiler and a commercial decompiler like Hex-Rays is still enormous.
 Several tricky problems must be solved, at least these:
 
 \begin{itemize}
 \item C data types: arrays, structures, pointers, etc.
-This problem is virtually non-existent for JVM (Java, etc) and .NET decompilers, because type information
+This problem is virtually non-existent for \ac{JVM} (Java, etc) and .NET decompilers, because type information
 is present in binary files.
 
 \item Basic blocks, C/C++ statements. Mike Van Emmerik in his thesis
@@ -1423,7 +1425,7 @@ is present in binary files.
 (which are also used heavily in compilers).
 
 \item Memory support, including local stack. Keep in mind pointer aliasing problem.
-Again, decompilers of JVM and .NET files are simpler here.
+Again, decompilers of \ac{JVM} and .NET files are simpler here.
 \end{itemize}
 
 \subsection{Further reading}
@@ -1454,8 +1456,6 @@ As I've said, LISP knowledge can help to understand this all much easier.
 Here is well-known micro-interpreter of LISP by Peter Norvig, also written in Python:
 \url{https://web.archive.org/web/20161116133448/http://www.norvig.com/lispy.html},
 \url{https://web.archive.org/web/20160305172301/http://norvig.com/lispy2.html}.
-
-Russian translation: \url{https://habrahabr.ru/post/115206/}.
 
 \subsection{The files}
 
