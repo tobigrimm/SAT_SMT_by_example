@@ -9,7 +9,6 @@ We also tell to KLEE that the Base64decode() function must return 16 (i.e., size
 
 \lstinputlisting[numbers=left]{KLEE/klee_base64.c}
 
-% FIXME:
 \begin{lstlisting}
 % clang -emit-llvm -c -g klee_base64.c
 ...
@@ -34,7 +33,6 @@ KLEE: NOTE: now ignoring this error at this location
 
 We're interesting in the second error, where \TT{klee\_assert()} has been triggered:
 
-% FIXME:
 \begin{lstlisting}
 % ls klee-last | grep err
 test000001.user.err
@@ -57,7 +55,6 @@ The final zero byte at 31th byte (starting at zeroth byte) is our deed: so that 
 
 The base64 string is indeed correct:
 
-% FIXME:
 \begin{lstlisting}
 % echo AAECAwQFBgcICQoLDA0OD4 | base64 -d | hexdump -C
 base64: invalid input
@@ -65,10 +62,9 @@ base64: invalid input
 00000010
 \end{lstlisting}
 
-base64 decoder Linux utility I've just run blaming for ``invalid input'' -- it means input string is not properly padded:
+base64 decoder Linux utility I've just run blaming for ``invalid input''---it means the input string is not properly padded.
 Now let's pad it manually, and decoder utility will no complain anymore:
 
-% FIXME:
 \begin{lstlisting}
 % echo AAECAwQFBgcICQoLDA0OD4== | base64 -d | hexdump -C
 00000000  00 01 02 03 04 05 06 07  08 09 0a 0b 0c 0d 0e 0f  |................|

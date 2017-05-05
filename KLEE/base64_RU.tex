@@ -1,0 +1,83 @@
+\subsection{Обратная ф-ция base64-декодера}
+
+Для KLEE нет никаких проблем реконструировать входную base64-строку, имея только код декодировщик base64, без соответствующего
+кодировщика.
+Я скопипастил код из
+\url{http://www.opensource.apple.com/source/QuickTimeStreamingServer/QuickTimeStreamingServer-452/CommonUtilitiesLib/base64.c}.
+
+Мы добавляем констрайнты (строки 84, 85) так что выходной буфер будет иметь байты от 0 до 15.
+Мы также говорим KLEE что ф-ция Base64decode() должна вернуть 16 (т.е., размер выходного буфера в байтах, строка 82).
+
+\lstinputlisting[numbers=left]{KLEE/klee_base64.c}
+
+\begin{lstlisting}
+% clang -emit-llvm -c -g klee_base64.c
+...
+
+% klee klee_base64.bc
+KLEE: output directory is "/home/klee/klee-out-99"
+KLEE: WARNING: undefined reference to function: klee_assert
+KLEE: ERROR: /home/klee/klee_base64.c:99: invalid klee_assume call (provably false)
+KLEE: NOTE: now ignoring this error at this location
+KLEE: WARNING ONCE: calling external: klee_assert(0)
+KLEE: ERROR: /home/klee/klee_base64.c:104: failed external call: klee_assert
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: /home/klee/klee_base64.c:85: memory error: out of bound pointer
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: /home/klee/klee_base64.c:81: memory error: out of bound pointer
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: /home/klee/klee_base64.c:65: memory error: out of bound pointer
+KLEE: NOTE: now ignoring this error at this location
+
+...
+\end{lstlisting}
+
+Интересно посмотреть на вторую ошиюку, где сработала \TT{klee\_assert()}:
+
+\begin{lstlisting}
+% ls klee-last | grep err
+test000001.user.err
+test000002.external.err
+test000003.ptr.err
+test000004.ptr.err
+test000005.ptr.err
+
+% ktest-tool --write-ints klee-last/test000002.ktest
+ktest file : 'klee-last/test000002.ktest'
+args       : ['klee_base64.bc']
+num objects: 1
+object    0: name: b'input'
+object    0: size: 32
+object    0: data: b'AAECAwQFBgcICQoLDA0OD4\x00\xff\xff\xff\xff\xff\xff\xff\xff\x00'
+\end{lstlisting}
+
+Это действительно настоящая base64-строка, оканчивающаяся нулевым байтом, как и требуется по стандартам Си/Си++.
+Последний нулевой байт на месте 31-го (считая с нулевого) это дело наших рук: так KLEE будет выдавать меньшее количество
+ошибок.
+
+Строка в base64 действительно корректна:
+
+\begin{lstlisting}
+% echo AAECAwQFBgcICQoLDA0OD4 | base64 -d | hexdump -C
+base64: invalid input
+00000000  00 01 02 03 04 05 06 07  08 09 0a 0b 0c 0d 0e 0f  |................|
+00000010
+\end{lstlisting}
+
+Утилита для декодирования base64 из Linux которую я только что запустил, ругается: ``invalid input'' --- 
+это означает что строка неверно дополнена выровнивающими символами (``='').
+Дополним вручную, и декодер больше не будет ругаться:
+
+\begin{lstlisting}
+% echo AAECAwQFBgcICQoLDA0OD4== | base64 -d | hexdump -C
+00000000  00 01 02 03 04 05 06 07  08 09 0a 0b 0c 0d 0e 0f  |................|
+00000010
+\end{lstlisting}
+
+Причина, по которой наша base64-строка не была дополнена, в том, что декодеры base64 обычно игнорируют эти символы (``='')
+в конце.
+Другими словами, они не тербуют их, так же, как и наш декодер.
+Так что, символы для выравнивания остались незамеченными для KLEE.
+
+И снова мы сделали \textit{антипод} или \textit{инверсную функцию} декодера base64.
+

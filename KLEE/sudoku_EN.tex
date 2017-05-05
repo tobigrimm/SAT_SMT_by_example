@@ -1,0 +1,96 @@
+\subsection{Sudoku}
+
+I've also rewritten Sudoku example (\ref{sudoku_SMT}) for KLEE:
+
+\lstinputlisting[numbers=left]{KLEE/klee_sudoku_or1.c}
+
+Let's run it:
+
+\begin{lstlisting}
+% clang -emit-llvm -c -g klee_sudoku_or1.c
+...
+
+\$ time klee klee_sudoku_or1.bc
+KLEE: output directory is "/home/klee/klee-out-98"
+KLEE: WARNING: undefined reference to function: klee_assert
+KLEE: WARNING ONCE: calling external: klee_assert(0)
+KLEE: ERROR: /home/klee/klee_sudoku_or1.c:93: failed external call: klee_assert
+KLEE: NOTE: now ignoring this error at this location
+
+KLEE: done: total instructions = 7512
+KLEE: done: completed paths = 161
+KLEE: done: generated tests = 161
+
+real    3m44.111s
+user    3m43.319s
+sys     0m0.951s
+\end{lstlisting}
+
+Now this is really slower (on my Intel Core i3-3110M 2.4GHz notebook) in comparison to Z3Py solution (\ref{sudoku_SMT}).
+
+But the answer is correct:
+
+\begin{lstlisting}
+% ls klee-last | grep err
+test000161.external.err
+
+% ktest-tool --write-ints klee-last/test000161.ktest
+ktest file : 'klee-last/test000161.ktest'
+args       : ['klee_sudoku_or1.bc']
+num objects: 1
+object    0: name: b'cells'
+object    0: size: 81
+object    0: data: b'\x01\x04\x05\x03\x02\x07\x06\t\x08\x08\x03\t\x06\x05\x04\x01\x02\x07\x06\x07\x02\t\x01\x08\x05\x04\x03\x04\t\x06\x01\x08\x05\x03\x07\x02\x02\x01\x08\x04\x07\x03\t\x05\x06\x07\x05\x03\x02\t\x06\x04\x08\x01\x03\x06\x07\x05\x04\x02\x08\x01\t\t\x08\x04\x07\x06\x01\x02\x03\x05\x05\x02\x01\x08\x03\t\x07\x06\x04'
+\end{lstlisting}
+
+Character \TT{\textbackslash{}t} has code of 9 in C/C++,
+and KLEE prints byte array as a C/C++ string, so it shows some values in such way.
+We can just keep in mind that there is 9 at the each place where we see \TT{\textbackslash{}t}.
+The solution, while not properly formatted, correct indeed.
+
+By the way, at lines 42 and 43 you may see how we tell to KLEE that all array elements must be within some limits.
+If we comment these lines out, we've got this:
+
+\begin{lstlisting}
+% time klee klee_sudoku_or1.bc
+KLEE: output directory is "/home/klee/klee-out-100"
+KLEE: WARNING: undefined reference to function: klee_assert
+KLEE: ERROR: /home/klee/klee_sudoku_or1.c:51: overshift error
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: /home/klee/klee_sudoku_or1.c:51: overshift error
+KLEE: NOTE: now ignoring this error at this location
+KLEE: ERROR: /home/klee/klee_sudoku_or1.c:51: overshift error
+KLEE: NOTE: now ignoring this error at this location
+...
+\end{lstlisting}
+
+KLEE warns us that shift value at line 51 is too big.
+Indeed, KLEE may try all byte values up to 255 (0xFF), which are pointless to use there,
+and may be a symptom of error or bug, so KLEE warns about it. % FIXME chk spelling
+
+Now let's use \TT{klee\_assume()} again:
+
+\lstinputlisting{KLEE/klee_sudoku_or2.c}
+
+\begin{lstlisting}
+% time klee klee_sudoku_or2.bc
+KLEE: output directory is "/home/klee/klee-out-99"
+KLEE: WARNING: undefined reference to function: klee_assert
+KLEE: WARNING ONCE: calling external: klee_assert(0)
+KLEE: ERROR: /home/klee/klee_sudoku_or2.c:93: failed external call: klee_assert
+KLEE: NOTE: now ignoring this error at this location
+
+KLEE: done: total instructions = 7119
+KLEE: done: completed paths = 1
+KLEE: done: generated tests = 1
+
+real    0m35.312s
+user    0m34.945s
+sys     0m0.318s
+\end{lstlisting}
+
+That works much faster: perhaps KLEE indeed handle this \textit{intrinsic} in a special way.
+And, as we see, the only one path has been found (one we actually interesting in it) instead of 161.
+
+It's still much slower than Z3Py solution, though.
+

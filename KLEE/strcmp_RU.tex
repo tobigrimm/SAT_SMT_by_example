@@ -1,15 +1,15 @@
-\subsection{Unit test: strcmp() function}
+\subsection{Unit-тест: ф-ция strcmp()}
 
-The standard \TT{strcmp()} function from C library can return 0, -1 and 1, depending of comparison result.
+Стандартная ф-ция Си \TT{strcmp()} может возвращать 0, -1 или 1, в зависимости от результата сравнения.
 
-Here is my own implementation of strcmp():
+Вот моя собственная реализация \TT{strcmp()}:
 
 \lstinputlisting{KLEE/strcmp.c}
 
-Let's find out, if KLEE is capable of finding all three paths?
-I intentionaly made things simpler for KLEE by limiting input arrays to two 2 bytes or to 1 character + terminal zero byte.
+Попробуем узнать, способен ли KLEE найти все три пути?
+Я специально сделал всё как можно проще для KLEE, ограничив входные массивы до двух байт, или до одного байта +
+оконечивающий нулевой байт.
 
-% FIXME:
 \begin{lstlisting}[basicstyle=\ttfamily, mathescape]
 % clang -emit-llvm -c -g strcmp.c
 
@@ -31,11 +31,10 @@ messages.txt  test000001.pc        test000002.user.err  warnings.txt
 run.istats    test000001.user.err  test000003.ktest
 \end{lstlisting}
 
-The first two errors are about klee\_assume().
-These are input values on which klee\_assume() calls are stuck.
-We can ignore them, or take a peek out of curiosity:
+Первые две ошибки это о \TT{klee\_assume()}.
+Это входные значения, на которых застряли вызовы \TT{klee\_assume()}.
+Мы можем игнорировать их, либо же, из любопытства, посмотреть, что там:
 
-% FIXME:
 \begin{lstlisting}
 % ktest-tool --write-ints klee-last/test000001.ktest
 ktest file : 'klee-last/test000001.ktest'
@@ -60,9 +59,8 @@ object    1: size: 2
 object    1: data: b'\x00\x00'
 \end{lstlisting}
 
-Three rest files are the input values for each path inside of my implementation of strcmp():
+Остальные файлы это входные значения для каждого пути в моей реализации \TT{strcmp()}:
 
-% FIXME:
 \begin{lstlisting}
 % ktest-tool --write-ints klee-last/test000003.ktest
 ktest file : 'klee-last/test000003.ktest'
@@ -98,9 +96,9 @@ object    1: size: 2
 object    1: data: b'a\x00'
 \end{lstlisting}
 
-3rd is about first argument (``b'') is lesser than the second (``c'').
-4th is opposite (``c'' and ``a'').
-5th is when they are equal (``a'' and ``a'').\\
-\\
-Using these 3 test cases, we've got full coverage of our implementation of strcmp().
+3-й это когда первый аргумент (``b'') меньше второго (``c'').
+4-й это наоборот (``c'' и ``a'').
+5-й это когда они равны (``a'' и ``a'').
+
+Используя эти 3 теста, мы получаем полное покрытие (coverage) для нашей реализации \TT{strcmp()}.
 

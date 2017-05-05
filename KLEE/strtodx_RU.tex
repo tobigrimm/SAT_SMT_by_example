@@ -1,0 +1,33 @@
+\subsection{strtodx() из RetroBSD}
+
+Нашел эту ф-цию в RetroBSD:
+\url{https://github.com/RetroBSD/retrobsd/blob/master/src/libc/stdlib/strtod.c}.
+Она конвертирует строку в число с плавающей точкой для заданной системы исчисления.
+
+\lstinputlisting[numbers=left]{KLEE/strtodx.c}
+( \url{https://github.com/dennis714/SAT_SMT_article/blob/master/KLEE/strtodx.c} )
+
+Интересно, KLEE не поддерживает арифметику с плавающей точкой, но тем не менее, что-то нашел:
+
+\begin{lstlisting}
+...
+
+KLEE: ERROR: /home/klee/klee_test.c:202: memory error: out of bound pointer
+
+...
+
+% ktest-tool klee-last/test003483.ktest
+ktest file : 'klee-last/test003483.ktest'
+args       : ['klee_test.bc']
+num objects: 1
+object    0: name: b'buf'
+object    0: size: 10
+object    0: data: b'-.0E-66\x00\x00\x00'
+\end{lstlisting}
+
+Как видно, строка ``-.0E-66'' приводит к чтению из массива за его пределами, в строке 202.
+Во время дальнейшего изучения, я обнаружил что массив \TT{powersOf10[]} слишком короткий:
+был прочитан 6-й элемент (считая с нулевого).
+И мы видим что часть массива закомментирована (строка 79)!
+Вероятно, чья-то ошибка?
+

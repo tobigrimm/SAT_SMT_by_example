@@ -26,8 +26,8 @@ object    0: data: b'-.0E-66\x00\x00\x00'
 \end{lstlisting}
 
 As it seems, string ``-.0E-66'' makes out of bounds array access (read) at line 202.
-While further investigation, I've found that powersOf10[] array is too short: 6th element (started at 0th) has been accessed.
+While further investigation, I've found that \TT{powersOf10[]} array is too short:
+6th element (started at 0th) has been accessed.
 And here we see part of array commented (line 79)!
 Probably someone's mistake?
-
 

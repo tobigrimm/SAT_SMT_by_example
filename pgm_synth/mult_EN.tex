@@ -1,7 +1,7 @@
-\subsection{Simple program synthesis using Z3 SMT-solver}
+\subsection{Synthesis of simple program using Z3 SMT-solver}
 
-Sometimes, multiplication operation can be replaced with couple of shifting/addition/subtraction operations.
-Compilers do so, because pack of instructions can be faster than multiplication unit in CPU.
+Sometimes, multiplication operation can be replaced with a several operations of shifting/addition/subtraction.
+Compilers do so, because pack of instructions can be executed faster.
 
 For example, multiplication by 19 is replaced by GCC 5.4 with pair of instructions: \TT{lea edx, [eax+eax*8]} and
 \TT{lea eax, [eax+edx*2]}.
@@ -10,14 +10,14 @@ This is sometimes also called ``superoptimization''.
 Let's see if we can find a shortest possible instructions pack for some specified multiplier.
 
 As I've already wrote once, SMT-solver can be seen as a solver of huge systems of equations.
-The task is to construct such system of equations, which could produce a short program on output.
+The task is to construct such system of equations, which, when solved, could produce a short program.
 I will use electronics analogy here, it can make things a little simpler.
 
-First of all, what our program could be? There will be 3 operations allowed: ADD/SUB/SHL.
+First of all, what our program will be consting of? There will be 3 operations allowed: ADD/SUB/SHL.
 Only registers allowed as operands, except for the second operand of SHL (which could be in 1..31 range).
 Each register will be assigned only once (as in \ac{SSA}).
 
-And there will be some magic block, which takes all previous register states, it also takes operation type,
+And there will be some ``magic block'', which takes all previous register states, it also takes operation type,
 operands and produces a value of next register's state.
 
 \begin{lstlisting}
@@ -33,7 +33,6 @@ operands and produces a value of next register's state.
 	             +---------------+
 \end{lstlisting}
 
-
 Now let's take a look on our schematics on top level:
 
 \begin{lstlisting}
@@ -42,21 +41,21 @@ Now let's take a look on our schematics on top level:
 	1 -> blk -> blk -> blk .. -> blk -> multiplier
 \end{lstlisting}
 
-Each block takes previous state of registers and produces new set.
+Each block takes previous state of registers and produces new states.
 There are two chains.
 First chain takes 0 as state of R0 at the very beginning, and the chain is supposed to produce 0 at the end
 (since zero multiplied by any value is still zero).
 The second chain takes 1 and must produce multiplier as the state of very last register
 (since 1 multiplied by multiplier must equal to multiplier).
 
-Each block is "controlled" by operation type, operand types, etc.
+Each block is ``controlled'' by operation type, operands, etc.
 For each column, there is each own set.
 
 Now you can view these two chains as two equations.
-Ultimate goal is to find such state of all operand types, etc, so the first chain will equal to 0,
+The ultimate goal is to find such state of all operation types and operands, so the first chain will equal to 0,
 and the second to multiplier.
 
-Let's also take a look into "magic block" inside:
+Let's also take a look into ``magic block'' inside:
 
 \begin{lstlisting}
 	                op1_reg         op
@@ -71,7 +70,7 @@ Let's also take a look into "magic block" inside:
 	               op2_reg       op2_imm
 \end{lstlisting}
 
-Each selector can be viewed as simple multipositional switch.
+Each selector can be viewed as a simple multipositional switch.
 If operation is SHL, a value in range of 1..31 is used as second operand.
 
 So you can imagine this electric circuit and your goal is to turn all switches in such a state, so two chains
@@ -90,8 +89,8 @@ op2_imm=[BitVec('op2_imm_s%d' % s, 32) for s in range(MAX_STEPS)]
 \end{lstlisting}
 
 R[][] is registers state for each chain and each step.
-On contrary, op/op1\_reg/op2\_reg/op2\_imm variables are defined for each step, but for all chains,
-since both chains at each column has the same operation/etc.
+On contrary, \TT{op}/\TT{op1\_reg}/\TT{op2\_reg}/\TT{op2\_imm} variables are defined for each step, but for both chains,
+since both chains at each column has the same operation/operands.
 
 Now we must limit count of operations, and also, register's number for each step must not be bigger than step number,
 in other words, instruction at each step is allowed to access only registers which were already set before:
@@ -105,7 +104,7 @@ for s in range(1, STEPS):
     sl.add(And(op2_imm[s]>=1, op2_imm[s]<=31))
 \end{lstlisting}
 
-Fix register of first step for each chain:
+Fix register of first step for both chains:
 
 \begin{lstlisting}
 for c in range(CHAINS):
@@ -114,7 +113,7 @@ for c in range(CHAINS):
     sl.add(R[c][STEPS-1]==chain_inputs[c]*multiplier)
 \end{lstlisting}
 
-Now this is ``magic block'':
+Now let's add ``magic blocks'':
 
 \begin{lstlisting}
 for s in range(1, STEPS):
@@ -146,8 +145,8 @@ def simulate_op(R, c, op, op1_reg, op2_reg, op2_imm):
 	       0))) # default
 \end{lstlisting}
 
-This is very important to understand: if the operation is ADD/SUB, op2\_imm's value is just ignored.
-Otherwise, if operation is SHL, value of op2\_reg is ignored.
+This is very important to understand: if the operation is ADD/SUB, \TT{op2\_imm}'s value is just ignored.
+Otherwise, if operation is SHL, value of \TT{op2\_reg} is ignored.
 Just like in case of digital circuit.
 
 The code: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/pgm_synth/mult.py}.
@@ -203,12 +202,12 @@ r5=ADD r2, r3
 r6=ADD r5, r4
 \end{lstlisting}
 
-Looks great, but it took ~23 seconds to find it on my Intel Xeon CPU E31220 @ 3.10GHz.
+Looks great, but it took $\approx 23$ seconds to find it on my Intel Xeon CPU E31220 @ 3.10GHz.
 I agree, this is far from practical usage.
 Also, I'm not quite sure that this piece of code will work faster than a single multiplication instruction.
 But anyway, it's a good demonstration of SMT solvers capabilities.
 
-The code multiplying by 12345 (~150 seconds):
+The code multiplying by 12345 ($\approx 150$ seconds):
 
 \begin{lstlisting}
 r1=SHL r0, 5
@@ -220,7 +219,7 @@ r6=SUB r4, r5
 r7=ADD r0, r6
 \end{lstlisting}
 
-Multiplication by 123456 (~8 minutes!):
+Multiplication by 123456 ($\approx 8$ minutes!):
 
 \begin{lstlisting}
 r1=SHL r0, 9
@@ -235,13 +234,13 @@ r7=ADD r1, r6
 \subsubsection{Few notes}
 
 I've removed SHR instruction support, simply because the code multiplying by a constant makes no use of it.
-Even more: it's not a problem to add support of immediates as second operand for all instructions,
+Even more: it's not a problem to add support of constants as second operand for all instructions,
 but again, you wouldn't find a piece of code which does this job and uses some additional constants.
 Or maybe I wrong?
 
-Of course, for another job you'll need to add support of immediates and other operations.
+Of course, for another job you'll need to add support of constants and other operations.
 But at the same time, it will work slower and slower.
-So I had to keep \ac{ISA} of this toy CPU as compact as possible.
+So I had to keep \ac{ISA} of this toy \ac{CPU} as compact as possible.
 
 \subsubsection{The code}
 
