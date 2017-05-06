@@ -1,0 +1,298 @@
+\section{\ac{SAT}-солверы}
+
+Сравнивать SMT с SAT, это как сравнивать высокоуровневый ЯП с языком ассемблера.
+Последний может быть куда более эффективным, но на нем труднее программировать.
+
+\subsection{CNF форма}
+
+\ac{CNF}\footnote{\url{https://en.wikipedia.org/wiki/Conjunctive_normal_form}} это так называемая \textit{нормальная форма}.
+
+% TODO recheck
+% TODO write abt it!
+%\textit{normal form} is somewhat similar to polynomials in algebra. 
+%What is polynomial?
+%It is a standard way to express unsystematic equations like $2x \cdot x$ as $3x$ polynomial, 
+%and so you will be able to apply some operations to polynomials like summing, etc.
+
+Любое булево выражение может быть сконвертировано в \textit{нормальную форму}, и \ac{CNF} это одна из них.
+\ac{CNF}-выражение это пачка клозов (подвыражений) состоящих их литералов (или термов, переменных), операций ИЛИ и НЕ,
+все из которых склеены друг с другом в полное выражение операцией И.
+Вот способ запомнить: \ac{CNF} это ``И всех ИЛИ'' (или ``произведение всех сумм'')
+и \ac{DNF} это ``ИЛИ всех И'' (или ``сумма всех произведений'').
+
+Пример: $(\neg A \vee B) \wedge (C \vee \neg D)$.
+
+$\vee$ означает ИЛИ (логическая дизьюнкция\footnote{\url{https://en.wikipedia.org/wiki/Logical_disjunction}}), 
+знак ``+'' также иногда используется для ИЛИ.
+
+$\wedge$ означает ИЛИ (логическая коньюнкция\footnote{\url{https://en.wikipedia.org/wiki/Logical_conjunction}}).
+Легко запомнить: $\wedge$ выглядит как буква ``A''.
+Знак ``$\cdot$'' также иногда используется для И.
+
+$\neg$ это отрицание (НЕ).
+
+% TODO A/B is the first clause, C/D is second
+
+\subsection{Пример: двухбитный сумматор}
+\label{adder}
+
+В сущности, \ac{SAT}-солвер это солвер огромных булевых уравнений в CNF-форме.
+Он просто выдает ответ, есть ли набор входных значений, удовлетворяющий CNF-выражению, и какие это значения должны быть.
+
+Вот для примера двухбитный сумматор:
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[scale=0.75]{SAT/adder_logisim.png}
+\caption{Схема двухбитного сумматора}
+\end{figure}
+
+Сумматор здесь в самом простом возможном виде: у него нет входных и выходных переносов, и тут только 3 XOR-гейта
+и один AND-гейт.
+Попробуем разобраться, какой набор входных переменных заставит сумматор выставить оба выходных бита?
+Просто подсчитав в уме, мы можем увидеть, что таких способа 4: $0+3=3$, $1+2=3$, $2+1=3$, $3+0=3$.
+Вот также таблица истинности, с подсвеченными соответствующими рядами:
+
+\input{SAT/truth1}
+
+Посмотрим, что об этом скажет SAT-солвер?
+
+В начале, нам нужно представить наш двухбитный сумматор как CNF-выражение.
+
+Используя Wolfram Mathematica, можно выразить 1-битное выражение для обоих выходов сумматоров:\\
+\\
+\textbf{\texttt{In[]:=AdderQ0[aL$\_$,bL$\_$]=Xor[aL,bL]}} \\
+\textbf{\texttt{Out[]:=aL $\veebar$ bL}} \\
+\\
+\textbf{\texttt{In[]:=AdderQ1[aL$\_$,aH$\_$,bL$\_$,bH$\_$]=Xor[And[aL,bL],Xor[aH,bH]]}} \\
+\textbf{\texttt{Out[]:=aH $\veebar$ bH $\veebar$ (aL \&\& bL)}} \\
+\\
+Нам нужно такое выражение, где обе части выдадут единицы.
+Используя Wolfram Mathematica, найдем все возможные входы такого выражения (я склеил обе части при помощи And): \\
+\\
+\textbf{\texttt{In[]:=Boole[SatisfiabilityInstances[And[AdderQ0[aL,bL],AdderQ1[aL,aH,bL,bH]],\{aL,aH,bL,bH\},4]]}} \\
+\textbf{\texttt{Out[]:=\{1,1,0,0\},\{1,0,0,1\},\{0,1,1,0\},\{0,0,1,1\}}} \\
+\\
+Да, действительно, Mathematica говорит, что здесь 4 входа, которые приведут к нужному нам результату.
+Так что, Mathematica тоже может использоваться как \ac{SAT}-солвер.
+
+Тем не менее, перейдем к CNF-форме. Используя Mathematica, сконвертируем наше выражение в CNF-форму:\\
+\\
+\textbf{\texttt{In[]:=cnf=BooleanConvert[And[AdderQ0[aL,bL],AdderQ1[aL,aH,bL,bH]],``CNF'']}} \\
+\textbf{\texttt{Out[]:=(!aH $\|$ !bH) \&\& (aH $\|$ bH) \&\& (!aL $\|$ !bL) \&\& (aL $\|$ bL)}} \\
+\\
+Выглядит посложнее. Причина такой многословности в том, что \ac{CNF}-форма не поддерживает операцию исключающего
+ИЛИ.
+% FIXME: TeX form of the expression!
+
+\subsubsection{MiniSat}
+
+Для начала, попробуем MiniSat\footnote{\url{http://minisat.se/MiniSat.html}}.
+Стандартный способ закодировать \ac{CNF}-выражение для MiniSat это перечислить все части ИЛИ в каждой строке.
+Также, MiniSat не поддерживает имена переменных, только числа.
+Перечислим наши переменные: 1 будет aH, 2 -- aL, 3 -- bH, 4 -- bL.
+
+Вот что получилось, когда я сконвертировал выражение из Mathematica во входной файл для MiniSat:
+
+\begin{lstlisting}
+p cnf 4 4
+-1 -3 0
+1 3 0
+-2 -4 0
+2 4 0
+\end{lstlisting}
+
+Две четверки в первой строке это, соответственно, число переменных и число клозов.
+Так что тут 4 строки, каждая для каждого клоза ИЛИ.
+Минус перед номером переменной означает что переменная инвертирована.
+Отсутствие минуса -- не инвертирована.
+Ноль в конце это просто оконечивающий ноль, означающий конец клоза.
+
+Другими словами, каждая строка это ИЛИ-клоз с возможными инвертированиями,
+и задача MiniSat в том, чтобы найти такой набор входных переменных, который удовлетворит все строки во входном файле.
+
+Этот файл я назвал \textit{adder.cnf} и теперь попробуем MiniSat:
+
+\begin{lstlisting}
+% minisat -verb=0 adder.cnf results.txt
+SATISFIABLE
+\end{lstlisting}
+
+Результаты в файле \textit{results.txt}:
+
+\begin{lstlisting}
+SAT
+-1 -2 3 4 0
+\end{lstlisting}
+
+Это означает, что если первые две переменных (aH и aL) будут \textit{false},
+и две последние переменные (bH и bL) будут \textit{true},
+все \ac{CNF}-выражение будет истинно (satisfiable).
+Похоже на правду: если bH и bL выставить в \textit{true}, оба бита результата также будут \textit{true}.
+
+Как получить другие решения (instances)?
+\ac{SAT}-солверы, как и \ac{SMT}-солверы, выдают только одно решение (или \textit{instance}).
+
+MiniSat использует \ac{PRNG}, и его изначальное состояние (seed) можно задать явно.
+Я попробовал разные значения, но результат всё тот же.
+Тем не менее, CryptoMiniSat в этом случае может показать все возможные 4 решения, хотя и в хаотичном порядке.
+Так что это не очень надежный способ.
+
+Видимо, единственный способ, это инвертировать клоз решения и добавить его во входное выражение.
+Мы получили \TT{-1 -2 3 4}, 
+теперь мы можем инвертировать все значения в нем (просто поменяйте минусы: \TT{1 2 -3 -4}),
+и добавим это в конец входного файла:
+
+\begin{lstlisting}
+p cnf 4 5
+-1 -3 0
+1 3 0
+-2 -4 0
+2 4 0
+1 2 -3 -4
+\end{lstlisting}
+
+Получаем другой результат:
+
+\begin{lstlisting}
+SAT
+1 2 -3 -4 0
+\end{lstlisting}
+
+Это означает что обе aH и aL должны быть \textit{true} и bH и bL должны быть \textit{false}, чтобы удовлетворить
+входное выражение.
+Снова инвертируем это решение и снова добавим:
+
+\begin{lstlisting}
+p cnf 4 6
+-1 -3 0
+1 3 0
+-2 -4 0
+2 4 0
+1 2 -3 -4
+-1 -2 3 4 0
+\end{lstlisting}
+
+Результат:
+
+\begin{lstlisting}
+SAT
+-1 2 3 -4 0
+\end{lstlisting}
+
+aH=false, aL=true, bH=true, bL=false. Это также корректно, в соответствии с таблицей истинности.
+
+Добавим снова:
+
+\begin{lstlisting}
+p cnf 4 7
+-1 -3 0
+1 3 0
+-2 -4 0
+2 4 0
+1 2 -3 -4
+-1 -2 3 4 0
+1 -2 -3 4 0
+\end{lstlisting}
+
+\begin{lstlisting}
+SAT
+1 -2 -3 4 0
+\end{lstlisting}
+
+\textit{aH=true, aL=false, bH=false, bL=true.} Это тоже верно.
+
+Это четвертый результат. Больше быть не должно. Что если добавим и это?
+
+\begin{lstlisting}
+p cnf 4 8
+-1 -3 0
+1 3 0
+-2 -4 0
+2 4 0
+1 2 -3 -4
+-1 -2 3 4 0
+1 -2 -3 4 0
+-1 2 3 -4 0
+\end{lstlisting}
+
+Теперь MiniSat просто говорит ``UNSATISFIABLE'' без всякой дополнительной информации в файле результатов.
+
+Нам пример крохотный, но MiniSat может работать с огромными \ac{CNF}-выражениями.
+
+\subsubsection{CryptoMiniSat}
+
+Операция исключающего ИЛИ (XOR) отсутствует в CNF-форме, но она очень важна в криптографических алгоритмах.
+Простейший способ представить одну единственную XOR-операцию в CNF-форме, это:
+$(\neg x \vee \neg y) \wedge (x \vee y)$ -- не очень короткое выражение,
+хотя, множество XOR-операций в одном выражении могут оптимизироваться лучше.
+
+Одна значительная разница между MiniSat и CryptoMiniSat в том, что последний поддерживает
+клозы с операцией XOR вместо ИЛИ,
+потому что CryptoMiniSat предназначен больше для анализа криптоалгоритмов\footnote{\url{http://www.msoos.org/xor-clauses/}}.
+XOR-клозы поддерживаются в CryptoMiniSat специальным образом, без трансляции в клозы ИЛИ.
+
+Вам нужно просто прибавить ``x'' к клозу в \ac{CNF}-файле и CryptoMiniSat затем считает обычный ИЛИ-клоз как XOR-клоз.
+Что до двухбитного сумматора, вот самое короткое из возможных XOR-CNF выражений, которое можно использовать
+для поиска всех входных значений, где оба выходных бита выставлены:
+
+$(aH \oplus bH) \wedge (aL \oplus bL)$
+
+Это \TT{.cnf}-файл CryptoMiniSat:
+
+\begin{lstlisting}
+p cnf 4 2
+x1 3 0
+x2 4 0
+\end{lstlisting}
+
+Запускаю CryptoMiniSat с разными значениями для инициализации его \ac{PRNG} \dots
+
+\begin{lstlisting}
+% cryptominisat4 --verb 0 --random 0 XOR_adder.cnf
+s SATISFIABLE
+v 1 2 -3 -4 0
+% cryptominisat4 --verb 0 --random 1 XOR_adder.cnf
+s SATISFIABLE
+v -1 -2 3 4 0
+% cryptominisat4 --verb 0 --random 2 XOR_adder.cnf
+s SATISFIABLE
+v 1 -2 -3 4 0
+% cryptominisat4 --verb 0 --random 3 XOR_adder.cnf
+s SATISFIABLE
+v 1 2 -3 -4 0
+% cryptominisat4 --verb 0 --random 4 XOR_adder.cnf
+s SATISFIABLE
+v -1 2 3 -4 0
+% cryptominisat4 --verb 0 --random 5 XOR_adder.cnf
+s SATISFIABLE
+v -1 2 3 -4 0
+% cryptominisat4 --verb 0 --random 6 XOR_adder.cnf
+s SATISFIABLE
+v -1 -2 3 4 0
+% cryptominisat4 --verb 0 --random 7 XOR_adder.cnf
+s SATISFIABLE
+v 1 -2 -3 4 0
+% cryptominisat4 --verb 0 --random 8 XOR_adder.cnf
+s SATISFIABLE
+v 1 2 -3 -4 0
+% cryptominisat4 --verb 0 --random 9 XOR_adder.cnf
+s SATISFIABLE
+v 1 2 -3 -4 0
+\end{lstlisting}
+
+Тем не менее, все 4 возможных решения, это:
+
+\begin{lstlisting}
+v -1 -2 3 4 0
+v -1 2 3 -4 0
+v 1 -2 -3 4 0
+v 1 2 -3 -4 0
+\end{lstlisting}
+
+\dots то же, что и выдал MiniSat.
+
+% subsections:
+\input{SAT/minesweeper/main}
+\input{SAT/GoL/main}
+

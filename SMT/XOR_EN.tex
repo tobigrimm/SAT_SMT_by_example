@@ -1,18 +1,20 @@
 \subsection{Using Z3 theorem prover to prove equivalence of some weird alternative to XOR operation}
 \label{weird_XOR}
 
-(The article was first published in my blog at April 2015: \url{http://blog.yurichev.com/node/86}).
+(The test was first published in my blog at April 2015: \url{http://blog.yurichev.com/node/86}).
 
-There is a "A Hacker's Assistant" program\footnote{\url{http://www.hackersdelight.org/}} (\textit{Aha!}) written by Henry Warren,
-who is also the author of the great "Hacker's Delight" book.
+There is a ``A Hacker's Assistant'' program\footnote{\url{http://www.hackersdelight.org/}} (\textit{Aha!}) written by Henry Warren,
+who is also the author of the great ``Hacker's Delight'' book.
 
 The \textit{Aha!} program is essentially \textit{superoptimizer}\footnote{\url{http://en.wikipedia.org/wiki/Superoptimization}},
 which blindly brute-force a list of some generic RISC CPU instructions to achieve shortest possible (and jumpless or branch-free) 
 CPU code sequence for desired operation.
 For example, \textit{Aha!} can find jumpless version of abs() function easily.
 
-Compiler developers use superoptimization to find shortest possible (and/or jumpless) code, but I tried to do otherwise -- to find longest code for some basic operation.
-I tried \textit{Aha!} to find equivalent of basic XOR operation without usage of the actual XOR instruction, and the most bizarre example \textit{Aha!} gave is:
+Compiler developers use superoptimization to find shortest possible (and/or jumpless) code,
+but I tried to do otherwise---to find longest code for some primitive operation.
+I tried \textit{Aha!} to find equivalent of basic XOR operation without usage of the actual XOR instruction,
+and the most bizarre example \textit{Aha!} gave is:
 
 \begin{lstlisting}
 Found a 4-operation program:
@@ -24,13 +26,14 @@ Found a 4-operation program:
 \end{lstlisting}
 
 And it's hard to say, why/where we can use it, maybe for obfuscation, I'm not sure.
-I would call this \textit{suboptimization} (as opposed to \textit{superoptimization}). Or maybe \textit{superdeoptimization}.
+I would call this \textit{suboptimization} (as opposed to \textit{superoptimization}).
+Or maybe \textit{superdeoptimization}.
 
 But my another question was also, is it possible to prove that this is correct formula at all?
 The \textit{Aha!} checking some intput/output values against XOR operation, but of course, not all the possible values.
 It is 32-bit code, so it may take very long time to try all possible 32-bit inputs to test it.
 
-We can try Z3 theorem prover for the job. It's called ``prover'', after all.
+We can try Z3 theorem prover for the job. It's called \textit{prover}, after all.
 
 So I wrote this:
 
@@ -47,11 +50,12 @@ s.add(((y & x)*0xFFFFFFFE) + (y + x)!=output)
 print s.check()
 \end{lstlisting}
 
-In plain English language, this means "are there any case for x and y where $x \oplus y$ doesn't equals to $((y \& x)*-2) + (y + x)$?"
-... and Z3 prints "unsat", meaning, it can't find any counterexample to the equation.
-So this \textit{Aha!} output is proved to be working just like XOR operation.
+In plain English language, this means
+``are there any case for $x$ and $y$ where $x \oplus y$ doesn't equals to $((y \& x)*-2) + (y + x)$?''
+\dots and Z3 prints ``unsat'', meaning, it can't find any counterexample to the equation.
+So this \textit{Aha!} result is proved to be working just like XOR operation.
 
-Oh, I also tried to extend the formula to 64-bit:
+Oh, I also tried to extend the formula to 64 bit:
 
 \begin{lstlisting}
 #!/usr/bin/python
@@ -66,7 +70,7 @@ s.add(((y & x)*0xFFFFFFFE) + (y + x)!=output)
 print s.check()
 \end{lstlisting}
 
-Nope, now it says "sat", meaning, Z3 found at least one counterexample.
+Nope, now it says ``sat'', meaning, Z3 found at least one counterexample.
 Oops, it's because I forgot to extend -2 number to 64-bit value:
 
 \begin{lstlisting}
@@ -82,12 +86,12 @@ s.add(((y & x)*0xFFFFFFFFFFFFFFFE) + (y + x)!=output)
 print s.check()
 \end{lstlisting}
 
-Now it says "unsat", so the formula given by \textit{Aha!} works for 64-bit code as well.
+Now it says ``unsat'', so the formula given by \textit{Aha!} works for 64-bit code as well.
 
 \subsubsection{In SMT-LIB form}
 
-Now we can rephrase our equation to more suitable form: $(x + y - ((x \& y)<<1))$.
-It also works well is Z3:
+Now we can rephrase our expression to more suitable form: $(x + y - ((x \& y)<<1))$.
+It also works well in Z3Py:
 
 \begin{lstlisting}
 #!/usr/bin/python
@@ -122,7 +126,8 @@ Here is how to define it in SMT-LIB way:
 
 \subsubsection{Using universal quantifier}
 
-Z3 has universal quantifier \TT{exists}, which defines a constraint, which is true if at least one set of variables satistfied underlying condition:
+Z3 supports universal quantifier \TT{exists}, which is true
+if at least one set of variables satistfied underlying condition:
 
 \begin{lstlisting}
 (declare-const x (_ BitVec 64))
@@ -145,8 +150,9 @@ It returns ``unsat'', meaning, Z3 couldn't find any counterexample of the equati
 \\
 This is also known as $\exists$ in mathematical logic lingo.\\
 \\
-Z3 has also universal quantifier \TT{forall}, which defines a constraint, where all possible values for the equation must be true.
-So we can rewrite our \ac{SMT} example as:
+Z3 also supports universal quantifier \TT{forall}, which is true if the equation is true for all
+possible values.
+So we can rewrite our SMT-LIB example as:
 
 \begin{lstlisting}
 (declare-const x (_ BitVec 64))
@@ -165,13 +171,14 @@ So we can rewrite our \ac{SMT} example as:
 (check-sat)
 \end{lstlisting}
 
-It returns \TT{sat}, meaning, the equation is correct for all possible 64-bit \TT{x} and \TT{y} values, like them all were checked.
+It returns ``sat'', meaning, the equation is correct for all possible 64-bit \TT{x} and \TT{y} values,
+like them all were checked.
 
 Mathematically speaking: $\forall n\!\in\!\mathbb{N}\; (x \oplus y = (x + y - ((x \& y)<<1)))$
 \footnote{
 $\forall$ means \textit{equation must be true for all possible values}, which are choosen from natural numbers ($\mathbb{N}$).}
 
-\subsubsection{How the equation works}
+\subsubsection{How the expression works}
 
 First of all, binary addition can be viewed as binary XORing with carrying (\ref{adder}).
 Here is an example: let's add 2 (10b) and 2 (10b).
@@ -183,8 +190,9 @@ If the carry bits are not generated during addition, the addition operation is m
 For example, let's add 1 (1b) and 2 (10b). $1 + 2$ equals to 3, but $1 \oplus 2$ is also 3.
 
 If the addition is XORing plus carry generation and application, we should eliminate effect of carrying somehow here.
-The first part of the equation ($x + y$) is addition, the second ($(x \& y)<<1$) is just calculation of every carry bit which was used during addition.
-Subtracting removes carry bits from the result of addition, so the only XOR effect is left then.
+The first part of the expression ($x + y$) is addition, the second ($(x \& y)<<1$) is just calculation of every carry bit which was used during addition.
+If to subtract carry bits from the result of addition, the only XOR effect is left then.
 
-It's hard to say how Z3 proves this: maybe it just simplifies the equation down to single XOR using simple boolean algebra rewriting rules?
+It's hard to say how Z3 proves this:
+maybe it just simplifies the equation down to single XOR using simple boolean algebra rewriting rules?
 

@@ -3,15 +3,14 @@
 
 See also about cracking it using Z3: \ref{minesweeper_SMT}.
 
-SAT solvers are very different in that sense that they are at low-level, and can take only CNF expressions on input.
-
-\subsubsection{Simple population count function}
+\subsubsection{Simple \textit{population count} function}
 
 First of all, somehow we need to count neighbour bombs.
 The counting function is similar to \textit{population count} function.
 
 We can try to make \ac{CNF} expression using Wolfram Mathematica.
-This will be a function, returning True if any of 2 bits of 8 inputs bits are True and others are False.
+This will be a function, returning \textit{True}
+if any of 2 bits of 8 inputs bits are \textit{True} and others are \textit{False}.
 First, we make truth table of such function:
 
 \begin{lstlisting}
@@ -69,7 +68,7 @@ Out[]= (! a || ! b || ! c) && (! a || ! b || ! d) && (! a || !
 The syntax is similar to C/C++.
 Let's check it.
 
-I wrote a Python function to convert Mathematica's output into CNF file which can be feeded to SAT solver:
+I wrote a Python function to convert Mathematica's output into \ac{CNF} file which can be feeded to SAT solver:
 
 \lstinputlisting{SAT/minesweeper/tst.py}
 
@@ -82,7 +81,6 @@ I can run it:
 
 \begin{lstlisting}
 % minisat -verb=0 tst1.cnf results.txt
-WARNING: for repeatability, setting FPU to use double precision
 SATISFIABLE
 
 % cat results.txt
@@ -90,10 +88,10 @@ SAT
 1 -2 -3 -4 -5 -6 -7 8 0
 \end{lstlisting}
 
-The variable name in results lacking minus sign is "True".
-Variable name with minus sign is "False".
-We see there are just two variables are "True": 1 and 8.
-This is indeed correct: MiniSat solver found a condition, for which our function returns "True".
+The variable name in results lacking minus sign is \textit{True}.
+Variable name with minus sign is \textit{False}.
+We see there are just two variables are \textit{True}: 1 and 8.
+This is indeed correct: MiniSat solver found a condition, for which our function returns \textit{True}.
 Zero at the end is just a terminal symbol which means nothing.
 
 We can ask MiniSat for another solution, by adding current solution to the input CNF file, but with all variables negated:
@@ -106,13 +104,12 @@ We can ask MiniSat for another solution, by adding current solution to the input
 -1 2 3 4 5 6 7 -8 0
 \end{lstlisting}
 
-In plain English language, this means "give me ANY solution which can satisfy all clauses, but also not equal to the last clause we've just added".
+In plain English language, this means ``give me ANY solution which can satisfy all clauses, but also not equal to the last clause we've just added''.
 
-MiniSat, indeed, found another solution, again, with only 2 variables equal to "True":
+MiniSat, indeed, found another solution, again, with only 2 variables equal to \textit{True}:
 
 \begin{lstlisting}
 % minisat -verb=0 tst2.cnf results.txt
-WARNING: for repeatability, setting FPU to use double precision
 SATISFIABLE
 
 % cat results.txt
@@ -120,23 +117,23 @@ SAT
 1 2 -3 -4 -5 -6 -7 -8 0
 \end{lstlisting}
 
-By the way, \textit{population count} function for 8 neighbours in CNF form is simplest:
+By the way, \textit{population count} function for 8 neighbours (POPCNT8) in CNF form is simplest:
 
 \begin{lstlisting}
 a&&b&&c&&d&&e&&f&&g&&h
 \end{lstlisting}
 
-Indeed: it's true if all 8 input bits are "True".
+Indeed: it's true if all 8 input bits are \textit{True}.
 
-The function for 0 neighbours is also simple:
+The function for 0 neighbours (POPCNT0) is also simple:
 
 \begin{lstlisting}
 !a&&!b&&!c&&!d&&!e&&!f&&!g&&!h
 \end{lstlisting}
 
-It means, it will return "True", if all input variables are "False".
+It means, it will return \textit{True}, if all input variables are \textit{False}.
 
-By the way, function for POPCNT1 is also simple:
+By the way, POPCNT1 function is also simple:
 
 \begin{lstlisting}
 (!a||!b)&&(!a||!c)&&(!a||!d)&&(!a||!e)&&(!a||!f)&&(!a||!g)&&(!a||!h)&&(a||b||c||d||e||f||g||h)&&
@@ -144,17 +141,19 @@ By the way, function for POPCNT1 is also simple:
 (!c||!h)&&(!d||!e)&&(!d||!f)&&(!d||!g)&&(!d||!h)&&(!e||!f)&&(!e||!g)&&(!e||!h)&&(!f||!g)&&(!f||!h)&&(!g||!h)
 \end{lstlisting}
 
-It just enumerates all possible pairs of 8 variables (a/b, a/c, a/d, etc) and says: no two bits must be present
-simultaneously in each possible pair.
-And there is another clause: "(a||b||c||d||e||f||g||h)", which says: at least one bit must be present among 8 variables.
+There is just enumeration of all possible pairs of 8 variables (a/b, a/c, a/d, etc), which implies:
+no two bits must be present simultaneously in each possible pair.
+And there is another clause: ``(a||b||c||d||e||f||g||h)'', which implies:
+at least one bit must be present among 8 variables.
 
-And yes, you can ask Mathematica for finding CNF expressions for any other truth table.
+And yes, you can ask Mathematica for finding \ac{CNF} expressions for any other truth table.
 
 \subsubsection{Minesweeper}
 
-Now we can use Mathematica to get all \textit{population count} functions for 0..8 neighbours.
+Now we can use Mathematica to generate all \textit{population count} functions for 0..8 neighbours.
 
-For 9*9 Minesweeper grid including invisible border, there will be 11*11=121 variables, mapped to Minesweeper grid like this:
+For $9 \cdot 9$ Minesweeper matrix including invisible border, there will be $11 \cdot 11=121$ variables,
+mapped to Minesweeper matrix like this:
 
 \begin{lstlisting}
  1    2   3   4   5   6   7   8   9  10  11
@@ -168,17 +167,18 @@ For 9*9 Minesweeper grid including invisible border, there will be 11*11=121 var
 111 112 113 114 115 116 117 118 119 120 121
 \end{lstlisting}
 
-Then we write a Python script which stacks all \textit{population count} functions: each function for each known number of neighbours (digit on Minesweeper field).
-Each POPCNTx() function takes list of variable numbers and outputs list of clauses to be added to the final CNF file.
+Then we write a Python script which stacks all \textit{population count} functions:
+each function for each known number of neighbours (digit on Minesweeper field).
+Each POPCNTx() function takes list of variable numbers and outputs list of clauses to be added to the final \ac{CNF} file.
 
-As of empty cells, we also add them as clauses, but with minus sign, which means, the variable must be False.
-Whenever we try to place bomb, we add its variable as clause without minus sign, this means the variable must be True.
+As of empty cells, we also add them as clauses, but with minus sign, which means, the variable must be \textit{False}.
+Whenever we try to place bomb, we add its variable as clause without minus sign, this means the variable must be \textit{True}.
 
 Then we execute external minisat process.
 The only thing we need from it is exit code.
-If an input \ac{CNF} is UNSAT, it returns 20:
+If an input \ac{CNF} is \TT{UNSAT}, it returns 20:
 
-We use here the information from the previous attempt to solve Minesweeper: \ref{minesweeper_SMT}.
+We use here the information from the previous solving of Minesweeper: \ref{minesweeper_SMT}.
 
 \lstinputlisting{SAT/minesweeper/minesweeper_SAT.py}
 

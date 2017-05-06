@@ -1,6 +1,6 @@
 \section{\ac{SAT}-solvers}
 
-SMT vs SAT is like high level \ac{PL} and assembly language.
+SMT vs. SAT is like high level \ac{PL} vs. assembly language.
 The latter can be much more efficient, but it's hard to program in it.
 
 \subsection{CNF form}
@@ -15,8 +15,8 @@ The latter can be much more efficient, but it's hard to program in it.
 %and so you will be able to apply some operations to polynomials like summing, etc.
 
 Any boolean expression can be converted to \textit{normal form} and \ac{CNF} is one of them.
-The \ac{CNF} expression is bunch of clauses (sub-expressions) constisting of terms (variables), ORs and NOTs, 
-all of which are then glueled together with AND into an expression.
+The \ac{CNF} expression is a bunch of clauses (sub-expressions) constisting of terms (variables), ORs and NOTs, 
+all of which are then glueled together with AND into a full expression.
 There is a way to memorize it: \ac{CNF} is ``AND of ORs'' (or ``product of sums'') and \ac{DNF} is ``OR of ANDs'' (or ``sum of products'').
 
 Example is: $(\neg A \vee B) \wedge (C \vee \neg D)$.
@@ -36,7 +36,7 @@ $\neg$ is negation (NOT).
 \label{adder}
 
 \ac{SAT}-solver is merely a solver of huge boolean equations in CNF form.
-It just gives the answer, if there is a set of input variables which can satisfy CNF expression, and what input values must be.
+It just gives the answer, if there is a set of input values which can satisfy CNF expression, and what input values must be.
 
 Here is a 2-bit adder for example:
 
@@ -47,42 +47,17 @@ Here is a 2-bit adder for example:
 \end{figure}
 
 The adder in its simplest form: it has no carry-in and carry-out, and it has 3 XOR gates and one AND gate.
-Let's try to figure out, which sets of inputs will force adder to set both two output bits?
+Let's try to figure out, which sets of input values will force adder to set both two output bits?
 By doing quick memory calculation, we can see that there are 4 ways to do so: $0+3=3$, $1+2=3$, $2+1=3$, $3+0=3$.
 Here is also truth table, with these rows highlighted:
 
-\newcommand{\HLcell}{\cellcolor{blue!25}}
-
-\begin{center}
-\begin{doublespace}
-\noindent\(\begin{array}{l|llllll}
-  & \text{aH} & \text{aL} & \text{bH} & \text{bL} & \text{qH} & \text{qL} \\
-\hline
- \text{3+3 = 6 $\equiv $ 2 (mod 4)} & 1 & 1 & 1 & 1 & 1 & 0 \\
- \text{3+2 = 5 $\equiv $ 1 (mod 4)} & 1 & 1 & 1 & 0 & 0 & 1 \\
- \text{3+1 = 4 $\equiv $ 0 (mod 4)} & 1 & 1 & 0 & 1 & 0 & 0 \\
- \text{\HLcell{}3+0 = 3 $\equiv $ 3 (mod 4)} & \HLcell{}1 & \HLcell{}1 & \HLcell{}0 & \HLcell{}0 & \HLcell{}1 & \HLcell{}1 \\
- \text{2+3 = 5 $\equiv $ 1 (mod 4)} & 1 & 0 & 1 & 1 & 0 & 1 \\
- \text{2+2 = 4 $\equiv $ 0 (mod 4)} & 1 & 0 & 1 & 0 & 0 & 0 \\
- \text{\HLcell{}2+1 = 3 $\equiv $ 3 (mod 4)} & \HLcell{}1 & \HLcell{}0 & \HLcell{}0 & \HLcell{}1 & \HLcell{}1 & \HLcell{}1 \\
- \text{2+0 = 2 $\equiv $ 2 (mod 4)} & 1 & 0 & 0 & 0 & 1 & 0 \\
- \text{1+3 = 4 $\equiv $ 0 (mod 4)} & 0 & 1 & 1 & 1 & 0 & 0 \\
- \text{\HLcell{}1+2 = 3 $\equiv $ 3 (mod 4)} & \HLcell{}0 & \HLcell{}1 & \HLcell{}1 & \HLcell{}0 & \HLcell{}1 & \HLcell{}1 \\
- \text{1+1 = 2 $\equiv $ 2 (mod 4)} & 0 & 1 & 0 & 1 & 1 & 0 \\
- \text{1+0 = 1 $\equiv $ 1 (mod 4)} & 0 & 1 & 0 & 0 & 0 & 1 \\
- \text{\HLcell{}0+3 = 3 $\equiv $ 3 (mod 4)} & \HLcell{}0 & \HLcell{}0 & \HLcell{}1 & \HLcell{}1 & \HLcell{}1 & \HLcell{}1 \\
- \text{0+2 = 2 $\equiv $ 2 (mod 4)} & 0 & 0 & 1 & 0 & 1 & 0 \\
- \text{0+1 = 1 $\equiv $ 1 (mod 4)} & 0 & 0 & 0 & 1 & 0 & 1 \\
- \text{0+0 = 0 $\equiv $ 0 (mod 4)} & 0 & 0 & 0 & 0 & 0 & 0 \\
-\end{array}\)
-\end{doublespace}
-\end{center}
+\input{SAT/truth1}
 
 Let's find, what \ac{SAT}-solver can say about it?
 
-First, we should represent our 2-bit adder as CNF expression.
+First, we should represent our 2-bit adder as \ac{CNF} expression.
 
-Using Wolfram Mathematica, I'll express 1-bit expressions for both adder outputs:\\
+Using Wolfram Mathematica, we can express 1-bit expression for both adder outputs:\\
 \\
 \textbf{\texttt{In[]:=AdderQ0[aL$\_$,bL$\_$]=Xor[aL,bL]}} \\
 \textbf{\texttt{Out[]:=aL $\veebar$ bL}} \\
@@ -99,18 +74,18 @@ Let's use Wolfram Mathematica find all instances of such expression (I glueled b
 Yes, indeed, Mathematica says, there are 4 inputs which will lead to the result we need.
 So, Mathematica can also be used as \ac{SAT} solver.
 
-Nevertheless, let's proceed to CNF form. Using Mathematica again, let's convert our expression to CNF form:\\
+Nevertheless, let's proceed to \ac{CNF} form. Using Mathematica again, let's convert our expression to \ac{CNF} form:\\
 \\
 \textbf{\texttt{In[]:=cnf=BooleanConvert[And[AdderQ0[aL,bL],AdderQ1[aL,aH,bL,bH]],``CNF'']}} \\
 \textbf{\texttt{Out[]:=(!aH $\|$ !bH) \&\& (aH $\|$ bH) \&\& (!aL $\|$ !bL) \&\& (aL $\|$ bL)}} \\
 \\
-Looks more complex. The reason of such verbosity is that CNF form doesn't allow XOR operations.
+Looks more complex. The reason of such verbosity is that \ac{CNF} form doesn't allow XOR operations.
 % FIXME: TeX form of the expression!
 
 \subsubsection{MiniSat}
 
 For the starters, we can try MiniSat\footnote{\url{http://minisat.se/MiniSat.html}}.
-The standard way to encode CNF expression for MiniSat is to enumerate all OR parts at each line.
+The standard way to encode \ac{CNF} expression for MiniSat is to enumerate all OR parts at each line.
 Also, MiniSat doesn't support variable names, just numbers.
 Let's enumerate our variables: 1 will be aH, 2 -- aL, 3 -- bH, 4 -- bL.
 
@@ -130,10 +105,10 @@ Minus before variable number meaning that the variable is negated.
 Absence of minus -- not negated.
 Zero at the end is just terminating zero, meaning end of the clause.
 
-In other words, each line is OR-clause with optional negation, and the task of MiniSat is to find such set of input, which can satisfy all lines
-in the input file.
+In other words, each line is OR-clause with optional negations,
+and the task of MiniSat is to find such set of input, which can satisfy all lines in the input file.
 
-The following file I named as \textit{adder.cnf} and now let's try MiniSat:
+That file I named as \textit{adder.cnf} and now let's try MiniSat:
 
 \begin{lstlisting}
 % minisat -verb=0 adder.cnf results.txt
@@ -148,18 +123,18 @@ SAT
 \end{lstlisting}
 
 This means, if the first two variables (aH and aL) will be \textit{false}, and the last two variables (bH and bL) will be set to \textit{true},
-the whole CNF expression is satisfiable.
+the whole \ac{CNF} expression is satisfiable.
 Seems to be true: if bH and bL are the only inputs set to \textit{true}, both resulting bits are also has \textit{true} states.
 
 Now how to get other instances? \ac{SAT}-solvers, like \ac{SMT} solvers, produce only one solution (or \textit{instance}).
 
-MiniSat uses PRNG and its initial seed can be set explicitely. I tried different values, but result is still the same.
+MiniSat uses \ac{PRNG} and its initial seed can be set explicitely. I tried different values, but result is still the same.
 Nevertheless, CryptoMiniSat in this case was able to show all possible 4 instances, in chaotic order, though.
 So this is not very robust way.
 
 Perhaps, the only known way is to negate solution clause and add it to the input expression.
 We've got \TT{-1 -2 3 4}, 
-now we can negate all variables in it (just toggle minuses: \TT{1 2 -3 -4} and add it to the end of the input file:
+now we can negate all values in it (just toggle minuses: \TT{1 2 -3 -4}) and add it to the end of the input file:
 
 \begin{lstlisting}
 p cnf 4 5
@@ -190,7 +165,7 @@ p cnf 4 6
 -1 -2 3 4 0
 \end{lstlisting}
 
-The result is
+The result is:
 
 \begin{lstlisting}
 SAT
@@ -217,7 +192,7 @@ SAT
 1 -2 -3 4 0
 \end{lstlisting}
 
-aH=true, aL=false, bH=false, bL=true. This is also correct.
+\textit{aH=true, aL=false, bH=false, bL=true.} This is also correct.
 
 This is fourth result. There are shouldn't be more. What if to add it?
 
@@ -235,24 +210,26 @@ p cnf 4 8
 
 Now MiniSat just says ``UNSATISFIABLE'' without any additional information in the resulting file.
 
-Our example is tiny, but MiniSat can work with huge CNF expressions.
+Our example is tiny, but MiniSat can work with huge \ac{CNF} expressions.
 
 \subsubsection{CryptoMiniSat}
 
-XOR operation is absent in CNF form, but crucial in cryptographical algorithms.
-Simplest possible way to represent single XOR operation in CNF form is: $(\neg x \vee \neg y) \wedge (x \vee y)$ -- not that small expression, 
+XOR operation is absent in \ac{CNF} form, but crucial in cryptographical algorithms.
+Simplest possible way to represent single XOR operation in \ac{CNF} form is:
+$(\neg x \vee \neg y) \wedge (x \vee y)$ -- not that small expression, 
 though, many XOR operations in single expression can be optimized better.
 
-One significant difference between MiniSat and CryptoMiniSat is that the latter supports CNF clauses with XOR operations instead of ORs,
-because CryptoMiniSat has aim to analyze some of crypto algorithms\footnote{\url{http://www.msoos.org/xor-clauses/}}.
+One significant difference between MiniSat and CryptoMiniSat is that
+the latter supports clauses with XOR operations instead of ORs,
+because CryptoMiniSat has aim to analyze crypto algorithms\footnote{\url{http://www.msoos.org/xor-clauses/}}.
 XOR clauses are handled by CryptoMiniSat in a special way without translating to OR clauses.
 
-You need just to prepend a clause with ``x'' in .cnf file and OR clause is then treated as XOR clause by CryptoMiniSat.
+You need just to prepend a clause with ``x'' in \ac{CNF} file and OR clause is then treated as XOR clause by CryptoMiniSat.
 As of 2-bit adder, this smallest possible XOR-CNF expression can be used to find all inputs where both output adder bits are set:
 
 $(aH \oplus bH) \wedge (aL \oplus bL)$
 
-This is 2-bit adder \TT{.cnf} file for CryptoMiniSat:
+This is \TT{.cnf} file for CryptoMiniSat:
 
 \begin{lstlisting}
 p cnf 4 2
@@ -260,7 +237,7 @@ x1 3 0
 x2 4 0
 \end{lstlisting}
 
-Now I run CryptoMiniSat with various random seeds...
+Now I run CryptoMiniSat with various random values to initialize its \ac{PRNG} \dots
 
 \begin{lstlisting}
 % cryptominisat4 --verb 0 --random 0 XOR_adder.cnf
@@ -304,7 +281,7 @@ v 1 -2 -3 4 0
 v 1 2 -3 -4 0
 \end{lstlisting}
 
-The same as reported by MiniSat.
+\dots the same as reported by MiniSat.
 
 % subsections:
 \input{SAT/minesweeper/main}
