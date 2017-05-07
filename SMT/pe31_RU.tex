@@ -1,6 +1,6 @@
-\subsection{Solving Problem Euler 31: ``Coin sums''}
+\subsection{Решение Problem Euler 31: ``Coin sums''}
 
-(This post was first published in my blog\footnote{\url{http://dennisyurichev.blogspot.de/2013/05/in-england-currency-is-made-up-of-pound.html}} at 10-May-2013).
+(Этот текст был впервые опубликован в моем блоге\footnote{\url{http://dennisyurichev.blogspot.de/2013/05/in-england-currency-is-made-up-of-pound.html}} 10-го мая 2013.)
 
 \begin{framed}
 \begin{quotation}
@@ -13,15 +13,16 @@ It is possible to make £2 in the following way:
 How many different ways can £2 be made using any number of coins?
 \end{quotation}
 \end{framed}
-( \href{http://projecteuler.net/problem=31}{Problem Euler 31 - Coin sums} )
+( \href{http://projecteuler.net/problem=31}{Problem Euler 31 --- Coin sums} )
 
 \label{SMTEnumerate}
-Using Z3 \ac{SMT} solver for solving this is overkill, and also slow, but nevertheless, it works, showing all possible solutions as well.
-The piece of code for blocking already found solution and search for next, and thus, counting all solutions, was taken from Stack Overflow answer
+Используя Z3 для решения такой задачи это слишком, и медленно, но тем не менее, это работает, выдавая все возможные решения.
+Фрагмент кода для блокирования уже найденнго решения и поиска следующего, таким образом, вычисляя считая все возможные решения,
+был взят из ответа на Stack Overflow
 \footnote{\url{http://stackoverflow.com/questions/11867611/z3py-checking-all-solutions-for-equation}, 
 another question: \url{http://stackoverflow.com/questions/13395391/z3-finding-all-satisfying-models}}.
-This is also called ``model counting''.
-Constraints like ``a>=0'' must be present, because Z3 solver will search for solutions with negative numbers.
+Это также называется ``model counting'' (подсчет моделей).
+Констрайнты вроде ``a>=0'' должны присутствовать, иначе Z3 будет находить решения с отрицательными числами.
 
 \begin{lstlisting}
 #!/usr/bin/python
@@ -58,7 +59,7 @@ while True:
         break
 \end{lstlisting}
 
-Works very slow, and this is what it produces:
+Работает очень медленно, и вот что выдает:
 
 \begin{lstlisting}
 [h = 0, g = 0, f = 0, e = 0, d = 0, c = 0, b = 0, a = 200]
@@ -70,4 +71,4 @@ Works very slow, and this is what it produces:
 [f = 0, b = 5, a = 50, d = 2, g = 0, h = 0, c = 24, e = 0]
 \end{lstlisting}
 
-73682 results in total.
+Всего 73682 результатов.

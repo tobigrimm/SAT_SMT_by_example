@@ -2,7 +2,8 @@
 
 \subsection{School-level system of equations}
 
-I've got this school-level system of equations copypasted from Wikipedia\footnote{\url{https://en.wikipedia.org/wiki/System_of_linear_equations}}:
+I've got this school-level system of equations copypasted from Wikipedia
+\footnote{\url{https://en.wikipedia.org/wiki/System_of_linear_equations}}:
 
 \begin{alignat*}{7}
 3x &&\; + \;&& 2y             &&\; - \;&& z  &&\; = \;&& 1 & \\
@@ -34,13 +35,15 @@ sat
 [z = -2, y = -2, x = 1]
 \end{lstlisting}
 
-If we change equation in some way so it will have no solution, s.check() will return ``unsat''.
+If we change any equation in some way so it will have no solution, s.check() will return ``unsat''.
 
-I've used ``Real'' \textit{sort} (some kind of data type in \ac{SMT}-solvers) because the last expression has $\frac{1}{2}$, which is, of course, a real number.
+I've used ``Real'' \textit{sort} (some kind of data type in \ac{SMT}-solvers)
+because the last expression equals to $\frac{1}{2}$, which is, of course, a real number.
 For the integer system of equations, ``Int'' \textit{sort} would work fine.
 
-Python (and other high-level PLs like C\#) interface is highly popular, because it's practical, but in fact, 
-there is a standard language for \ac{SMT}-solvers named SMT-LIB\footnote{\url{http://smtlib.cs.uiowa.edu/papers/smt-lib-reference-v2.5-r2015-06-28.pdf}}.
+Python (and other high-level \ac{PL}s like C\#) interface is highly popular, because it's practical, but in fact, 
+there is a standard language for \ac{SMT}-solvers called SMT-LIB
+\footnote{\url{http://smtlib.cs.uiowa.edu/papers/smt-lib-reference-v2.5-r2015-06-28.pdf}}.
 
 Our example rewritten to it looks like this:
 
@@ -55,7 +58,7 @@ Our example rewritten to it looks like this:
 (get-model)
 \end{lstlisting}
 
-This language is very close to LISP, but hard to read for untrained eyes.
+This language is very close to LISP, but is somewhat hard to read for untrained eyes.
 
 Now we run it:
 
@@ -77,11 +80,11 @@ This is not true: Z3Py API offers overloaded operators, so expressions are const
 \footnote{\url{https://github.com/Z3Prover/z3/blob/6e852762baf568af2aad1e35019fdf41189e4e12/src/api/python/z3.py}}.
 I would call it ``embedded \ac{DSL}''.
 
-% FIXME \tt, etc
 Same thing for Z3 C++ API, you may find there ``operator+'' declarations and many more
 \footnote{\url{https://github.com/Z3Prover/z3/blob/6e852762baf568af2aad1e35019fdf41189e4e12/src/api/c\%2B\%2B/z3\%2B\%2B.h}}.
 
-Z3 APIs for Java, ML and .NET are also exist\footnote{\url{https://github.com/Z3Prover/z3/tree/6e852762baf568af2aad1e35019fdf41189e4e12/src/api}}.\\
+Z3 \ac{API}s for Java, ML and .NET are also exist
+\footnote{\url{https://github.com/Z3Prover/z3/tree/6e852762baf568af2aad1e35019fdf41189e4e12/src/api}}.\\
 \\
 Z3Py tutorial: \url{https://github.com/ericpony/z3py-tutorial}.
 
@@ -98,7 +101,7 @@ I've found this somewhere at Facebook:
 \caption{System of equations}
 \end{figure}
 
-It's that easy to solve it in Z3 \ac{SMT}-solver:
+It's that easy to solve it in Z3:
 
 \begin{lstlisting}
 #!/usr/bin/python
@@ -120,18 +123,19 @@ sat
 
 \subsection{Connection between \ac{SAT} and \ac{SMT} solvers}
 
-Early \ac{SMT}-solvers were frontends to \ac{SAT} solvers, i.e., they translating input SMT expressions into \ac{CNF} and feed SAT-solver with it.
-Conversion process is sometimes called ``bit blasting''.
+Early \ac{SMT}-solvers were frontends to \ac{SAT} solvers, i.e.,
+they translating input SMT expressions into \ac{CNF} and feed SAT-solver with it.
+Translation process is sometimes called ``bit blasting''.
 Some \ac{SMT}-solvers still works in that way: STP uses MiniSAT or CryptoMiniSAT as backend SAT-solver.
 Some other \ac{SMT}-solvers are more advanced (like Z3), so they use something even more complex.
 
 % subsections
-\input{SMT/zebra.tex}
-\input{SMT/sudoku.tex}
-\input{SMT/pe31.tex}
-\input{SMT/XOR.tex}   % \\
-\input{SMT/Dietz.tex} % //
-\input{SMT/LCG.tex}
-\input{SMT/pipe.tex}
-\input{SMT/minesweeper/main.tex}
+\input{SMT/zebra_EN}
+\input{SMT/sudoku_EN}
+\input{SMT/pe31_EN}
+\input{SMT/XOR_EN}   % \\
+\input{SMT/Dietz_EN} % //
+\input{SMT/LCG_EN}
+\input{SMT/pipe_EN}
+\input{SMT/minesweeper/main_EN}
 
