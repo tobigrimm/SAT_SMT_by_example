@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Python 2.x
 
 import re, math, operator, random, os, subprocess, sys

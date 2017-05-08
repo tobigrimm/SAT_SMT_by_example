@@ -12,7 +12,7 @@ Here is my first experiment:
 
 What I did is changing size of ring buffer from 4096 to 32, because if bigger, KLEE consumes all \ac{RAM} it can.
 But I've found that KLEE can live with that small buffer.
-I\ve also decreased \TT{COMPRESSED\_LEN} gradually to check, whether KLEE would find compressed piece of data, and it did:
+I've also decreased \TT{COMPRESSED\_LEN} gradually to check, whether KLEE would find compressed piece of data, and it did:
 
 % FIXME:
 \begin{lstlisting}

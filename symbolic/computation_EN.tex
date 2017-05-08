@@ -3,8 +3,9 @@
 Let's first start with symbolic computation\footnote{\url{https://en.wikipedia.org/wiki/Symbolic_computation}}.
 
 Some numbers can only be represented in binary system approximately, like $\frac{1}{3}$ and $\pi$.
-If we calculate $\frac{1}{3} \cdot 3$ step-by-step, we may have some undesirable noise. % FIXME term!
-We also know that $sin(\frac{\pi}{2}) = 1$, but calculating this expression in usual way, we can also have some noise in result.
+If we calculate $\frac{1}{3} \cdot 3$ step-by-step, we may have loss of significance.
+We also know that $sin(\frac{\pi}{2}) = 1$, but calculating this expression in usual way,
+we can also have some noise in result.
 Arbitrary-precision arithmetic\footnote{\url{https://en.wikipedia.org/wiki/Arbitrary-precision_arithmetic}} is not a solution,
 because these numbers cannot be stored in memory as a binary number of finite length.
 
@@ -37,7 +38,7 @@ as some kind of symbol instead of a number.
 
 % TODO example
 So Mathematica left $x$ as unknown value.
-This is, in fact, common mistake by Mathematica's users: a small typo in an input expression may lead to a huge irreducible expression with this typo included.
+This is, in fact, common mistake by Mathematica's users: a small typo in an input expression may lead to a huge irreducible expression with the typo left.
 
 Another example: Mathematica left this deliberately while computing binary logarithm:
 
@@ -48,7 +49,7 @@ Out[]= Log[36]/Log[2]
 
 Because it has a hope that at some point in future, this expression will become a subexpression in another expression and 
 it will be reduced nicely at the very end.
-But if we really need an answer, we can force Mathematica to calculate it:
+But if we really need a numerical answer, we can force Mathematica to calculate it:
 
 \begin{lstlisting}
 In[]:= Log[2, 36] // N
@@ -82,7 +83,7 @@ All these things are extremely clumsy in comparison to a fast \ac{FPU}.
 
 ``Symbolic computation'' is opposed to ``numerical computation'', the last one is just processing numbers step-by-step, using calculator, \ac{CPU} or \ac{FPU}.\\
 \\
-Some problems can be solved better by the first method, some others -- by the second one.
+Some task can be solved better by the first method, some others -- by the second one.
 
 \subsubsection{Rational data type}
 

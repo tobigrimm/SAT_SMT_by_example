@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from z3 import *
 
 C1=0x5D7E0D1F2E0F1F84

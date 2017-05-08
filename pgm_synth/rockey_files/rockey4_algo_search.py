@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 # Rockey 4 dongle algorithm search <dennis@yurichev.com>
 

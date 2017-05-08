@@ -708,7 +708,7 @@ result=(arg1 & 0xfffffffffffffff0)
 
 Division is often replaced by multiplication for performance reasons.
 
-From school-level mathematics, we can remember that division by 3 can be replaced by multiplication by $\frac{1}{3}$.
+From school-level arithmetics, we can remember that division by 3 can be replaced by multiplication by $\frac{1}{3}$.
 In fact, sometimes compilers do so for floating-point arithmetics, for example, FDIV instruction in x86 code
 can be replaced by FMUL.
 At least MSVC 6.0 will replace division by 3 by multiplication by $\frac{1}{3}$ and sometimes it's hard to be sure,

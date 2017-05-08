@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
 	if (argc!=5)
 	{
 		printf ("Usage: %s password1 password2 password3 password4\n");
-		printf ("Passwords should be in hexadecimal form.\n");
+		printf ("Passwords must be in hexadecimal form.\n");
 		return 5;
 	};
 

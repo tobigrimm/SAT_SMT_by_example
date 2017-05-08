@@ -10,7 +10,7 @@
 Я специально сделал всё как можно проще для KLEE, ограничив входные массивы до двух байт, или до одного байта +
 оконечивающий нулевой байт.
 
-\begin{lstlisting}[basicstyle=\ttfamily, mathescape]
+\begin{lstlisting}
 % clang -emit-llvm -c -g strcmp.c
 
 % klee strcmp.bc

@@ -1,10 +1,26 @@
 ﻿\documentclass{article}
 
-\usepackage{cmap}
+\usepackage{fontspec}
+\setmainfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
 
-\usepackage[russian,english]{babel}
-\usepackage[T2A]{fontenc}
-\usepackage[default]{sourcesanspro}
+\usepackage{polyglossia}
+
+\EN{
+\setmainlanguage{english}
+\setotherlanguage{russian}
+}
+
+\RU{
+\setmainlanguage{russian}
+\setotherlanguage{english}
+%\newfontfamily{\cyrillicfonttt}{DejaVu Sans Mono}
+}
+
+\usepackage{cmap}
+%\usepackage[russian,english]{babel}
+%\usepackage[T2A]{fontenc}
+%\usepackage[default]{sourcesanspro}
 
 \usepackage{amsmath, amssymb, graphics, setspace}
 \usepackage[table]{xcolor}% http://ctan.org/pkg/xcolor
@@ -34,8 +50,10 @@
 %\newcommand{\TT}[1]{\texttt{#1}}
 \newcommand*{\TT}[1]{\colorbox{light-gray}{\texttt{#1}}}
 
-\newcommand{\TITLE}{Quick introduction into SAT/SMT solvers and symbolic execution}
-\newcommand{\AUTHOR}{Dennis Yurichev \TT{<dennis(a)yurichev.com>}}
+\EN{\newcommand{\TITLE}{Quick introduction into SAT/SMT solvers and symbolic execution}}
+\RU{\newcommand{\TITLE}{Краткое введение в SAT/SMT-солверы и символьное исполнение}}
+\EN{\newcommand{\AUTHOR}{Dennis Yurichev \TT{<dennis(a)yurichev.com>}}}
+\RU{\newcommand{\AUTHOR}{Денис Юричев \TT{<dennis(a)yurichev.com>}}}
 
 \hypersetup{
     pdftex,
@@ -49,7 +67,8 @@
 \lstset{
     %backgroundcolor=\color{lstbgcolor},
     %backgroundcolor=\color{light-gray},
-    basicstyle=\ttfamily\small, 
+    %basicstyle=\ttfamily\small, 
+    basicstyle=\ttfamily\footnotesize, 
     literate={~} {$\sim$}{1},
     breaklines=true,
     frame=single,
@@ -60,7 +79,8 @@
 
 \author{\AUTHOR}
 \title{\TITLE}
-\date{December 2015 -- May 2017}
+\EN{\date{December 2015 -- May 2017}}
+\RU{\date{Декабрь 2015 -- май 2017}}
 
 \begin{document}
 
@@ -69,14 +89,26 @@
 \tableofcontents
 
 % sections
-\input{intro}
-\input{SMT/main.tex}
-\input{pgm_synth/main.tex}
-\input{toy_decompiler/main.tex}
-\input{symbolic/main.tex}
-\input{KLEE/main.tex}
-\input{crypto/main.tex}
-\input{SAT/main.tex}
+\EN{
+\input{intro_EN}
+\input{SMT/main_EN}
+\input{pgm_synth/main_EN}
+\input{toy_decompiler/main_EN}
+\input{symbolic/main_EN}
+\input{KLEE/main_EN}
+\input{crypto/main_EN}
+\input{SAT/main_EN}
+}
+\RU{
+\input{intro_RU}
+\input{SMT/main_RU}
+\input{pgm_synth/main_RU}
+\input{toy_decompiler/main_RU}
+\input{symbolic/main_RU}
+\input{KLEE/main_RU}
+\input{crypto/main_RU}
+\input{SAT/main_RU}
+}
 
 \section{Acronyms used}
 
@@ -101,6 +133,20 @@
 \acro{CTF}{Capture the Flag}
 \acro{ISA}{Instruction Set Architecture}
 \acro{CSP}{Constraint satisfaction problem}
+\acro{CS}{Computer science}
+\acro{DAG}{Directed acyclic graph}
+\acro{NOP}{No Operation}
+\acro{JVM}{Java Virtual Machine}
+\acro{VM}{Virtual Machine}
+\acro{LZSS}{Lempel–Ziv–Storer–Szymanski}
+\acro{RAM}{Random-access memory}
+\acro{FPGA}{Field-programmable gate array}
+\acro{EDA}{Electronic design automation}
+\acro{MAC}{Message authentication code}
+\acro{ECC}{Elliptic curve cryptography}
+\acro{API}{Application programming interface}
+\acro{NSA}{National Security Agency}
+
 \end{acronym}
 
 \end{document}

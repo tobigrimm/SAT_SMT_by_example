@@ -9,7 +9,7 @@ Here is my own implementation of \TT{strcmp()}:
 Let's find out, if KLEE is capable of finding all three paths?
 I intentionaly made things simpler for KLEE by limiting input arrays to two 2 bytes or to 1 character + terminal zero byte.
 
-\begin{lstlisting}[basicstyle=\ttfamily, mathescape]
+\begin{lstlisting}
 % clang -emit-llvm -c -g strcmp.c
 
 % klee strcmp.bc

@@ -3,7 +3,7 @@
 Sometimes, multiplication operation can be replaced with a several operations of shifting/addition/subtraction.
 Compilers do so, because pack of instructions can be executed faster.
 
-For example, multiplication by 19 is replaced by GCC 5.4 with pair of instructions: \TT{lea edx, [eax+eax*8]} and
+For example, multiplication by 19 is replaced by GCC 5.4 with pair of instructions: \TT{lea edx, [eax+eax*8]} and\\
 \TT{lea eax, [eax+edx*2]}.
 This is sometimes also called ``superoptimization''.
 
@@ -88,7 +88,7 @@ op2_reg=[Int('op2_reg_s%d' % s) for s in range(MAX_STEPS)]
 op2_imm=[BitVec('op2_imm_s%d' % s, 32) for s in range(MAX_STEPS)]
 \end{lstlisting}
 
-R[][] is registers state for each chain and each step.
+R[][] is registers state for each chain and each step.\\
 On contrary, \TT{op}/\TT{op1\_reg}/\TT{op2\_reg}/\TT{op2\_imm} variables are defined for each step, but for both chains,
 since both chains at each column has the same operation/operands.
 
