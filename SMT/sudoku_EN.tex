@@ -129,7 +129,7 @@ It took $\approx 1.4$ seconds on my Intel Core i3-3110M 2.4GHz notebook to solve
 \subsubsection{The second idea}
 
 My first approach is far from effective, I did what first came to my mind and worked.
-Another approach is to use \TT{distinct} command from SMTLIB, which tells Z3 that some variables must be distinct (or unique).
+Another approach is to use \TT{distinct} command from SMT-LIB, which tells Z3 that some variables must be distinct (or unique).
 This command is also available in Z3 Python interface.
 
 I've rewritten my first Sudoku solver, now it operates over \textit{Int} \textit{sort}, it has \TT{distinct} commands instead of bit operations,

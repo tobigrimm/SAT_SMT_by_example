@@ -114,7 +114,7 @@ Summary: if you deal with amateur cryptography, you can always give KLEE and SMT
 Even more: sometimes you have only decryption function, and if algorithm is simple enough,
 KLEE or SMT solver can reverse things back.
 
-One fun thing to mention: if you try to implement amateur cryptoalgorithm in Verilog/VHDL language to run it on \ac{FPGA},
+One funny thing to mention: if you try to implement amateur cryptoalgorithm in Verilog/VHDL language to run it on \ac{FPGA},
 maybe in brute-force way,
 you can find that \ac{EDA} tools can optimize many things during synthesis
 (this is the word they use for ``compilation'') and can leave cryptoalgorithm much smaller/simpler than it was.
@@ -148,6 +148,9 @@ for (i=0; i<size; i++)
 
 This is not even encryption, rather concealing or hiding.
 
+Some other examples of simple XOR-cipher cryptoanalysis are present in the ``Reverse Engineering for Beginners''
+\footnote{\url{http://beginners.re}} book.
+
 \subsubsection{Other features}
 
 \textbf{Tables} There are often table(s) with pseudorandom data, which is/are used chaotically.
@@ -156,6 +159,8 @@ This is not even encryption, rather concealing or hiding.
 this could affect behaviour of software.
 So there is often some kind of checksum: starting at simple summing and \ac{CRC}.
 This is close to \ac{MAC} in real cryptography.
+
+\textbf{Entropy level} Maybe (much) lower, despite the fact that data looks random.
 
 \subsubsection{Examples}
 

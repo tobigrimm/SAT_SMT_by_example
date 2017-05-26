@@ -123,11 +123,11 @@ sat
 
 \subsection{Connection between \ac{SAT} and \ac{SMT} solvers}
 
-Early \ac{SMT}-solvers were frontends to \ac{SAT} solvers, i.e.,
+\ac{SMT}-solvers are frontends to \ac{SAT} solvers, i.e.,
 they translating input SMT expressions into \ac{CNF} and feed SAT-solver with it.
 Translation process is sometimes called ``bit blasting''.
-Some \ac{SMT}-solvers still works in that way: STP uses MiniSAT or CryptoMiniSAT as backend SAT-solver.
-Some other \ac{SMT}-solvers are more advanced (like Z3), so they use something even more complex.
+Some \ac{SMT}-solvers uses external SAT-solver: STP uses MiniSAT or CryptoMiniSAT as backend.
+Some other \ac{SMT}-solvers (like Z3) has their own SAT solver.
 
 % subsections
 \input{SMT/zebra_EN}
