@@ -72,15 +72,16 @@
     literate={~} {$\sim$}{1},
     breaklines=true,
     frame=single,
-    columns=fullflexible,keepspaces,
+    %columns=fullflexible,keepspaces,
+    columns=keepspaces,
     escapeinside=§§,
     inputencoding=utf8
 }
 
+% с fullflexible в русской версии "+-----+" выглядит длиннее! ХЗ, почему
+
 \author{\AUTHOR}
 \title{\TITLE}
-\EN{\date{December 2015 -- May 2017}}
-\RU{\date{Декабрь 2015 -- май 2017}}
 
 \begin{document}
 
@@ -146,7 +147,7 @@
 \acro{ECC}{Elliptic curve cryptography}
 \acro{API}{Application programming interface}
 \acro{NSA}{National Security Agency}
-
+\acro{DPLL}{Davis–Putnam–Logemann–Loveland}
 \end{acronym}
 
 \end{document}

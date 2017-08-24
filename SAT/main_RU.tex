@@ -94,13 +94,7 @@ $\neg$ это отрицание (НЕ).
 
 Вот что получилось, когда я сконвертировал выражение из Mathematica во входной файл для MiniSat:
 
-\begin{lstlisting}
-p cnf 4 4
--1 -3 0
-1 3 0
--2 -4 0
-2 4 0
-\end{lstlisting}
+\lstinputlisting{SAT/adder.cnf}
 
 Две четверки в первой строке это, соответственно, число переменных и число клозов.
 Так что тут 4 строки, каждая для каждого клоза ИЛИ.
@@ -292,7 +286,27 @@ v 1 2 -3 -4 0
 
 \dots то же, что и выдал MiniSat.
 
+\subsection{Picosat}
+
+По крайней мере Picosat может перечислить все возможные решения без тех костылей, которые я только что показывал:
+
+\begin{lstlisting}
+% picosat --all adder.cnf
+s SATISFIABLE
+v -1 -2 3 4 0
+s SATISFIABLE
+v -1 2 3 -4 0
+s SATISFIABLE
+v 1 2 -3 -4 0
+s SATISFIABLE
+v 1 -2 -3 4 0
+s SOLUTIONS 4
+\end{lstlisting}
+
 % subsections:
+\input{SAT/8queens/main_RU}
+\input{SAT/sudoku/main_RU}
 \input{SAT/minesweeper/main_RU}
 \input{SAT/GoL/main_RU}
+\input{SAT/backtrack/main_RU}
 

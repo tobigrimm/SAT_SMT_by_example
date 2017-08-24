@@ -1,0 +1,72 @@
+\subsection{Sudoku in SAT}
+
+One might think that we can encode each 1..9 number in binary form: 5 bits or variables would be enough.
+But there is even simpler way: allocate 9 bits, where only one bit will be \textit{True}.
+The number 1 can be encoded as [1, 0, 0, 0, 0, 0, 0, 0, 0], the number 3 as [0, 0, 1, 0, 0, 0, 0, 0, 0], etc.
+Seems uneconomical? Yes, but other operations would be simpler.
+
+First of all, we'll reuse important \TT{POPCNT1} function I've described earlier: \ref{POPCNTOne}.
+
+The second important operation we need to invent is making 9 numbers unique.
+If each number is encoded as 9-bits vector, 9 numbers can form a matrix, like:
+
+\begin{lstlisting}
+0 0 0 0 0 0 1 0 0 <- 1st number
+0 0 0 0 0 1 0 0 0 <- 2nd number
+0 1 0 0 0 0 0 0 0 <- ...
+0 0 1 0 0 0 0 0 0 <- ...
+0 0 0 0 0 0 0 0 1 <- ...
+0 0 0 0 1 0 0 0 0 <- ...
+0 0 0 0 0 0 0 1 0 <- ...
+1 0 0 0 0 0 0 0 0 <- ...
+0 0 0 1 0 0 0 0 0 <- 9th number
+\end{lstlisting}
+
+Now we will use a \TT{POPCNT1} function to make each row in the matrix to contain only one \textit{True} bit, that will
+preserve consistency in encoding, since no vector can contain more than 1 \textit{True} bit, or no \textit{True} bits at all.
+Then we will use a \TT{POPCNT1} function again to make all columns in the matrix to have only one single \textit{True} bit.
+That will make all rows in matrix unique, in other words, all 9 encoded numbers will always be unique.
+
+After applying \TT{POPCNT1} function 9+9=18 times we'll have 9 unique numbers in 1..9 range.
+
+Using that operation we can make each row of Sudoku puzzle unique, each column unique and also each $3 \cdot 3=9$ box.
+
+\lstinputlisting{SAT/sudoku/sudoku_SAT.py}
+( \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SAT/sudoku/sudoku_SAT.py} )
+
+The \TT{make\_distinct\_bits\_in\_vector()} function preserves consistency of encoding.\\
+The \TT{make\_distinct\_vectors()} function makes 9 numbers unique.\\
+The \TT{cvt\_vector\_to\_number()} decodes vector to number.\\
+The \TT{number\_to\_vector()} encodes number to vector.\\
+The \TT{main()} function has all necessary calls to make rows/columns/$3\cdot 3$ boxes unique.
+
+That works:
+
+\begin{lstlisting}
+% python sudoku_SAT.py
+len(clauses)= 12195
+1 4 5 3 2 7 6 9 8
+8 3 9 6 5 4 1 2 7
+6 7 2 9 1 8 5 4 3
+4 9 6 1 8 5 3 7 2
+2 1 8 4 7 3 9 5 6
+7 5 3 2 9 6 4 8 1
+3 6 7 5 4 2 8 1 9
+9 8 4 7 6 1 2 3 5
+5 2 1 8 3 9 7 6 4
+\end{lstlisting}
+
+Same solution as earlier: \ref{sudoku_SMT}.
+
+Picosat tells this SAT instance has only one solution.
+Indeed, as they say, true Sudoku puzzle can have only one solution.
+
+\subsubsection{Getting rid of one POPCNT1 function call}
+
+To make 9 unique 1..9 numbers we can use \TT{POPCNT1} function to make each row in matrix be unique and
+use \textit{OR} boolean operation for all columns.
+That will have merely the same effect: all rows has to be unique to make each column to be evaluated
+to \textit{True} if all variables in column are OR'ed.
+
+That will make 3447 clauses instead of 12195, but somehow, SAT solvers works slower. No idea why.
+
