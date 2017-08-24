@@ -1,0 +1,168 @@
+\subsection{Eight queens puzzle}
+\label{EightQueens}
+
+Eight queens is a very popular puzzle and often used for measuring performance of SAT solvers.
+The problem is to place 8 queens on chess board so they will not attack each other.
+For example:
+
+\begin{lstlisting}
+| | | |*| | | | |
+| | | | | | |*| |
+| | | | |*| | | |
+| |*| | | | | | |
+| | | | | |*| | |
+|*| | | | | | | |
+| | |*| | | | | |
+| | | | | | | |*|
+\end{lstlisting}
+
+Let's try to figure out how to solve it.
+
+\subsubsection{POPCNT1}
+
+One important function we will (often) use is \TT{POPCNT1}.
+This is a function which returns \textit{True} if one single of inputs is \textit{True} and others are \textit{False}.
+It will return \textit{False} otherwise.
+
+In my other examples, I've used Wolfram Mathematica to generate CNF clauses for it, for example: \ref{minesweeper_SAT}.
+What expression Mathematica offers as \TT{POPCNT1} function with 8 inputs?
+
+\begin{lstlisting}
+(!a||!b)&&(!a||!c)&&(!a||!d)&&(!a||!e)&&(!a||!f)&&(!a||!g)&&(!a||!h)&&(a||b||c||d||e||f||g||h)&&
+(!b||!c)&&(!b||!d)&&(!b||!e)&&(!b||!f)&&(!b||!g)&&(!b||!h)&&(!c||!d)&&(!c||!e)&&(!c||!f)&&(!c||!g)&&
+(!c||!h)&&(!d||!e)&&(!d||!f)&&(!d||!g)&&(!d||!h)&&(!e||!f)&&(!e||!g)&&(!e||!h)&&(!f||!g)&&(!f||!h)&&(!g||!h)
+\end{lstlisting}
+
+We can clearly see that the expression constisting of all possible variable pairs (negated) plus
+enumeration of all variables (non-negated).
+In plain English terms, this means: ``no pair can be equal to two \textit{True}'s \textit{AND} at least one \textit{True}
+must be present among all variables''.
+
+This is how it works: if two variables will be \textit{True}, negated they will be both \textit{False},
+and this clause will not be evaluated
+to \textit{True}, which is our ultimate goal.
+If one of variables is \textit{True}, both negated will produce one \textit{True} and one \textit{False} (fine).
+If both variables are False, both negated will produce two \textit{True's} (again, fine).
+
+Here is how I can generate clauses for the function using \textit{itertools} module from Python,
+which provides many important functions from combinatorics:
+
+\begin{lstlisting}
+import itertools
+
+def neg(v):
+    return "-"+v
+
+def add_popcnt0_or_1(vars):
+    global clauses
+    # enumerate all possible pairs
+    # no pair can have both True's
+    # so add "~var OR ~var2"
+    for pair in itertools.combinations(vars, r=2):
+        clauses.add(neg(pair[0])+" "+neg(pair[1]))
+
+def add_popcnt1(vars):
+    global clauses
+    add_popcnt0_or_1(vars)
+    # at least one var must be present:
+    clauses.add(" ".join(vars))
+\end{lstlisting}
+
+\TT{add\_popcnt0\_or\_1()} function enumerates all possible pairs using \textit{itertools} function
+\textit{combinations()}.
+
+\TT{add\_popcnt1()} function does the same, but also adds a final clause, which forces at least one
+\textit{True} variable to be present.
+
+What clauses will be generated for 5 variables (1..5)?
+
+\lstinputlisting{SAT/8queens/popcnt1.cnf}
+
+Yes, these are all possible pairs of 1..5 numbers + all 5 numbers.
+
+We can get all solutions using Picosat:
+
+\begin{lstlisting}
+% picosat --all popcnt1.cnf
+s SATISFIABLE
+v -1 -2 -3 -4 5 0
+s SATISFIABLE
+v -1 -2 -3 4 -5 0
+s SATISFIABLE
+v -1 -2 3 -4 -5 0
+s SATISFIABLE
+v -1 2 -3 -4 -5 0
+s SATISFIABLE
+v 1 -2 -3 -4 -5 0
+s SOLUTIONS 5
+\end{lstlisting}
+
+5 possible solutions indeed.
+
+\subsubsection{Eight queens}
+
+Now let's get back to eight queens.
+
+We can assign 64 variables to $8 \cdot 8=64$ cells.
+Cell occuppied with queen will be \textit{True}, vacant cell will be \textit{False}.
+
+The problem of placing non-attacking (each other) queens on chess board (of any size) can be stated in plain English like this:
+\begin{itemize}
+\item one single queen must be present at each row;
+
+\item one single queen must be present at each column;
+
+\item zero or one queen must be present at each diagonal (empty diagonals can be present in valid solution).
+\end{itemize}
+
+These rules can be translated like that:
+
+\begin{itemize}
+\item POPCNT1(each row)==\textit{True}
+
+\item POPCNT1(each column)==\textit{True}
+
+\item POPCNT0\_OR\_1(each diagonal)==\textit{True}
+\end{itemize}
+
+Now all we need is to enumerate rows, columns and diagonals and gather all clauses:
+
+\lstinputlisting{SAT/8queens/8queens.py}
+( \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SAT/8queens/8queens.py} )
+
+Perhaps, \TT{gen\_diagonal()} function is not very aesthetically appealing: it enumerates also subdiagonals
+of already enumerated longer diagonals.
+To prevent presence of duplicate clauses, \textit{clauses} global variable is not a list, rather set, which allows
+only unique data to be present there.
+
+Also, I've used \TT{POPCNT0\_OR\_1} for each column, this will help to produce slightly lower number of clauses.
+Each column will have a queen anyway, this is implied from the first rule (\TT{POPCNT1} for each row).
+
+After running, we got CNF file with 64 variables and 736 clauses (\url{https://github.com/dennis714/SAT_SMT_article/blob/master/SAT/8queens/8queens.cnf}).
+Here is one solution:
+
+\begin{lstlisting}
+% python 8queens.py
+len(clauses)= 736
+| | | |*| | | | |
+| | | | | | |*| |
+| | | | |*| | | |
+| |*| | | | | | |
+| | | | | |*| | |
+|*| | | | | | | |
+| | |*| | | | | |
+| | | | | | | |*|
+\end{lstlisting}
+
+How many possible solutions are there?
+Picosat tells 92, which is indeed correct number (\url{https://oeis.org/A000170}).
+
+Performance of Picosat is not impressive, probably because it has to output all the solutions.
+It took 34 seconds on my ancient Intel Atom 1.66GHz netbook to enumerate all solutions for $11 \cdot 11$ chess board
+(2680 solutions),
+which is way slower than my straigt brute-force program: \url{https://yurichev.com/blog/8queens/}.
+Nevertheless, it's lighting fast (as other SAT solvers) in finding first solution.
+
+The SAT instance is also small enough to be easily solved by my simplest possible backtracking SAT solver:
+\ref{SAT_backtrack}.
+
