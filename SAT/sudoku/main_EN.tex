@@ -1,4 +1,5 @@
 \subsection{Sudoku in SAT}
+\label{Sudoku_SAT}
 
 One might think that we can encode each 1..9 number in binary form: 5 bits or variables would be enough.
 But there is even simpler way: allocate 9 bits, where only one bit will be \textit{True}.
@@ -62,11 +63,13 @@ Picosat tells this SAT instance has only one solution.
 Indeed, as they say, true Sudoku puzzle can have only one solution.
 
 \subsubsection{Getting rid of one POPCNT1 function call}
+\label{OR_in_POPCNT1}
 
 To make 9 unique 1..9 numbers we can use \TT{POPCNT1} function to make each row in matrix be unique and
 use \textit{OR} boolean operation for all columns.
 That will have merely the same effect: all rows has to be unique to make each column to be evaluated
 to \textit{True} if all variables in column are OR'ed.
+(I will do this in the next example: \ref{Zebra_SAT}.)
 
 That will make 3447 clauses instead of 12195, but somehow, SAT solvers works slower. No idea why.
 
