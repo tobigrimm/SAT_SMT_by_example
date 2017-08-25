@@ -1,0 +1,314 @@
+\subsection{Zebra puzzle as a SAT problem}
+\label{Zebra_SAT}
+
+Let's try to solve Zebra puzzle (\ref{zebra_SMT}) in SAT.
+
+I would define each variable as vector of 5 variables, as I did before in Sudoku solver: \ref{Sudoku_SAT}.
+
+I also use \TT{POPCNT1} function, but unlike previous example, I used Wolfram Mathematica to generate it in CNF form:
+
+\begin{lstlisting}
+In[]:= tbl1=Table[PadLeft[IntegerDigits[i,2],5] ->If[Equal[DigitCount[i,2][[1]],1],1,0],{i,0,63}]
+Out[]= {{0,0,0,0,0}->0,
+{0,0,0,0,1}->1,
+{0,0,0,1,0}->1,
+{0,0,0,1,1}->0,
+{0,0,1,0,0}->1,
+{0,0,1,0,1}->0,
+
+...
+
+{1,1,1,1,0}->0,
+{1,1,1,1,1}->0}
+
+In[]:= BooleanConvert[BooleanFunction[tbl1,{a,b,c,d,e}],"CNF"]
+Out[]= (!a||!b)&&(!a||!c)&&(!a||!d)&&(!a||!e)&&(a||b||c||d||e)&&(!b||!c)&&(!b||!d)&&(!b||!e)&&(!c||!d)&&(!c||!e)&&(!d||!e)
+\end{lstlisting}
+
+Also, as I suggested before (\ref{OR_in_POPCNT1}), I used \textit{OR} operation as the second step.
+
+\begin{lstlisting}
+def mathematica_to_CNF (s, d):
+    for k in d.keys():
+        s=s.replace(k, d[k])
+    s=s.replace("!", "-").replace("||", " ").replace("(", "").replace(")", "")
+    s=s.split ("&&")
+    return s
+
+def add_popcnt1(v1, v2, v3, v4, v5):
+    global clauses
+    s="(!a||!b)&&" \
+      "(!a||!c)&&" \
+      "(!a||!d)&&" \
+      "(!a||!e)&&" \
+      "(!b||!c)&&" \
+      "(!b||!d)&&" \
+      "(!b||!e)&&" \
+      "(!c||!d)&&" \
+      "(!c||!e)&&" \
+      "(!d||!e)&&" \
+      "(a||b||c||d||e)"
+
+    clauses=clauses+mathematica_to_CNF(s, {"a":v1, "b":v2, "c":v3, "d":v4, "e":v5})
+
+...
+
+# k=tuple: ("high-level" variable name, number of bit (0..4))
+# v=variable number in CNF
+vars={}
+vars_last=1
+
+...
+
+def alloc_distinct_variables(names):
+    global vars
+    global vars_last
+    for name in names:
+        for i in range(5):
+            vars[(name,i)]=str(vars_last)
+            vars_last=vars_last+1
+
+        add_popcnt1(vars[(name,0)], vars[(name,1)], vars[(name,2)], vars[(name,3)], vars[(name,4)])
+
+    # make them distinct:
+    for i in range(5):
+        clauses.append(vars[(names[0],i)] + " " + vars[(names[1],i)] + " " + vars[(names[2],i)] + " " + vars[(names[3],i)] + " " + vars[(names[4],i)])
+
+...
+
+alloc_distinct_variables(["Yellow", "Blue", "Red", "Ivory", "Green"])
+alloc_distinct_variables(["Norwegian", "Ukrainian", "Englishman", "Spaniard", "Japanese"])
+alloc_distinct_variables(["Water", "Tea", "Milk", "OrangeJuice", "Coffee"])
+alloc_distinct_variables(["Kools", "Chesterfield", "OldGold", "LuckyStrike", "Parliament"])
+alloc_distinct_variables(["Fox", "Horse", "Snails", "Dog", "Zebra"])
+
+...
+
+\end{lstlisting}
+
+Now we have 5 boolean variables for each \textit{high-level} variable,
+and each group of variables will always have distinct values.
+
+Now let's reread puzzle description: ``2.The Englishman lives in the red house.''.
+That's easy.
+In my Z3 and KLEE examples I just wrote ``Englishman==Red''.
+Same story here: we just add a clauses showing that 5 boolean variables for ``Englishman''
+must be equal to 5 booleans for ``Red''.
+
+On a lowest CNF level, if we want to say that two variables must be equal to each other, we add two clauses:
+
+$(var1 \vee \neg var2) \wedge (\neg var1 \vee var2)$
+
+That means, both \textit{var1} and \textit{var2} values must be \textit{False} or \textit{True},
+but they cannot be different.
+
+\begin{lstlisting}
+def add_eq_clauses(var1, var2):
+    global clauses
+    clauses.append(var1 + " -" + var2)
+    clauses.append("-"+var1 + " " + var2)
+
+def add_eq (n1, n2):
+    for i in range(5):
+        add_eq_clauses(vars[(n1,i)], vars[(n2, i)])
+
+...
+
+# 2.The Englishman lives in the red house.
+add_eq("Englishman","Red")
+
+# 3.The Spaniard owns the dog.
+add_eq("Spaniard","Dog")
+
+# 4.Coffee is drunk in the green house.
+add_eq("Coffee","Green")
+
+...
+
+\end{lstlisting}
+
+Now the next conditions:
+``9.Milk is drunk in the middle house.'' (i.e., 3rd house), ``10.The Norwegian lives in the first house.''
+We can just assign boolean values directly:
+
+\begin{lstlisting}
+# n=1..5
+def add_eq_var_n (name, n):
+    global clauses
+    global vars
+    for i in range(5):
+        if i==n-1:
+            clauses.append(vars[(name,i)]) # always True
+        else:
+            clauses.append("-"+vars[(name,i)]) # always False
+
+...
+
+# 9.Milk is drunk in the middle house.
+add_eq_var_n("Milk",3) # i.e., 3rd house
+
+# 10.The Norwegian lives in the first house.
+add_eq_var_n("Norwegian",1)
+\end{lstlisting}
+
+For ``Milk'' we will have ``0 0 1 0 0'' value, for ``Norwegian'': ``1 0 0 0 0''.
+
+What to do with this?
+``6.The green house is immediately to the right of the ivory house.''
+I can construct the following condition:
+
+\begin{lstlisting}
+    Ivory      Green
+AND(1 0 0 0 0  0 1 0 0 0)
+.. OR ..
+AND(0 1 0 0 0  0 0 1 0 0)
+.. OR ..
+AND(0 0 1 0 0  0 0 0 1 0)
+.. OR ..
+AND(0 0 0 1 0  0 0 0 0 1)
+\end{lstlisting}
+
+There is no ``0 0 0 0 1'' for ``Ivory'', because it cannot be the last one.
+Now I can convert these conditions to CNF using Wolfram Mathematica:
+
+\begin{lstlisting}
+In[]:= BooleanConvert[(a1&& !b1&&!c1&&!d1&&!e1&&!a2&& b2&&!c2&&!d2&&!e2) ||
+(!a1&& b1&&!c1&&!d1&&!e1&&!a2&& !b2&&c2&&!d2&&!e2) ||
+(!a1&& !b1&&c1&&!d1&&!e1&&!a2&& !b2&&!c2&&d2&&!e2) ||
+(!a1&& !b1&&!c1&&d1&&!e1&&!a2&& !b2&&!c2&&!d2&&e2) ,"CNF"]
+
+Out[]= (!a1||!b1)&&(!a1||!c1)&&(!a1||!d1)&&(a1||b1||c1||d1)&&!a2&&(!b1||!b2)&&(!b1||!c1)&&
+(!b1||!d1)&&(b1||b2||c1||d1)&&(!b2||!c1)&&(!b2||!c2)&&(!b2||!d1)&&(!b2||!d2)&&(!b2||!e2)&&
+(b2||c1||c2||d1)&&(b2||c2||d1||d2)&&(b2||c2||d2||e2)&&(!c1||!c2)&&(!c1||!d1)&&(!c2||!d1)&&
+(!c2||!d2)&&(!c2||!e2)&&(!d1||!d2)&&(!d2||!e2)&&!e1
+\end{lstlisting}
+
+And here is a piece of my Python code:
+
+\begin{lstlisting}
+def add_right (n1, n2):
+    global clauses
+    s="(!a1||!b1)&&(!a1||!c1)&&(!a1||!d1)&&(a1||b1||c1||d1)&&!a2&&(!b1||!b2)&&(!b1||!c1)&&(!b1||!d1)&&" \
+      "(b1||b2||c1||d1)&&(!b2||!c1)&&(!b2||!c2)&&(!b2||!d1)&&(!b2||!d2)&&(!b2||!e2)&&(b2||c1||c2||d1)&&" \
+      "(b2||c2||d1||d2)&&(b2||c2||d2||e2)&&(!c1||!c2)&&(!c1||!d1)&&(!c2||!d1)&&(!c2||!d2)&&(!c2||!e2)&&" \
+      "(!d1||!d2)&&(!d2||!e2)&&!e1"
+
+    clauses=clauses+mathematica_to_CNF(s, {
+	"a1": vars[(n1,0)], "b1": vars[(n1,1)], "c1": vars[(n1,2)], "d1": vars[(n1,3)], "e1": vars[(n1,4)],
+	"a2": vars[(n2,0)], "b2": vars[(n2,1)], "c2": vars[(n2,2)], "d2": vars[(n2,3)], "e2": vars[(n2,4)]})
+
+...
+
+# 6.The green house is immediately to the right of the ivory house.
+add_right("Ivory", "Green")
+\end{lstlisting}
+
+What we will do with that?
+``11.The man who smokes Chesterfields lives in the house next to the man with the fox.''
+``12.Kools are smoked in the house next to the house where the horse is kept.''
+
+We don't know side, left or right, but we know that they are differ in one.
+Here is a clauses I would add:
+
+\begin{lstlisting}
+    Chesterfield  Fox
+AND(0 0 0 0 1     0 0 0 1 0)
+.. OR ..
+AND(0 0 0 1 0     0 0 0 0 1)
+AND(0 0 0 1 0     0 0 1 0 0)
+.. OR ..
+AND(0 0 1 0 0     0 1 0 0 0)
+AND(0 0 1 0 0     0 0 0 1 0)
+.. OR ..
+AND(0 1 0 0 0     1 0 0 0 0)
+AND(0 1 0 0 0     0 0 1 0 0)
+.. OR ..
+AND(1 0 0 0 0     0 1 0 0 0)
+\end{lstlisting}
+
+I can convert this into CNF using Mathematica again:
+
+\begin{lstlisting}
+In[]:= BooleanConvert[(a1&& !b1&&!c1&&!d1&&!e1&&!a2&& b2&&!c2&&!d2&&!e2) ||
+
+(!a1&& b1&&!c1&&!d1&&!e1&&a2&& !b2&&!c2&&!d2&&!e2) ||
+(!a1&& b1&&!c1&&!d1&&!e1&&!a2&& !b2&&c2&&!d2&&!e2) ||
+
+(!a1&& !b1&&c1&&!d1&&!e1&&!a2&& b2&&!c2&&!d2&&!e2) ||
+(!a1&& !b1&&c1&&!d1&&!e1&&!a2&& !b2&&!c2&&d2&&!e2) ||
+
+(!a1&& !b1&&!c1&&d1&&!e1&&!a2&& !b2&&c2&&!d2&&!e2) ||
+(!a1&& !b1&&!c1&&d1&&!e1&&!a2&& !b2&&!c2&&!d2&&e2) ||
+
+(!a1&& !b1&&!c1&&!d1&&e1&&!a2&& !b2&&!c2&&d2&&!e2) ,"CNF"]
+
+Out[]= (!a1||!b1)&&(!a1||!c1)&&(!a1||!d1)&&(!a1||!e1)&&(a1||b1||c1||d1||e1)&&(!a2||b1)&&(!a2||!b2)&&
+(!a2||!c2)&&(!a2||!d2)&&(!a2||!e2)&&(a2||b2||c1||c2||d1||e1)&&(a2||b2||c2||d1||d2)&&(a2||b2||c2||d2||e2)&&
+(!b1||!b2)&&(!b1||!c1)&&(!b1||!d1)&&(!b1||!e1)&&(b1||b2||c1||d1||e1)&&(!b2||!c2)&&(!b2||!d1)&&(!b2||!d2)&&
+(!b2||!e1)&&(!b2||!e2)&&(!c1||!c2)&&(!c1||!d1)&&(!c1||!e1)&&(!c2||!d2)&&(!c2||!e1)&&(!c2||!e2)&&
+(!d1||!d2)&&(!d1||!e1)&&(!d2||!e2)
+\end{lstlisting}
+
+And here is my code:
+
+\begin{lstlisting}
+def add_right_or_left (n1, n2):
+    global clauses
+    s="(!a1||!b1)&&(!a1||!c1)&&(!a1||!d1)&&(!a1||!e1)&&(a1||b1||c1||d1||e1)&&(!a2||b1)&&" \
+      "(!a2||!b2)&&(!a2||!c2)&&(!a2||!d2)&&(!a2||!e2)&&(a2||b2||c1||c2||d1||e1)&&(a2||b2||c2||d1||d2)&&" \
+       "(a2||b2||c2||d2||e2)&&(!b1||!b2)&&(!b1||!c1)&&(!b1||!d1)&&(!b1||!e1)&&(b1||b2||c1||d1||e1)&&" \
+       "(!b2||!c2)&&(!b2||!d1)&&(!b2||!d2)&&(!b2||!e1)&&(!b2||!e2)&&(!c1||!c2)&&(!c1||!d1)&&(!c1||!e1)&&" \
+       "(!c2||!d2)&&(!c2||!e1)&&(!c2||!e2)&&(!d1||!d2)&&(!d1||!e1)&&(!d2||!e2)"
+    
+    clauses=clauses+mathematica_to_CNF(s, {
+	"a1": vars[(n1,0)], "b1": vars[(n1,1)], "c1": vars[(n1,2)], "d1": vars[(n1,3)], "e1": vars[(n1,4)],
+	"a2": vars[(n2,0)], "b2": vars[(n2,1)], "c2": vars[(n2,2)], "d2": vars[(n2,3)], "e2": vars[(n2,4)]})
+
+...
+
+# 11.The man who smokes Chesterfields lives in the house next to the man with the fox.
+add_right_or_left("Chesterfield","Fox") # left or right
+
+# 12.Kools are smoked in the house next to the house where the horse is kept.
+add_right_or_left("Kools","Horse") # left or right
+\end{lstlisting}
+
+This is it!
+The full source code: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SAT/zebra/zebra_SAT.py}.
+
+Resulting CNF instance has 125 boolean variables and 511 clauses: \\
+\url{https://github.com/dennis714/SAT_SMT_article/blob/master/SAT/zebra/1.cnf}.
+It is a piece of cake for any SAT solver.
+Even my toy-level SAT-solver (\ref{SAT_backtrack}) can solve it in \textasciitilde{}1 second on my ancient Intel Atom netbook.
+
+And of course, there is only one possible solution, what is acknowledged by Picosat.
+
+\begin{lstlisting}
+% python zebra_SAT.py
+Yellow 1
+Blue 2
+Red 3
+Ivory 4
+Green 5
+Norwegian 1
+Ukrainian 2
+Englishman 3
+Spaniard 4
+Japanese 5
+Water 1
+Tea 2
+Milk 3
+OrangeJuice 4
+Coffee 5
+Kools 1
+Chesterfield 2
+OldGold 3
+LuckyStrike 4
+Parliament 5
+Fox 1
+Horse 2
+Snails 3
+Dog 4
+Zebra 5
+\end{lstlisting}
+
