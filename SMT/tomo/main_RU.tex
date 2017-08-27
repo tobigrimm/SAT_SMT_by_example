@@ -1,0 +1,246 @@
+\subsection{Дискретная томография}
+
+Как компьютерная томография (КТ) вообще работает?
+Тело человека бомбардируется рентгеновскими лучами под разными углами во вращающемся торе.
+Детекторы излучения также находятся в торе и вся информация записывается.
+
+Мы тут можем симулировать простой томограф.
+Символ ``i'' вращается и будет ``просвечен'' под 4-я углами.
+Представим что символ бомбардируется рентгеновскими лучами слева.
+Все звездочки в каждом ряду суммируются и сумма ``принимается'' рентгеновскими детекторами справа.
+
+\begin{lstlisting}
+WIDTH= 11 HEIGHT= 11
+angle=(π/4)*0
+    **      2
+    **      2
+            0
+   ***      3
+    **      2
+    **      2
+    **      2
+    **      2
+    **      2
+   ****     4
+            0
+[2, 2, 0, 3, 2, 2, 2, 2, 2, 4, 0] ,
+angle=(π/4)*1
+            0
+            0
+  *         1
+ **         2
+    *       1
+    **      2
+     **     2
+     ****   4
+       *    1
+      *     1
+            0
+[0, 0, 1, 2, 1, 2, 2, 4, 1, 1, 0] ,
+angle=(π/4)*2
+            0
+            0
+            0
+            0
+         *  1
+** *******  9
+** *******  9
+   *     *  2
+            0
+            0
+            0
+[0, 0, 0, 0, 1, 9, 9, 2, 0, 0, 0] ,
+angle=(π/4)*3
+            0
+            0
+       *    1
+       **   2
+      ** *  3
+     ***    3
+    **      2
+            0
+  **        2
+   *        1
+            0
+[0, 0, 1, 2, 3, 3, 2, 0, 2, 1, 0] ,
+\end{lstlisting}
+
+( Исходный код: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/tomo/gen.py} )
+
+Все что мы получаем из нашего игрушечного томографа это 4 вектора, это суммы всех звездочек в рядях для 4-х углов:
+
+\begin{lstlisting}
+[2, 2, 0, 3, 2, 2, 2, 2, 2, 4, 0] ,
+[0, 0, 1, 2, 1, 2, 2, 4, 1, 1, 0] ,
+[0, 0, 0, 0, 1, 9, 9, 2, 0, 0, 0] ,
+[0, 0, 1, 2, 3, 3, 2, 0, 2, 1, 0] ,
+\end{lstlisting}
+
+Как восстановить изначальное изображение?
+Мы собираемся представить матрицу 11*11, где сумма каждого ряда должна равняться некоторому известному нам значению.
+Затем мы вращаем матрицу и делаем это снова.
+
+Ф-ция ``rotate'' была взята из программы для генерации, потому что, вследствии динамической типизации в Питоне,
+не важно, чем ф-ция оперирует: строки, символы, или объекты в Z3 содержащие переменные, так что она одинаково хорошо
+работает  для всех.
+
+\begin{lstlisting}
+#-*- coding: utf-8 -*-
+
+import math, sys
+from z3 import *
+
+# https://en.wikipedia.org/wiki/Rotation_matrix
+def rotate(pic, angle):
+    WIDTH=len(pic[0])
+    HEIGHT=len(pic)
+    #print WIDTH, HEIGHT
+    assert WIDTH==HEIGHT
+    ofs=WIDTH/2
+
+    out = [[0 for x in range(WIDTH)] for y in range(HEIGHT)]
+
+    for x in range(-ofs,ofs):
+        for y in range(-ofs,ofs):
+            newX = int(round(math.cos(angle)*x - math.sin(angle)*y,3))+ofs
+            newY = int(round(math.sin(angle)*x + math.cos(angle)*y,3))+ofs
+            # clip at boundaries, hence min(..., HEIGHT-1)
+            out[min(newX,HEIGHT-1)][min(newY,WIDTH-1)]=pic[x+ofs][y+ofs]
+    return out
+
+vectors=[
+[2, 2, 0, 3, 2, 2, 2, 2, 2, 4, 0] ,
+[0, 0, 1, 2, 1, 2, 2, 4, 1, 1, 0] ,
+[0, 0, 0, 0, 1, 9, 9, 2, 0, 0, 0] ,
+[0, 0, 1, 2, 3, 3, 2, 0, 2, 1, 0]]
+
+WIDTH = HEIGHT = len(vectors[0])
+
+s=Solver()
+cells=[[Int('cell_r=%d_c=%d' % (r,c)) for c in range(WIDTH)] for r in range(HEIGHT)]
+
+# monochrome picture, only 0's or 1's:
+for c in range(WIDTH):
+    for r in range(HEIGHT):
+        s.add(Or(cells[r][c]==0, cells[r][c]==1))
+
+def all_zeroes_in_vector(vec):
+    for v in vec:
+        if v!=0:
+            return False
+    return True
+
+ANGLES=len(vectors)
+for a in range(ANGLES):
+    angle=a*(math.pi/ANGLES)
+    rows=rotate(cells, angle)
+    r=0
+    for row in rows:
+        # skip empty rows:
+        if all_zeroes_in_vector(row)==False:
+            # sum of row must be equal to the corresponding element of vector:
+            s.add(Sum(*row)==vectors[a][r])
+        r=r+1
+
+print s.check()
+m=s.model()
+for r in range(HEIGHT):
+    for c in range(WIDTH):
+        if str(m[cells[r][c]])=="1":
+            sys.stdout.write("*")
+        else:
+            sys.stdout.write(" ")
+    print ""
+\end{lstlisting}
+
+( Исходный код: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/tomo/solve.py} )
+
+Это работает:
+
+\begin{lstlisting}
+% python solve.py
+sat
+    **
+    **
+
+   ***
+    **
+    **
+    **
+    **
+    **
+   ****
+\end{lstlisting}
+
+Другими словами, все что делает SMT-солвер это решает систему уравнений.
+
+Так что, 4-х углов достаточно.
+Что если бы мы использовали только 3 угла?
+
+\begin{lstlisting}
+WIDTH= 11 HEIGHT= 11
+angle=(π/3)*0
+    **      2
+    **      2
+            0
+   ***      3
+    **      2
+    **      2
+    **      2
+    **      2
+    **      2
+   ****     4
+            0
+[2, 2, 0, 3, 2, 2, 2, 2, 2, 4, 0] ,
+angle=(π/3)*1
+            0
+            0
+            0
+ **         2
+ **         2
+   ***      3
+     ****   4
+       **   2
+       *    1
+            0
+            0
+[0, 0, 0, 2, 2, 3, 4, 2, 1, 0, 0] ,
+angle=(π/3)*2
+            0
+            0
+            0
+       **   2
+       **   2
+     *****  5
+    **      2
+ **         2
+  *         1
+            0
+            0
+[0, 0, 0, 2, 2, 5, 2, 2, 1, 0, 0] ,
+\end{lstlisting}
+
+Нет, этого не достаточно:
+
+\begin{lstlisting}
+% time python solve3.py
+sat
+ *  *
+    **
+
+     * **
+   **
+   *  *
+    **
+     *   *
+*   *
+   ****
+\end{lstlisting}
+
+Впрочем, результат корректный, но 3 вектора допускают слишком много возможных ``исходных изображений'', и Z3 нашел
+первое.
+
+Дальнейшее чтение:
+\url{https://en.wikipedia.org/wiki/Discrete_tomography},
+\url{https://en.wikipedia.org/wiki/2-satisfiability#Discrete_tomography}.
+
