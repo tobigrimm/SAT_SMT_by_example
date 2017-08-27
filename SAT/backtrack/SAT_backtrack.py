@@ -107,7 +107,7 @@ def backtrack(vals):
             # new value is correct, try add another one:
             backtrack(new_vals)
         else:
-            # new value (False) is not correct, now try True:
+            # new value (False) is not correct, now try True (variable flip):
             continue
 
 # try to find all values:
