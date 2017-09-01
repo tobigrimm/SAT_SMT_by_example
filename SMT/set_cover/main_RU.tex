@@ -1,0 +1,90 @@
+\subsection{Создание наименьшего набора тестов используя Z3}
+\label{set_cover}
+
+Однажды я работал над переписыванием большого кода на чистый Си, и были тесты, несколько тысяч.
+Процесс тестирования был очень медленный, так что я думал о том, можно ли как-то уменьшить объем тестов.
+
+Мы можем вот что: запустить каждый тест и получить покрытие кода
+(информация о том, какие строки кода исполнялись, а какие --- нет).
+Затем задача это создать такой набор тестов, при котором покрытие будет максимальным, а кол-во тестов --- минимальным.
+
+На самом деле, это \textit{задача о покрытии множества} (\textit{set cover problem})
+(так же известна как \textit{hitting set problem}).
+Существуют алгоритмы и попроще (см. в Wikipedia\footnote{\url{https://en.wikipedia.org/wiki/Set_cover_problem}}),
+но это можно решить при помощи SMT-солвера.
+
+В начале, для примера я взял код для компрессии/декомпрессии \ac{LZSS}
+\footnote{\url{https://github.com/opensource-apple/kext_tools/blob/master/compression.c}},
+из исходных годов от Apple.
+Такие процедуры тестировать не легко.
+Вот моя версия:
+\url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/set_cover/compression.c}.
+Я добавил генерацию случайных входных данных для сжатия.
+Эта генерация зависит от некоторого изначального входного значения (\textit{seed}).
+Стандартные ф-ции \TT{srand()}/\TT{rand()} не рекомендуется использовать, но для такой простой задачи как у нас, это ОК.
+Я сгенерирую\footnote{\url{https://github.com/dennis714/yurichev.com/blob/master/blog/set_cover/gen_gcov_tests.sh}}
+1000 тестов с сидами 0..999, это создаст случайные данны для сжатия/разжатия/проверки.
+
+После того, как процедура сжатия/разжатия закончила работу,
+запускается утилита GNU gcov, которая выдает результат вроде:
+
+\begin{lstlisting}
+...
+     3395:  189:        for (i = 1; i < F; i++) {
+     3395:  190:            if ((cmp = key[i] - sp->text_buf[p + i]) != 0)
+     2565:  191:                break;
+        -:  192:        }
+     2565:  193:        if (i > sp->match_length) {
+     1291:  194:            sp->match_position = p;
+     1291:  195:            if ((sp->match_length = i) >= F)
+    #####:  196:                break;
+        -:  197:        }
+     2565:  198:    }
+    #####:  199:    sp->parent[r] = sp->parent[p];
+    #####:  200:    sp->lchild[r] = sp->lchild[p];
+    #####:  201:    sp->rchild[r] = sp->rchild[p];
+    #####:  202:    sp->parent[sp->lchild[p]] = r;
+    #####:  203:    sp->parent[sp->rchild[p]] = r;
+    #####:  204:    if (sp->rchild[sp->parent[p]] == p)
+    #####:  205:        sp->rchild[sp->parent[p]] = r;
+...
+\end{lstlisting}
+
+Число слева это кол-во, сколько раз исполнилась каждая строка.
+\TT{\#\#\#\#\#} означает, что строка кода не была исполнена вовсе.
+Второй столбец это номер строки.
+
+Теперь скрипт на Z3Py, который парсит все эти 1000 результатов gcov и находит минимальный \textit{hitting set}:
+
+% TODO: translate:
+\lstinputlisting{SMT/set_cover/set_cover.py}
+
+Вот что он выдает (\textasciitilde{}19s на моем старом Intel Quad-Core Xeon E3-1220 3.10GHz):
+
+\begin{lstlisting}
+% time python set_cover.py
+sat
+test_7
+test_48
+test_134
+python set_cover.py  18.95s user 0.03s system 99% cpu 18.988 total
+\end{lstlisting}
+
+Нам нужно всего 3 теста, чтобы исполнить (почти) все строки в коде:
+это впечатляет, учитывая тот факт, что выбрать эти тесты вручную было бы невероятно трудно!
+Результат легко проверить, и снова, при помощи утилиты gcov.
+
+Это иногда называется MaxSAT/MaxSMT --- проблема найти решение, но такое решение,
+где некоторая переменная/выражение будет максимальным, насколько это возможно, либо минимальным.
+
+Так же, этот код выдает неверные результаты на Z3 4.4.1, но корректно работает на Z3 4.5.0 (так что, пожалуйста,
+обновите).
+Это относительно свежая возможность в Z3, так что, вероятно, она не была стабильна в предыдущих версиях?
+
+Файлы: \url{https://github.com/dennis714/SAT_SMT_article/tree/master/SMT/set_cover}.
+
+Дальнейшее чтение:
+\url{https://en.wikipedia.org/wiki/Set_cover_problem},
+\url{https://en.wikipedia.org/wiki/Maximum_satisfiability_problem},
+\url{https://en.wikipedia.org/wiki/Optimization_problem}.
+

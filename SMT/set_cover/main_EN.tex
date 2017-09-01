@@ -1,0 +1,87 @@
+\subsection{Making smallest possible test suite using Z3}
+\label{set_cover}
+
+I once worked on rewriting large piece of code into pure C, and there were a tests, several thousands.
+Testing process was painfully slow, so I thought if the test suite can be minimized somehow.
+
+What we can do is to run each test and get code coverage
+(information about which lines of code was executed and which are not).
+Then the task is to make such test suite, where coverage is maximum, and number of tests is minimal.
+
+In fact, this is \textit{set cover problem} (also known as \textit{hitting set problem}).
+While simpler algorithms exist (see Wikipedia\footnote{\url{https://en.wikipedia.org/wiki/Set_cover_problem}}),
+it is also possible to solve with SMT-solver.
+
+First, I took \ac{LZSS} compression/decompression code
+\footnote{\url{https://github.com/opensource-apple/kext_tools/blob/master/compression.c}} for the example,
+from Apple sources.
+Such routines are not easy to test.
+Here is my version of it:
+\url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/set_cover/compression.c}.
+I've added random generation of input data to be compressed.
+Random generation is dependent of some kind of input seed.
+Standard \TT{srand()}/\TT{rand()} are not recommended to be used, but for such simple task as ours, it's OK.
+I'll generate\footnote{\url{https://github.com/dennis714/yurichev.com/blob/master/blog/set_cover/gen_gcov_tests.sh}}
+1000 tests with 0..999 seeds, that would produce random data to be compressed/decompressed/checked.
+
+After the compression/decompression routine has finished its work,
+GNU gcov utility is executed, which produces result like this:
+
+\begin{lstlisting}
+...
+     3395:  189:        for (i = 1; i < F; i++) {
+     3395:  190:            if ((cmp = key[i] - sp->text_buf[p + i]) != 0)
+     2565:  191:                break;
+        -:  192:        }
+     2565:  193:        if (i > sp->match_length) {
+     1291:  194:            sp->match_position = p;
+     1291:  195:            if ((sp->match_length = i) >= F)
+    #####:  196:                break;
+        -:  197:        }
+     2565:  198:    }
+    #####:  199:    sp->parent[r] = sp->parent[p];
+    #####:  200:    sp->lchild[r] = sp->lchild[p];
+    #####:  201:    sp->rchild[r] = sp->rchild[p];
+    #####:  202:    sp->parent[sp->lchild[p]] = r;
+    #####:  203:    sp->parent[sp->rchild[p]] = r;
+    #####:  204:    if (sp->rchild[sp->parent[p]] == p)
+    #####:  205:        sp->rchild[sp->parent[p]] = r;
+...
+\end{lstlisting}
+
+A leftmost number is an execution count for each line.
+\TT{\#\#\#\#\#} means the line of code hasn't been executed at all.
+The second column is a line number.
+
+Now the Z3Py script, which will parse all these 1000 gcov results and produce minimal \textit{hitting set}:
+
+\lstinputlisting{SMT/set_cover/set_cover.py}
+
+And what it produces (\textasciitilde{}19s on my old Intel Quad-Core Xeon E3-1220 3.10GHz):
+
+\begin{lstlisting}
+% time python set_cover.py
+sat
+test_7
+test_48
+test_134
+python set_cover.py  18.95s user 0.03s system 99% cpu 18.988 total
+\end{lstlisting}
+
+We need just these 3 tests to execute (almost) all lines in the code:
+looks impressive, given the fact, that it would be notoriously hard to pick these tests by hand!
+The result can be checked easily, again, using gcov utility.
+
+This is sometimes also called MaxSAT/MaxSMT --- the problem is to find solution,
+but the solution where some variable/expression is maximal as possible, or minimal as possible.
+
+Also, the code gives incorrect results on Z3 4.4.1, but working correctly on Z3 4.5.0 (so please upgrade).
+This is relatively fresh feature in Z3, so probably it was not stable in previous versions?
+
+The files: \url{https://github.com/dennis714/SAT_SMT_article/tree/master/SMT/set_cover}.
+
+Further reading:
+\url{https://en.wikipedia.org/wiki/Set_cover_problem},
+\url{https://en.wikipedia.org/wiki/Maximum_satisfiability_problem},
+\url{https://en.wikipedia.org/wiki/Optimization_problem}.
+

@@ -1,0 +1,49 @@
+\subsection{Package manager and Z3}
+
+Here is simplified example.
+We have libA, libB, libC and libD, available in various versions (and flavors).
+We're going to install programA and programB, which use these libraries.
+
+\lstinputlisting{SMT/dep/dependency.py}
+
+( The source code: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/dep/dependency.py} )
+
+The output:
+
+\begin{lstlisting}
+sat
+[libB = 5,
+ libD = 999,
+ libC = 10,
+ programB = 7,
+ programA = 1,
+ libA = 2]
+\end{lstlisting}
+
+999 means that there is no need to install libD, it's not required by other packages.
+
+Change version of ProgramB to v8 and it will says ``unsat'', meaning, there is a conflict:
+ProgramA requires libA v2, but ProgramB v8 eventually requires newer libA.
+
+Still, there is a work to do: ``unsat'' message is somewhat useless to end user,
+some information about conflicting items should be printed.
+
+Here is my another optimization problem example: \ref{set_cover}.
+
+More about using SAT/SMT solvers in package managers: \url{https://research.swtch.com/version-sat},
+\url{https://cseweb.ucsd.edu/~lerner/papers/opium.pdf}.
+
+Now in the opposite direction: forcing aptitude package manager to solve Sudoku: \\
+\url{http://web.archive.org/web/20160326062818/http://algebraicthunk.net/~dburrows/blog/entry/package-management-sudoku/}.
+
+Some readers may ask, how to order libraries/programs/packages to be installed?
+This is simpler problem, which is often solved by topological sorting.
+The algorithm reorders graph in such a way so that vertices not depended on anything will be on the top of queue.
+Next, there will be vertices dependend on vertices from the previous layer.
+And so on.
+
+\textit{make} UNIX utility does this while constructing order of items to be processed.
+Even more: older \textit{make} utilities offloaded the job to the external utility (\textit{tsort}).
+Some older UNIX has it, at least some versions of NetBSD
+\footnote{\url{http://netbsd.gw.com/cgi-bin/man-cgi/man?tsort+1+NetBSD-current}}.
+

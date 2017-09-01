@@ -1,0 +1,72 @@
+\subsection{Simplifying long and messy expressions using Mathematica and Z3}
+
+\dots which can be results of Hex-Rays and/or manual rewriting.
+
+I've added to my RE4B book about Wolfram Mathematica capabilities to minimize expressions
+\footnote{\url{https://github.com/dennis714/RE-for-beginners/blob/cd85356051937e87f90967cc272248084808223b/other/hexrays_EN.tex\#L412}, \url{https://beginners.re/}}.
+
+Today I stumbled upon this Hex-Rays output:
+
+\begin{lstlisting}
+if ( ( x != 7 || y!=0 ) && (x < 6 || x > 7) )
+{
+        ...
+};
+\end{lstlisting}
+
+Both Mathematica and Z3 (using ``simplify'' command) can't make it shorter, but I've got gut feeling,
+that there is something redundant.
+
+Let's take a look at the right part of the expression.
+If $x$ must be less than 6 \textit{OR} greater than 7, then it can hold any value except 6 \textit{AND} 7, right?
+So I can rewrite this manually:
+
+\begin{lstlisting}
+if ( ( x != 7 || y!=0 ) && x != 6 && x != 7) )
+{
+        ...
+};
+\end{lstlisting}
+
+And this is what Mathematica can simplify:
+
+\begin{lstlisting}
+In[]:= BooleanMinimize[(x != 7 || y != 0) && (x != 6 && x != 7)]
+Out[]:= x != 6 && x != 7
+\end{lstlisting}
+
+$y$ gets reduced.
+
+But am I really right?
+And why Mathematica and Z3 didn't simplify this at first place?
+
+I can use Z3 to prove that these expressions are equal to each other:
+
+\begin{lstlisting}
+#!/usr/bin/env python
+
+from z3 import *
+
+x=Int('x')
+y=Int('y')
+
+s=Solver()
+
+exp1=And(Or(x!=7, y!=0), Or(x<6, x>7))
+exp2=And(x!=6, x!=7)
+
+s.add(exp1!=exp2)
+
+print simplify(exp1) # no luck
+
+print s.check()
+print s.model()
+\end{lstlisting}
+
+Z3 can't find counterexample, so it says ``unsat'', meaning, these expressions are equivalent to each other.
+So I've rewritten this expression in my code, tests has been passed, etc.
+
+Yes, using both Mathematica and Z3 is overkill, and this is basic boolean algebra,
+but after \textasciitilde{}10 hours of sitting at a computer you can make really dumb mistakes,
+and additional proof your piece of code is correct is never unwanted.
+
