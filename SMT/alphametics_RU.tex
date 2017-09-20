@@ -1,0 +1,60 @@
+\section{Альфаметика}
+
+Согласно Дональду Кнуту, термин ``Альфаметика'' был придуман Дж. Эйч. Аш. Хантером.
+Это головоломка: какие десятичные цифры в пределах 0..9 нужно присвоить каждой букве, чтобы это уравнение было справедливо?
+
+\begin{lstlisting}
+  SEND
++ MORE
+ -----
+ MONEY
+\end{lstlisting}
+
+Для Z3 это легко:
+
+\lstinputlisting{SMT/alpha.py}
+
+Вывод:
+
+\begin{lstlisting}
+sat
+[E, = 5,
+ S, = 9,
+ M, = 1,
+ N, = 6,
+ D, = 7,
+ R, = 8,
+ O, = 0,
+ Y = 2]
+\end{lstlisting}
+
+Вот еще одна, из \ac{TAOCP} том IV (facs2b.ps URL):
+
+\lstinputlisting{SMT/alpha2.py}
+
+\begin{lstlisting}
+sat
+[L, = 6,
+ S, = 7,
+ N, = 2,
+ T, = 1,
+ I, = 5,
+ V = 3,
+ A, = 8,
+ R, = 9,
+ O, = 4,
+ TRIO = 1954,
+ SONATA, = 742818,
+ VIOLA, = 35468,
+ VIOLIN, = 354652]
+\end{lstlisting}
+
+Эту головоломку я нашел в примерах pySMT:
+
+\lstinputlisting{SMT/alpha3.py}
+
+\begin{lstlisting}
+sat
+[E, = 4, D = 6, O, = 2, W, = 3, R, = 5, L, = 1, H, = 9]
+\end{lstlisting}
+

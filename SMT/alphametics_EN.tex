@@ -1,0 +1,61 @@
+\section{Alphametics}
+
+According to Donald Knuth, the term ``Alphametics'' was coined by J. A. H. Hunter.
+This is a puzzle: what decimal digits in 0..9 range must be assigned to each letter,
+so the following equation will be true?
+
+\begin{lstlisting}
+  SEND
++ MORE
+ -----
+ MONEY
+\end{lstlisting}
+
+This is easy for Z3:
+
+\lstinputlisting{SMT/alpha.py}
+
+Output:
+
+\begin{lstlisting}
+sat
+[E, = 5,
+ S, = 9,
+ M, = 1,
+ N, = 6,
+ D, = 7,
+ R, = 8,
+ O, = 0,
+ Y = 2]
+\end{lstlisting}
+
+Another one, also from \ac{TAOCP} volume IV (facs2b.ps URL):
+
+\lstinputlisting{SMT/alpha2.py}
+
+\begin{lstlisting}
+sat
+[L, = 6,
+ S, = 7,
+ N, = 2,
+ T, = 1,
+ I, = 5,
+ V = 3,
+ A, = 8,
+ R, = 9,
+ O, = 4,
+ TRIO = 1954,
+ SONATA, = 742818,
+ VIOLA, = 35468,
+ VIOLIN, = 354652]
+\end{lstlisting}
+
+This puzzle I've found in pySMT examples:
+
+\lstinputlisting{SMT/alpha3.py}
+
+\begin{lstlisting}
+sat
+[E, = 4, D = 6, O, = 2, W, = 3, R, = 5, L, = 1, H, = 9]
+\end{lstlisting}
+
