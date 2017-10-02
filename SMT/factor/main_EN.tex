@@ -1,0 +1,70 @@
+\subsection{Integer factorization using Z3 SMT solver}
+\label{factor_Z3}
+
+Integer factorization is method of breaking a composite (non-prime number) into prime factors.
+Like 12345 = 3*4*823.
+
+Though for small numbers, this task can be accomplished by Z3:
+
+\lstinputlisting{SMT/factor/factor_z3.py}
+
+% TODO FIX URL
+( The source code: \url{https://github.com/dennis714/yurichev.com/blob/master/blog/factor/factor_z3.py} )
+
+When factoring 1234567890 recursively:
+
+\begin{lstlisting}
+% time python z.py
+factoring 1234567890
+factors of 1234567890 are 342270 and 3607
+factoring 342270
+factors of 342270 are 2 and 171135
+factoring 2
+2 is prime (unsat)
+factoring 171135
+factors of 171135 are 3803 and 45
+factoring 3803
+3803 is prime (unsat)
+factoring 45
+factors of 45 are 3 and 15
+factoring 3
+3 is prime (unsat)
+factoring 15
+factors of 15 are 5 and 3
+factoring 5
+5 is prime (unsat)
+factoring 3
+3 is prime (unsat)
+factoring 3607
+3607 is prime (unsat)
+[2, 3, 3, 5, 3607, 3803]
+python z.py  19.30s user 0.02s system 99% cpu 19.443 total
+\end{lstlisting}
+
+So, 1234567890 = 2*3*3*5*3607*3803.
+
+One important note: there is no primality test, no lookup tables, etc.
+Prime number is a number for which "x*y=prime" (where x>1 and y>1) diophantine equation (which allows only integers in solution) has no solutions.
+It can be solved for real numbers, though.
+
+Z3 is \href{https://github.com/Z3Prover/z3/issues/1264}{not yet good enough for non-linear integer arithmetic}
+and sometimes returns "unknown" instead of "unsat", but,
+as Leonardo de Moura (one of Z3's author) commented about this:
+
+\begin{lstlisting}
+...Z3 will solve the problem as a real problem. If no real solution is found, we know there is no integer solution.
+If a solution is found, Z3 will check if the solution is really assigning integer values to integer variables.
+If that is not the case, it will return unknown to indicate it failed to solve the problem.
+\end{lstlisting}
+( \url{https://stackoverflow.com/questions/13898175/how-does-z3-handle-non-linear-integer-arithmetic} )
+
+Probably, this is the case: we getting "unknown" in the case when a number cannot be factored, i.e., it's prime.
+
+It's also very slow. Wolfram Mathematica can factor number around $2^{80}$ in a matter of seconds.
+Still, I've written this for demonstration.
+
+The problem of breaking \ac{RSA} is a problem of factorization of very large numbers, up to $2^{4096}$.
+It's currently not possible to do this in practice.
+
+See also: integer factorization using SAT solver (\ref{factor_SAT}).
+

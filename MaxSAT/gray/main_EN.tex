@@ -1,0 +1,14 @@
+\subsection{Gray code in MaxSAT}
+\label{Gray_MaxSAT}
+
+This is remake of gray code generator for Z3 (\ref{Gray_Z3}).
+
+Here is also \textit{ch[]} table, but we add soft clauses for it here.
+The goal is to make as many \textit{False}'s in \textit{ch[]} table, as possible.
+
+\lstinputlisting{MaxSAT/gray/gray_SAT.py}
+
+So it does, for 5-bit Gray code:
+
+\lstinputlisting{MaxSAT/gray/5.txt}
+
