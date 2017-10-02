@@ -155,6 +155,12 @@ class Xu:
         if len(l)==2:
             return AND(l[0], l[1])
         return AND(l[0], AND_list(l[1:]))
+
+    def BV_AND(self, x,y):
+        rt=[]
+        for pair in zip(x, y):
+            rt.append(self.AND(pair[0],pair[1]))
+        return rt
     
     # vals=list
     # as in Tseitin transformations.
@@ -215,6 +221,12 @@ class Xu:
         self.add_clause([self.neg(rt), self.neg(x)])
         self.add_clause([rt, x])
         return rt
+
+    def BV_NOT(self, x):
+        rt=[]
+        for b in x:
+            rt.append(self.NOT(b))
+        return rt
     
     def XOR(self,x,y):
         rt=self.create_var()
@@ -224,7 +236,7 @@ class Xu:
         self.add_clause([self.neg(x), y, rt])
         return rt
     
-    def XOR_BV(self,x,y):
+    def BV_XOR(self,x,y):
         rt=[]
         for pair in zip(x,y):
             rt.append(self.XOR(pair[0], pair[1]))
@@ -245,12 +257,12 @@ class Xu:
         self.AtMost1(lst)
         self.OR(lst)
     
-    # Hamming distance between two bitvectors must be 1
-    # i.e., two bitvectors can differ in only one bit.
+    # Hamming distance between two bitvectors is 1
+    # i.e., two bitvectors differ in only one bit.
     def hamming1(self,l1, l2):
         self.add_comment("hamming1")
         assert len(l1)==len(l2)
-        XORed=self.XOR_BV(l1, l2)
+        XORed=self.BV_XOR(l1, l2)
         self.POPCNT1(XORed)
     
     # bitvectors must be different.
@@ -318,4 +330,17 @@ class Xu:
             prev=[carry] + s[:-1]
     
         return prev + frolic.rvr(out)
-        
+
+    def NEG(self, x):
+        # invert all bits
+        tmp=self.BV_NOT(x)
+        # add 1
+        one=self.alloc_BV(len(tmp))
+        self.fix_BV(one,n_to_BV(1, len(tmp)))
+        return self.adder(tmp, one)[0]
+    
+    def shift_left_1 (self, x):
+        return x[1:]+[self.const_false] 
+            
+    
+    

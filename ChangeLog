@@ -1,4 +1,4 @@
- 2-Oct-2017 Gray code for Z3 and MaxSAT, Integer factorization for Z3 and SAT
+ 2-Oct-2017 Gray code for Z3 and MaxSAT, Integer factorization for Z3 and SAT, bizarre XOR alternative and SAT.
 20-Sep-2017 Alphametics
  1-Sep-2017 Simple XOR encryption, de Bruijn sequences, package manager, minimizing test cases, xkcd #287, 
             simplifying long expressions.
