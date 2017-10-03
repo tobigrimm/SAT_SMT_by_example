@@ -2,6 +2,8 @@
 
 # my own SAT/CNF library
 
+# dennis(a)yurichev, 2017
+
 # "BV" stands for bitvector
 
 import subprocess, os, itertools
@@ -66,6 +68,9 @@ class Xu:
             exit(0)
 
         solution=frolic.read_lines_from_file("results.txt")[1].split(" ")
+        # remove last "variable", which is 0
+        assert solution[-1]=='0'
+        solution=solution[:-1]
         os.remove ("results.txt")
 
         return solution
@@ -127,6 +132,15 @@ class Xu:
             return v[1:]
         return "-"+v
 
+    def neg_if(self, cond, var):
+        if cond:
+            return self.neg(var)
+        else:
+            return var
+
+    def BV_neg(self, lst):
+        return [self.neg(l) for l in lst]
+
     def add_comment(self, comment):
         self.CNF.append("c "+comment+"\n")
 
@@ -170,6 +184,9 @@ class Xu:
         for v in vals:
             self.add_clause([self.neg(v), out])
         return out
+
+    def OR_always(self, vals):
+        self.add_clause(vals)
     
     def alloc_BV(self, n):
         return [self.create_var() for i in range(n)]
@@ -255,7 +272,7 @@ class Xu:
         
     def POPCNT1(self, lst):
         self.AtMost1(lst)
-        self.OR(lst)
+        self.OR_always(lst)
     
     # Hamming distance between two bitvectors is 1
     # i.e., two bitvectors differ in only one bit.
@@ -341,6 +358,4 @@ class Xu:
     
     def shift_left_1 (self, x):
         return x[1:]+[self.const_false] 
-            
-    
     

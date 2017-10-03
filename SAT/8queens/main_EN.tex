@@ -49,30 +49,20 @@ Here is how I can generate clauses for the function using \textit{itertools} mod
 which provides many important functions from combinatorics:
 
 \begin{lstlisting}
-import itertools
-
-def neg(v):
-    return "-"+v
-
-def add_popcnt0_or_1(vars):
-    global clauses
-    # enumerate all possible pairs
-    # no pair can have both True's
-    # so add "~var OR ~var2"
-    for pair in itertools.combinations(vars, r=2):
-        clauses.add(neg(pair[0])+" "+neg(pair[1]))
-
-def add_popcnt1(vars):
-    global clauses
-    add_popcnt0_or_1(vars)
-    # at least one var must be present:
-    clauses.add(" ".join(vars))
+    # naive/pairwise encoding   
+    def AtMost1(self, lst):
+        for pair in itertools.combinations(lst, r=2):
+            self.add_clause([self.neg(pair[0]), self.neg(pair[1])])
+        
+    def POPCNT1(self, lst):
+        self.AtMost1(lst)
+        self.OR_always(lst)
 \end{lstlisting}
 
-\TT{add\_popcnt0\_or\_1()} function enumerates all possible pairs using \textit{itertools} function
+\TT{AtMost1()} function enumerates all possible pairs using \textit{itertools} function
 \textit{combinations()}.
 
-\TT{add\_popcnt1()} function does the same, but also adds a final clause, which forces at least one
+\TT{POPCNT1()} function does the same, but also adds a final clause, which forces at least one
 \textit{True} variable to be present.
 
 What clauses will be generated for 5 variables (1..5)?
@@ -123,7 +113,7 @@ These rules can be translated like that:
 
 \item POPCNT1(each column)==\textit{True}
 
-\item POPCNT0\_OR\_1(each diagonal)==\textit{True}
+\item AtMost1(each diagonal)==\textit{True}
 \end{itemize}
 
 Now all we need is to enumerate rows, columns and diagonals and gather all clauses:
@@ -136,7 +126,7 @@ of already enumerated longer diagonals.
 To prevent presence of duplicate clauses, \textit{clauses} global variable is not a list, rather set, which allows
 only unique data to be present there.
 
-Also, I've used \TT{POPCNT0\_OR\_1} for each column, this will help to produce slightly lower number of clauses.
+Also, I've used \TT{AtMost1} for each column, this will help to produce slightly lower number of clauses.
 Each column will have a queen anyway, this is implied from the first rule (\TT{POPCNT1} for each row).
 
 After running, we got CNF file with 64 variables and 736 clauses (\url{https://github.com/dennis714/SAT_SMT_article/blob/master/SAT/8queens/8queens.cnf}).
@@ -156,7 +146,7 @@ len(clauses)= 736
 \end{lstlisting}
 
 How many possible solutions are there?
-Picosat tells 92, which is indeed correct number (\url{https://oeis.org/A000170}).
+Picosat tells 92, which is indeed correct number of solutions (\url{https://oeis.org/A000170}).
 
 Performance of Picosat is not impressive, probably because it has to output all the solutions.
 It took 34 seconds on my ancient Intel Atom 1.66GHz netbook to enumerate all solutions for $11 \cdot 11$ chess board
@@ -166,4 +156,17 @@ Nevertheless, it's lighting fast (as other SAT solvers) in finding first solutio
 
 The SAT instance is also small enough to be easily solved by my simplest possible backtracking SAT solver:
 \ref{SAT_backtrack}.
+
+\subsubsection{Counting all solutions}
+
+We get a solution, negate it and add as a new constraint.
+In plain English language this sounds ``find a solution, which is also can't be equal to the recently found/added''.
+We add them consequently and the process is slowing---just because a problem (\textit{instance}) is growing and SAT solver
+experience hard times in find yet another solution.
+
+\subsubsection{Skipping symmetrical solutions}
+
+We can also add rotated and reflected (horizontally) solution, so to skip symmetrical solutions.
+By doing so, we're getting 12 solutions for 8*8 board, 46 for 9*9 board, etc.
+This is \url{https://oeis.org/A002562}.
 

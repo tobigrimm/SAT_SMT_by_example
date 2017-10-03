@@ -42,15 +42,5 @@ def test():
 
 #test()
 
-# tested by Mathematica:
-#print factor(123456) # {{2, 6}, {3, 1}, {643, 1}} 
-#print factor(256)
-#print factor(999999) # {{3, 3}, {7, 1}, {11, 1}, {13, 1}, {37, 1}}
-print factor(1234567890) # {{2, 1}, {3, 2}, {5, 1}, {3607, 1}, {3803, 1}}
-#print factor(10000) # {{2, 4}, {5, 4}}
-#print factor(123456789012345)
-#print factor(3*7*11*17*23*29*31*37*41)
-#print factor(1234567890123)
-#print factor(2147713027)
-#print factor(137446031423)
+print factor(1234567890)
 
