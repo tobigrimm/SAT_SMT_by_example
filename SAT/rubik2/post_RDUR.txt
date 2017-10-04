@@ -1,0 +1,86 @@
+TURNS= 11
+sat!
+RCW
+DH
+BCW
+UCW
+UH
+DCCW
+FH
+BH
+BH
+FH
+UH
+
+TURNS= 10
+sat!
+RCCW
+UCCW
+UCW
+RCW
+RCW
+UH
+FCW
+UCCW
+DCCW
+DH
+
+TURNS= 9
+sat!
+BCCW
+LH
+RH
+BCW
+RCW
+RCCW
+DCW
+FH
+LCW
+
+TURNS= 8
+sat!
+RCW
+UH
+BCW
+UCCW
+LCW
+LH
+RCW
+FCW
+
+TURNS= 7
+sat!
+DCCW
+DH
+UH
+UCW
+BCW
+UH
+RCW
+
+TURNS= 6
+sat!
+RCW
+UCCW
+DCCW
+LCW
+UH
+DH
+
+TURNS= 5
+sat!
+LCW
+FCW
+BCW
+RH
+LCCW
+
+TURNS= 4
+sat!
+RCW
+DCW
+UCW
+RCW
+
+TURNS= 3
+unsat!

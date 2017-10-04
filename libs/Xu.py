@@ -38,6 +38,7 @@ class Xu:
         self.last_var=1
         # just list of lines to be written to CNF-file:
         self.CNF=[]
+        self.clauses_total=0
         self.HARD_CLAUSE=10000
 
         self.maxsat=maxsat
@@ -111,9 +112,9 @@ class Xu:
         VARS_TOTAL=self.last_var-1
         f=open(self.CNF_fname, "w")
         if self.maxsat==False:
-            f.write ("p cnf "+str(VARS_TOTAL)+" "+str(len(self.CNF))+"\n")
+            f.write ("p cnf "+str(VARS_TOTAL)+" "+str(self.clauses_total)+"\n")
         else:
-            f.write ("p wcnf "+str(VARS_TOTAL)+" "+str(len(self.CNF))+" "+str(self.HARD_CLAUSE)+"\n")
+            f.write ("p wcnf "+str(VARS_TOTAL)+" "+str(self.clauses_total)+" "+str(self.HARD_CLAUSE)+"\n")
         for line in self.CNF:
             f.write(line)
         f.close()
@@ -145,6 +146,7 @@ class Xu:
         self.CNF.append("c "+comment+"\n")
 
     def add_clause(self, cls):
+        self.clauses_total=self.clauses_total+1
         if self.maxsat==False:
             self.CNF.append(" ".join(cls) + " 0\n")
         else:
@@ -152,6 +154,7 @@ class Xu:
 
     def add_soft_clause(self, cls, weight):
         assert self.maxsat==True
+        self.clauses_total=self.clauses_total+1
         self.CNF.append(str(weight) + " " + " ".join(cls) + " 0\n")
 
     def AND_Tseitin(self, v1, v2, out):
@@ -208,6 +211,12 @@ class Xu:
         assert len(_vars)==len(BV)
         for var, _bool in zip(_vars, BV):
             self.fix (var, _bool)
+
+    # BV is a list of True/False/0/1
+    def fix_BV_soft(self, _vars, BV, weight):
+        assert len(_vars)==len(BV)
+        for var, _bool in zip(_vars, BV):
+            self.fix_soft (var, _bool, weight)
 
     def get_var_from_solution(self, var):
         # 1 if var is present in solution, 0 if present in negated form:
@@ -281,6 +290,14 @@ class Xu:
         assert len(l1)==len(l2)
         XORed=self.BV_XOR(l1, l2)
         self.POPCNT1(XORed)
+
+    # bitvectors must equal to each other.
+    def fix_BV_EQ(self, l1, l2):
+        #print l1, l2
+        assert len(l1)==len(l2)
+        self.add_comment("fix_BV_EQ")
+        for p in zip(l1, l2):
+            self.fix(self.EQ(p[0], p[1]), True) # FIXME: suboptimal?
     
     # bitvectors must be different.
     def fix_BV_NEQ(self, l1, l2):
@@ -358,4 +375,51 @@ class Xu:
     
     def shift_left_1 (self, x):
         return x[1:]+[self.const_false] 
+
+    def create_MUX(self, ins, sels):
+        assert 2**len(sels)==len(ins)
+        x=self.create_var()
+        for sel in range(len(ins)): # 32 for 5-bit selector
+            tmp=[self.neg_if((sel>>i)&1==1, sels[i]) for i in range(len(sels))] # 5 for 5-bit selector
     
+            self.add_clause([self.neg(ins[sel])] + tmp + [x])
+            self.add_clause([ins[sel]] + tmp + [self.neg(x)])
+        return x
+    
+    def create_wide_MUX (self, ins, sels):
+        out=[]
+        for i in range(len(ins[0])):
+            inputs=[x[i] for x in ins]
+            out.append(self.create_MUX(inputs, sels))
+        return out
+
+    # untested:
+    def ITE(self, s,f,t):
+        if s=="0":
+            raise AssertionError
+        if f=="0":
+            raise AssertionError
+        if t=="0":
+            raise AssertionError
+        x=self.create_var()
+        if x=="0":
+            raise AssertionError
+      
+        # as found by my util 
+        self.add_clauses([self.neg(s),self.neg(t),x])
+        self.add_clauses([self.neg(s),t,self.neg(x)])
+        self.add_clauses([s,self.neg(f),x])
+        self.add_clauses([s,f,self.neg(x)])
+    
+        return x
+"""
+to be added:
+
+def mathematica_to_CNF (s, d):
+    for k in d.keys():
+        s=s.replace(k, d[k])
+    s=s.replace("!", "-").replace("||", " ").replace("(", "").replace(")", "")
+    s=s.split ("&&")
+    return s
+"""
+
