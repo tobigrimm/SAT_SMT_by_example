@@ -79,6 +79,7 @@ class Xu:
     def run_maxsat_solver (self):
         tmp_fname="tmp.out"
         logfile=open(tmp_fname, "w")
+        #child = subprocess.Popen([self.MAXSAT_SOLVER, "-algorithm=1", self.CNF_fname], stdout=logfile)
         child = subprocess.Popen([self.MAXSAT_SOLVER, self.CNF_fname], stdout=logfile)
         child.wait()
         logfile.flush()
@@ -301,10 +302,13 @@ class Xu:
     
     # bitvectors must be different.
     def fix_BV_NEQ(self, l1, l2):
+        #print len(l1), len(l2)
         assert len(l1)==len(l2)
         self.add_comment("fix_BV_NEQ")
         t=[self.XOR(l1[i], l2[i]) for i in range(len(l1))]
-        self.fix(self.OR(t), True)
+        #print t
+        #self.fix(self.OR(t), True)
+        self.add_clause(t)
 
     # full-adder, as found by Mathematica using truth table:
     def FA (self, a,b,cin):
@@ -421,5 +425,25 @@ def mathematica_to_CNF (s, d):
     s=s.replace("!", "-").replace("||", " ").replace("(", "").replace(")", "")
     s=s.split ("&&")
     return s
+
+def sort_unit(a, b):
+    return OR([a,b]), AND(a,b)
+
+def sorting_network_make_ladder(lst):
+    if len(lst)==2:
+        return list(sort_unit(lst[0], lst[1]))
+
+    tmp=sorting_network_make_ladder(lst[1:]) # lst without head
+    first, second=sort_unit(lst[0], tmp[0])
+    return [first, second] + tmp[1:]
+
+def sorting_network(lst):
+    # simplest possible, bubble sort
+
+    if len(lst)==2:
+        return sorting_network_make_ladder(lst)
+
+    tmp=sorting_network_make_ladder(lst)
+    return sorting_network(tmp[:-1]) + [tmp[-1]]
 """
 

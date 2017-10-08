@@ -1,0 +1,25 @@
+ % date +"%j" --date="13 Jan 1970"
+013
+ % date +"%j" --date="13 Feb 1970"
+044
+ % date +"%j" --date="13 Mar 1970"
+072
+ % date +"%j" --date="13 Apr 1970"
+103
+ % date +"%j" --date="13 May 1970"
+133
+ % date +"%j" --date="13 Jun 1970"
+164
+ % date +"%j" --date="13 Jul 1970"
+194
+ % date +"%j" --date="13 Aug 1970"
+225
+ % date +"%j" --date="13 Sep 1970"
+256
+ % date +"%j" --date="13 Oct 1970"
+286
+ % date +"%j" --date="13 Nov 1970"
+317
+ % date +"%j" --date="13 Dec 1970"
+347
+

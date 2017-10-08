@@ -80,6 +80,20 @@ How do we recover initial image?
 We are going to represent 11*11 matrix, where sum of each row must be equal to some value we already know.
 Then we rotate matrix, and do this again.
 
+For the first matrix, the system of equations looks like that (we put there a values from the first vector):
+
+\begin{lstlisting}
+C1,1 + C1,2 + C1,3 + ... + C1,11 =      2
+C2,1 + C2,2 + C2,3 + ... + C2,11 =      2
+
+...
+
+C10,1 + C10,2 + C10,3 + ... + C10,11 =  4
+C11,1 + C11,2 + C11,3 + ... + C11,11 =  0
+\end{lstlisting}
+
+We also build similar systems of equations for each angle.
+
 The ``rotate'' function has been taken from the generation program, because, due to Python's dynamic typization nature,
 it's not important for the function to what operate on:
 strings, characters, or Z3 variable instances, so it works very well for all of them.

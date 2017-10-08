@@ -2,7 +2,7 @@
 
 from z3 import *
 from operator import add
-import itertools, frolic, bomah
+import itertools, frolic, Z3_utils
 
 """
 board=[ "********",
@@ -169,7 +169,7 @@ def color_tiles(solution):
             G.append((pair[0][0], pair[1][0]))
 
     # this is planar graph anyway, 4 colors enough:
-    return bomah.color_graph_using_Z3(G, total=TILES_TOTAL, limit=4)
+    return Z3_utils.color_graph_using_Z3(G, total=TILES_TOTAL, limit=4)
 
 def print_solution(solution):
     for row in range(board_height):

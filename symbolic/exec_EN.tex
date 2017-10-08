@@ -308,6 +308,42 @@ Surprisingly, KLEE can find backdoors in the very same manner.
 
 KLEE is also called ``KLEE Symbolic Virtual Machine'' -- by that its creators mean that the KLEE is \ac{VM} which executes a code symbolically rather than numerically (like usual \ac{CPU}).
 
+Let's extend our tiny example again.
+We would like to find Friday 13th. To make things simpler, we can limit ourselves to year 1970.
+Let's get all 12 13th days of year 1970:
+
+\lstinputlisting{symbolic/6_TGIF/13th.txt}
+
+The script checking if the current date is Friday 13th:
+
+\begin{lstlisting}
+input=...
+SECS_DAY=24*60*60
+dayno = input / SECS_DAY
+wday = (dayno + 4) % 7
+print wday
+if wday==5:
+    print "Thanks God, it's Friday!"
+ 
+    if dayno in [13,44,72,103,133,164,194,225,256,286,317,347]:
+        print "Friday 13th"
+\end{lstlisting}
+
+To get the second "print" executed, we must satisfy two constraints:
+
+\lstinputlisting{symbolic/6_TGIF/Z3_solve2.py}
+
+Easy task for Z3 as well:
+
+\begin{lstlisting}
+ % python Z3_solve2.py
+[dayno = 316, x = 27302400]
+ % date --date='@27302400'
+Fri Nov 13 03:00:00 MSK 1970
+\end{lstlisting}
+
+This is an UNIX date for which both constructs are satisfied: 13th November 1970, Friday.
+
 \subsubsection{Division by zero}
 
 If division by zero is unwrapped by sanitizing check, and exception isn't caught, it can crash process.
