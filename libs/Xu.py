@@ -6,6 +6,8 @@
 
 # "BV" stands for bitvector
 
+# TODO: check signed/unsigned issues for adder/multiplier/divider
+
 import subprocess, os, itertools
 import frolic
 
@@ -48,6 +50,8 @@ class Xu:
 
         self.remove_CNF_file=True
         #self.remove_CNF_file=False
+
+        self.verbosity=0
 
         # allocate a single variable fixed to False:
         self.const_false=self.create_var()
@@ -119,6 +123,8 @@ class Xu:
         for line in self.CNF:
             f.write(line)
         f.close()
+        if self.verbosity>0:
+            print ("write_CNF() clauses=%d" % self.clauses_total)
 
     def create_var(self):
         self.last_var=self.last_var+1
@@ -294,7 +300,7 @@ class Xu:
 
     # bitvectors must equal to each other.
     def fix_BV_EQ(self, l1, l2):
-        #print l1, l2
+        #print len(l1), len(l2)
         assert len(l1)==len(l2)
         self.add_comment("fix_BV_EQ")
         for p in zip(l1, l2):
@@ -376,11 +382,24 @@ class Xu:
         one=self.alloc_BV(len(tmp))
         self.fix_BV(one,n_to_BV(1, len(tmp)))
         return self.adder(tmp, one)[0]
-    
+
+    # untested
+    def shift_left (self, x, cnt):
+        return x[cnt:]+[self.const_false]*cnt
+
     def shift_left_1 (self, x):
         return x[1:]+[self.const_false] 
 
+    def shift_right (self, x, cnt):
+        return [self.const_false]*cnt+x[cnt:]
+
+    def shift_right_1 (self, x):
+        return [self.const_false]+x[:-1]
+
+    # for 1-bit sel
+    # ins=[[outputs for sel==0], [outputs for sel==1]]
     def create_MUX(self, ins, sels):
+        #print 2**len(sels), len(ins)
         assert 2**len(sels)==len(ins)
         x=self.create_var()
         for sel in range(len(ins)): # 32 for 5-bit selector
@@ -416,6 +435,55 @@ class Xu:
         self.add_clauses([s,f,self.neg(x)])
     
         return x
+
+    def subtractor(self, minuend, subtrahend):
+        # same as adder(), buf: 1) subtrahend is inverted; 2) input carry-in bit is 1
+        X=minuend
+        Y=self.BV_NOT(subtrahend)
+
+        inputs=frolic.rvr(list(zip(X,Y)))
+        carry=self.const_true
+        sums=[]
+        for pair in inputs:
+            # "carry" variable is replaced at each iteration.
+            # so it is used in the each FA() call from the previous FA() call.
+            st, carry = self.FA(pair[0], pair[1], carry)
+            sums.append(st)
+
+        return frolic.rvr(sums), carry
+
+    # 0 if a<b
+    # 1 if a>=b
+    def comparator_GE(self, a, b):
+        tmp, carry = self.subtractor(a, b)
+        return carry
+
+    def div_blk(self, enable, divident, divisor):
+        assert len(divident)==len(divisor)
+
+        diff, _ = self.subtractor(minuend=divident, subtrahend=divisor)
+
+        cmp_res = self.AND(enable, self.comparator_GE(divident, divisor))
+
+        out=self.alloc_BV(len(divident))
+
+        return self.create_wide_MUX([divident, diff], [cmp_res]), cmp_res
+
+    def divider(self, divident, divisor):
+        assert len(divident)==len(divisor)
+        BITS=len(divisor)
+    
+        wide_divisor=self.shift_left([self.const_false]*BITS+divisor, BITS-1)
+        quotient=[]
+        for b in range(BITS):
+            enable=self.NOT(self.OR(wide_divisor[:BITS]))
+            divident, q_bit=self.div_blk(enable, divident, wide_divisor[BITS:])
+            quotient.append(q_bit)
+            wide_divisor=self.shift_right_1(wide_divisor)
+
+        # remainder is left in divident:
+        return quotient, divident
+
 """
 to be added:
 

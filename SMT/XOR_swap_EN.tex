@@ -1,0 +1,20 @@
+\subsection{XOR swapping algorithm}
+
+This is well-known XOR swap algorithm (which don't use additional variable).
+How it works?
+
+\lstinputlisting[numbers=left]{SMT/xor_swap_Z3_check.py}
+
+Now we see a final states of X/Y variables:
+
+\begin{lstlisting}
+X= init_X ^ init_Y ^ init_Y ^ init_X ^ init_Y
+Y= init_Y ^ init_X ^ init_Y
+unsat
+\end{lstlisting}
+
+Z3 gave "unsat", meaning, it can't find any counterexample to the last equation (line 18).
+Hence, the equation is correct and so is the whole algorithm.
+
+% TODO in SMT-LIB form
+
