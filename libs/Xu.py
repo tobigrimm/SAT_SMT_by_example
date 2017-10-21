@@ -131,6 +131,9 @@ class Xu:
         return str(self.last_var-1)
 
     def neg(self, v):
+        #print ("neg:", v)
+        if type(v)==list:
+            raise AssertionError
         if v==None:
             raise AssertionError
         if v=="0":
@@ -396,19 +399,22 @@ class Xu:
     def shift_right_1 (self, x):
         return [self.const_false]+x[:-1]
 
-    # for 1-bit sel
-    # ins=[[outputs for sel==0], [outputs for sel==1]]
     def create_MUX(self, ins, sels):
-        #print 2**len(sels), len(ins)
+        #for _in in ins:
+        #    print ("_in:", _in)
+        #print (2**len(sels), len(ins))
         assert 2**len(sels)==len(ins)
         x=self.create_var()
         for sel in range(len(ins)): # 32 for 5-bit selector
             tmp=[self.neg_if((sel>>i)&1==1, sels[i]) for i in range(len(sels))] # 5 for 5-bit selector
-    
+   
+            #print (ins[sel]) 
             self.add_clause([self.neg(ins[sel])] + tmp + [x])
             self.add_clause([ins[sel]] + tmp + [self.neg(x)])
         return x
     
+    # for 1-bit sel
+    # ins=[[outputs for sel==0], [outputs for sel==1]]
     def create_wide_MUX (self, ins, sels):
         out=[]
         for i in range(len(ins[0])):
