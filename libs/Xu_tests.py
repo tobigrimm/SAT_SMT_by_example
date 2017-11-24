@@ -21,5 +21,23 @@ def div_test():
     assert Xu.BV_to_number(s.get_BV_from_solution(quotient))==10037137
     assert Xu.BV_to_number(s.get_BV_from_solution(remainder))==39
 
+def SumIsNot1_test():
+    s=Xu.Xu(False)
+
+    _vars=s.alloc_BV(4)
+    s.SumIsNot1(_vars)
+
+    assert s.count_solutions()==12
+
+def AND_list_test():
+    s=Xu.Xu(False)
+
+    _vars=s.alloc_BV(4)
+    s.fix(s.AND_list(_vars),False)
+
+    assert (s.count_solutions()==15)
+
 div_test()
+SumIsNot1_test()
+AND_list_test()
 

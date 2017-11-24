@@ -1,21 +1,24 @@
 ﻿\documentclass{article}
 
-\usepackage{fontspec}
-\setmainfont{DejaVu Sans}
-\setmonofont{DejaVu Sans Mono}
+%\usepackage{fontspec}
+%\setmainfont{DejaVu Sans}
+%\setmonofont{DejaVu Sans Mono}
 
 \usepackage{polyglossia}
 
-\EN{
+\ifdefined\ENGLISH
 \setmainlanguage{english}
 \setotherlanguage{russian}
-}
+\fi
 
-\RU{
+\ifdefined\RUSSIAN
+\setmainfont[Ligatures=TeX]{CMU Serif}
+\newfontfamily{\cyrillicfonttt}{CMU Typewriter Text}
+
 \setmainlanguage{russian}
 \setotherlanguage{english}
 %\newfontfamily{\cyrillicfonttt}{DejaVu Sans Mono}
-}
+\fi
 
 \usepackage{cmap}
 %\usepackage[russian,english]{babel}
@@ -100,6 +103,7 @@
 \input{crypto/main_EN}
 \input{SAT/main_EN}
 \input{MaxSAT/main_EN}
+\input{reading_EN}
 }
 \RU{
 \input{intro_RU}
@@ -111,6 +115,7 @@
 \input{crypto/main_RU}
 \input{SAT/main_RU}
 \input{MaxSAT/main_RU}
+\input{reading_RU}
 }
 
 \section{Acronyms used}

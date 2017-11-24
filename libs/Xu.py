@@ -7,6 +7,8 @@
 # "BV" stands for bitvector
 
 # TODO: check signed/unsigned issues for adder/multiplier/divider
+# TODO: class instance, class term
+# TODO: get rid of *fix* functions?
 
 import subprocess, os, itertools
 import frolic
@@ -177,11 +179,11 @@ class Xu:
         self.AND_Tseitin(v1, v2, out)
         return out
     
-    def AND_list(l):
+    def AND_list(self, l):
         assert(len(l)>=2)
         if len(l)==2:
-            return AND(l[0], l[1])
-        return AND(l[0], AND_list(l[1:]))
+            return self.AND(l[0], l[1])
+        return self.AND(l[0], self.AND_list(l[1:]))
 
     def BV_AND(self, x,y):
         rt=[]
@@ -277,6 +279,12 @@ class Xu:
         for pair in zip(x,y):
             rt.append(self.XOR(pair[0], pair[1]))
         return rt
+
+    def BV_XOR_list(self, l):
+        assert(len(l)>=2)
+        if len(l)==2:
+            return self.BV_XOR(l[0], l[1])
+        return self.BV_XOR(l[0], self.BV_XOR_list(l[1:]))
     
     def EQ(self, x, y):
         return self.NOT(self.XOR(x,y))
@@ -292,6 +300,21 @@ class Xu:
     def POPCNT1(self, lst):
         self.AtMost1(lst)
         self.OR_always(lst)
+
+    def neg_nth_elem_in_lst(self, lst, n):
+        rt=[]
+        assert n<len(lst)
+        for i in range(len(lst)):
+            if i==n:
+                rt.append(self.neg(lst[i]))
+            else:
+                rt.append(lst[i])
+        return rt
+
+    # sum of variables must not be equal to 1, but can be 0
+    def SumIsNot1(self, lst):
+        for i in range(len(lst)):
+            self.add_clause(self.neg_nth_elem_in_lst(lst, i))
     
     # Hamming distance between two bitvectors is 1
     # i.e., two bitvectors differ in only one bit.
@@ -439,7 +462,7 @@ class Xu:
         self.add_clauses([self.neg(s),t,self.neg(x)])
         self.add_clauses([s,self.neg(f),x])
         self.add_clauses([s,f,self.neg(x)])
-    
+
         return x
 
     def subtractor(self, minuend, subtrahend):
@@ -478,7 +501,7 @@ class Xu:
     def divider(self, divident, divisor):
         assert len(divident)==len(divisor)
         BITS=len(divisor)
-    
+
         wide_divisor=self.shift_left([self.const_false]*BITS+divisor, BITS-1)
         quotient=[]
         for b in range(BITS):
@@ -489,6 +512,35 @@ class Xu:
 
         # remainder is left in divident:
         return quotient, divident
+
+    def fetch_next_solution(self):
+        negated_solution=[]
+        for v in range(1, self.last_var):
+            negated_solution.append(self.neg_if(self.get_var_from_solution(str(v)), str(v)))
+        self.add_clause(negated_solution)
+        return self.solve()
+
+    def count_solutions(self):
+        if self.solve()==False:
+            return 0
+
+        cnt=1
+        while True:
+            if self.fetch_next_solution()==False:
+                break
+            cnt=cnt+1
+        return cnt
+
+    def get_all_solutions(self):
+        if self.solve()==False:
+            return None
+        rt=[self.solution]
+
+        while True:
+            if self.fetch_next_solution()==False:
+                break
+            rt.append(self.solution)
+        return rt
 
 """
 to be added:
