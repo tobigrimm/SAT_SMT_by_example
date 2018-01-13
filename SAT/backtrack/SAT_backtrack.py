@@ -23,6 +23,8 @@ def read_DIMACS (fname):
     # term can be negative signed integer
     clauses=[]
     for c in content[1:]:
+        if c.startswith ("c "):
+            continue
         clause=[]
         for var_s in c.split(" "):
             var=int(var_s)
