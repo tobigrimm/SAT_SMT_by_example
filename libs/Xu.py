@@ -220,6 +220,7 @@ class Xu:
     
     # BV is a list of True/False/0/1
     def fix_BV(self, _vars, BV):
+        #print _vars, BV
         assert len(_vars)==len(BV)
         for var, _bool in zip(_vars, BV):
             self.fix (var, _bool)
