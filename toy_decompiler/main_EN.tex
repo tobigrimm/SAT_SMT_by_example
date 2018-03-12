@@ -1319,7 +1319,7 @@ Still, division by multiplication can be tested using previously described brute
 \subsection{My other implementations of toy decompiler}
 
 When I made attempt to write it in C++, of course, node in expression was represented using class.
-There is also implementation in pure C\footnote{\url{https://github.com/dennis714/SAT_SMT_article/tree/master/toy_decompiler/files/C}}, node is represented using structure.
+There is also implementation in pure C\footnote{\url{https://github.com/DennisYurichev/SAT_SMT_article/tree/master/toy_decompiler/files/C}}, node is represented using structure.
 
 Matchers in both C++ and C versions doesn't return any dictionary, but instead, \TT{bind\_value()}
 functions takes pointer to a variable which will contain value after successful matching.
@@ -1358,7 +1358,7 @@ I have also a blog post about LLVM obfuscator, in which LLVM matcher is mentione
 Python version of toy decompiler uses strings in place where enumerate data type is used in C version
 (like \textit{OP\_AND}, \textit{OP\_MUL}, etc) and
 symbols used in Racket version\footnote{Racket is Scheme (which is, in turn, LISP dialect) dialect.
-\url{https://github.com/dennis714/SAT_SMT_article/tree/master/toy_decompiler/files/Racket}} (like \textit{'OP\_DIV}, etc).
+\url{https://github.com/DennisYurichev/SAT_SMT_article/tree/master/toy_decompiler/files/Racket}} (like \textit{'OP\_DIV}, etc).
 This may be seen as inefficient, nevertheless, thanks to strings interning, only address of strings are compared in
 Python version, not strings as a whole. So strings in Python can be seen as possible replacement for LISP symbols.
 
@@ -1459,7 +1459,7 @@ Here is well-known micro-interpreter of LISP by Peter Norvig, also written in Py
 
 \subsection{The files}
 
-Python version and tests: \url{https://github.com/dennis714/SAT_SMT_article/tree/master/toy_decompiler/files}.
+Python version and tests: \url{https://github.com/DennisYurichev/SAT_SMT_article/tree/master/toy_decompiler/files}.
 
 There are also C and Racket versions, but outdated.
 

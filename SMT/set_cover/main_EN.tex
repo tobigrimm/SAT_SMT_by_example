@@ -17,11 +17,11 @@ First, I took \ac{LZSS} compression/decompression code
 from Apple sources.
 Such routines are not easy to test.
 Here is my version of it:
-\url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/set_cover/compression.c}.
+\url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/set_cover/compression.c}.
 I've added random generation of input data to be compressed.
 Random generation is dependent of some kind of input seed.
 Standard \TT{srand()}/\TT{rand()} are not recommended to be used, but for such simple task as ours, it's OK.
-I'll generate\footnote{\url{https://github.com/dennis714/yurichev.com/blob/master/blog/set_cover/gen_gcov_tests.sh}}
+I'll generate\footnote{\url{https://github.com/DennisYurichev/yurichev.com/blob/master/blog/set_cover/gen_gcov_tests.sh}}
 1000 tests with 0..999 seeds, that would produce random data to be compressed/decompressed/checked.
 
 After the compression/decompression routine has finished its work,
@@ -78,7 +78,7 @@ but the solution where some variable/expression is maximal as possible, or minim
 Also, the code gives incorrect results on Z3 4.4.1, but working correctly on Z3 4.5.0 (so please upgrade).
 This is relatively fresh feature in Z3, so probably it was not stable in previous versions?
 
-The files: \url{https://github.com/dennis714/SAT_SMT_article/tree/master/SMT/set_cover}.
+The files: \url{https://github.com/DennisYurichev/SAT_SMT_article/tree/master/SMT/set_cover}.
 
 Further reading:
 \url{https://en.wikipedia.org/wiki/Set_cover_problem},

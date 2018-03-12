@@ -102,8 +102,8 @@ def attempt(STEPS):
         sl.add(R[c][0]==chain_inputs[c])
         sl.add(R[c][STEPS-1]==chain_inputs[c]*multiplier)
 
-    for s in range(1, STEPS):
-        sl.add(R[c][s]==simulate_op(R,c, op[s], op1_reg[s], op2_reg[s], op2_imm[s]))
+        for s in range(1, STEPS):
+            sl.add(R[c][s]==simulate_op(R,c, op[s], op1_reg[s], op2_reg[s], op2_imm[s]))
 
     tmp=sl.check()
     if tmp==sat:

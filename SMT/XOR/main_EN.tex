@@ -9,9 +9,9 @@ letters (a...z) as possible, but a solution will still satisfy all conditions.
 
 \lstinputlisting{SMT/XOR/1.py}
 
-( The source code: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/XOR/1.py} )
+( The source code: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/XOR/1.py} )
 
-Let's try it on a small 350-bytes file\footnote{\url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/XOR/cipher1.txt}}:
+Let's try it on a small 350-bytes file\footnote{\url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/XOR/cipher1.txt}}:
 
 \begin{lstlisting}
 % python 1.py cipher1.txt
@@ -100,7 +100,7 @@ We can count them in plain text and \textit{maximize} them:
 ...
 \end{lstlisting}
 
-( The source code: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/XOR/2.py} )
+( The source code: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/XOR/2.py} )
 
 Now this is something familiar:
 
@@ -146,7 +146,7 @@ But we can fix them, adding these conditions:
 ...
 \end{lstlisting}
 
-( The source code: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/XOR/3.py} )
+( The source code: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/XOR/3.py} )
 
 This key is seems correct:
 
@@ -184,12 +184,12 @@ So this is correct 17-byte XOR-key.
 
 Needless to say, that the bigger ciphertext for analysis we have, the better.
 That 350-byte file is in fact the beginning of bigger file I prepared
-(\url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/XOR/cipher2.txt}, 12903 bytes).
+(\url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/XOR/cipher2.txt}, 12903 bytes).
 And a correct key for it can be found for it without additional \textit{heuristics} we used here.
 
 SMT solver is overkill for this. I once solved this problem naively, and it was much faster:
 \url{https://yurichev.com/blog/XOR_mask_2/}.
 Nevertheless, this is yet another demonstration of yet another optimization problem.
 
-The files: \url{https://github.com/dennis714/SAT_SMT_article/tree/master/SMT/XOR}.
+The files: \url{https://github.com/DennisYurichev/SAT_SMT_article/tree/master/SMT/XOR}.
 

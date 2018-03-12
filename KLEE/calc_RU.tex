@@ -5,7 +5,7 @@
 К сожалению, в нем не было ошибок, так что я добавил одну: буфер токенов (\TT{buf[]} на строке) короче чем входной буфер (\TT{input[]} на строке).
 
 \lstinputlisting[numbers=left]{KLEE/calc.c}
-( \url{https://github.com/dennis714/SAT_SMT_article/blob/master/KLEE/calc.c} )
+( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/KLEE/calc.c} )
 
 KLEE легко нашел переполнение буфера (65 нулей + один символ табуляции):
 

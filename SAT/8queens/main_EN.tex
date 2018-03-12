@@ -119,7 +119,7 @@ These rules can be translated like that:
 Now all we need is to enumerate rows, columns and diagonals and gather all clauses:
 
 \lstinputlisting{SAT/8queens/8queens.py}
-( \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SAT/8queens/8queens.py} )
+( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/8queens/8queens.py} )
 
 Perhaps, \TT{gen\_diagonal()} function is not very aesthetically appealing: it enumerates also subdiagonals
 of already enumerated longer diagonals.
@@ -129,7 +129,7 @@ only unique data to be present there.
 Also, I've used \TT{AtMost1} for each column, this will help to produce slightly lower number of clauses.
 Each column will have a queen anyway, this is implied from the first rule (\TT{POPCNT1} for each row).
 
-After running, we got CNF file with 64 variables and 736 clauses (\url{https://github.com/dennis714/SAT_SMT_article/blob/master/SAT/8queens/8queens.cnf}).
+After running, we got CNF file with 64 variables and 736 clauses (\url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/8queens/8queens.cnf}).
 Here is one solution:
 
 \begin{lstlisting}

@@ -2,7 +2,7 @@
 
 # my own SAT/CNF library
 
-# dennis(a)yurichev, 2017
+# dennis(a)yurichev, 2017-2018
 
 # "BV" stands for bitvector
 
@@ -62,8 +62,8 @@ class Xu:
         self.const_true=self.create_var()
         self.fix(self.const_true,True)
 
-    def run_sat_solver (self):
-        child = subprocess.Popen([self.SAT_SOLVER, self.CNF_fname, "results.txt"], stdout=subprocess.PIPE)
+    def run_minisat (self):
+        child = subprocess.Popen(["minisat", self.CNF_fname, "results.txt"], stdout=subprocess.PIPE)
         child.wait()
         # 10 is SAT, 20 is UNSAT
         if child.returncode==20:
@@ -82,11 +82,44 @@ class Xu:
 
         return solution
 
+    # FIXME: this function and run_maxsat_solver are almost the same!
+    def run_plingeling (self):
+        tmp_fname="tmp.out"
+        logfile=open(tmp_fname, "w")
+        child = subprocess.Popen(["plingeling", self.CNF_fname], stdout=logfile)
+
+        child.wait()
+        logfile.flush()
+        logfile.close()
+
+        tmp=[]
+        logfile=open(tmp_fname, "r")
+        while True:
+            line = logfile.readline()
+            if line.startswith("s UNSAT"):
+                logfile.close()
+                return None
+            elif line.startswith("v "):
+                tmp.append (line[2:].rstrip())
+            elif line=='':
+                break
+            else:
+                pass
+
+        logfile.close()
+        os.remove(tmp_fname)
+        solution=" ".join(tmp).split(" ")
+        return solution
+
+    def run_sat_solver(self):
+        #return self.run_minisat()
+        return self.run_plingeling()
+
     def run_maxsat_solver (self):
         tmp_fname="tmp.out"
         logfile=open(tmp_fname, "w")
-        #child = subprocess.Popen([self.MAXSAT_SOLVER, "-algorithm=1", self.CNF_fname], stdout=logfile)
-        child = subprocess.Popen([self.MAXSAT_SOLVER, self.CNF_fname], stdout=logfile)
+        child = subprocess.Popen([self.MAXSAT_SOLVER, "-algorithm=1", self.CNF_fname], stdout=logfile)
+        #child = subprocess.Popen([self.MAXSAT_SOLVER, self.CNF_fname], stdout=logfile)
         child.wait()
         logfile.flush()
         logfile.close()
@@ -193,7 +226,8 @@ class Xu:
     
     # vals=list
     # as in Tseitin transformations.
-    def OR(self, vals):
+    # N.B.: previously called "OR"
+    def OR_list(self, vals):
         out=self.create_var()
         self.add_clause(vals+[self.neg(out)])
         for v in vals:
@@ -211,12 +245,21 @@ class Xu:
             self.add_soft_clause([var], weight)
         else:
             self.add_soft_clause([self.neg(var)], weight)
+
+    def fix_soft_always_true(self, var, weight):
+        self.fix_soft(var, True, weight)
     
     def fix(self, var, b):
         if b==True or b==1:
             self.add_clause([var])
         else:
             self.add_clause([self.neg(var)])
+
+    def fix_always_false(self, var):
+        self.fix(var, False)
+
+    def fix_always_true(self, var):
+        self.fix(var, True)
     
     # BV is a list of True/False/0/1
     def fix_BV(self, _vars, BV):
@@ -297,8 +340,10 @@ class Xu:
     def AtMost1(self, lst):
         for pair in itertools.combinations(lst, r=2):
             self.add_clause([self.neg(pair[0]), self.neg(pair[1])])
-        
-    def POPCNT1(self, lst):
+       
+    # previously named POPCNT1 
+    # make one-hot (AKA unitary) variable
+    def make_one_hot(self, lst):
         self.AtMost1(lst)
         self.OR_always(lst)
 
@@ -325,13 +370,27 @@ class Xu:
         XORed=self.BV_XOR(l1, l2)
         self.POPCNT1(XORed)
 
+    def fix_EQ(self, v1, v2):
+        self.add_clause([self.neg(v1), v2])
+        self.add_clause([v1, self.neg(v2)])
+        #self.fix(self.EQ(v1, v2), True) # FIXME: suboptimal?
+
     # bitvectors must equal to each other.
     def fix_BV_EQ(self, l1, l2):
         #print len(l1), len(l2)
         assert len(l1)==len(l2)
         self.add_comment("fix_BV_EQ")
         for p in zip(l1, l2):
-            self.fix(self.EQ(p[0], p[1]), True) # FIXME: suboptimal?
+            self.fix_EQ(p[0], p[1])
+    
+    def BV_EQ(self, l1, l2):
+        #print len(l1), len(l2)
+        assert len(l1)==len(l2)
+        self.add_comment("BV_EQ")
+        t=[]
+        for p in zip(l1, l2):
+            t.append(self.NOT(self.EQ(p[0], p[1])))
+        return self.NOT(self.OR_list(t))
     
     # bitvectors must be different.
     def fix_BV_NEQ(self, l1, l2):
@@ -459,10 +518,10 @@ class Xu:
             raise AssertionError
       
         # as found by my util 
-        self.add_clauses([self.neg(s),self.neg(t),x])
-        self.add_clauses([self.neg(s),t,self.neg(x)])
-        self.add_clauses([s,self.neg(f),x])
-        self.add_clauses([s,f,self.neg(x)])
+        self.add_clause([self.neg(s),self.neg(t),x])
+        self.add_clause([self.neg(s),t,self.neg(x)])
+        self.add_clause([s,self.neg(f),x])
+        self.add_clause([s,f,self.neg(x)])
 
         return x
 
@@ -542,6 +601,15 @@ class Xu:
                 break
             rt.append(self.solution)
         return rt
+
+    def BV_not_zero(self,bv):
+        return self.OR_list(bv)
+
+    def BV_zero(self, bv):
+        return self.NOT(self.OR_list(bv))
+
+    def get_val_from_solution(self,var):
+        return BV_to_number(self.get_BV_from_solution(var))
 
 """
 to be added:

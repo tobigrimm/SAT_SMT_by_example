@@ -65,7 +65,7 @@
 Так что, в самом конце, все ячейки имеют минимум 2 стыка, и вся эта сантехническая система не имеет связей с внешним миром ---
 я надеюсь, из-за этого станет немного проще.
 
-Исходник генератора на Си здесь: \url{https://github.com/dennis714/SAT_SMT_article/tree/master/SMT/pipe/generator}.
+Исходник генератора на Си здесь: \url{https://github.com/DennisYurichev/SAT_SMT_article/tree/master/SMT/pipe/generator}.
 Все вертикальные стыки хранятся в глобальном массиве \textit{hjoints[]} и вертикальные в \textit{vjoints[]}.
 
 Программа на Си генерирует ANSI-раскрашенный вывод, как это было показано выше
@@ -189,7 +189,7 @@ for r in range(HEIGHT):
             s.add(T[r][c]==t, B[r][c]==t, L[r][c]==t, R[r][c]==t) # §\pmboxdrawuni{254B}§
 \end{lstlisting}
 
-Полный исходник здесь: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/pipe/solver/solve_pipe_puzzle1.py}.
+Полный исходник здесь: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/pipe/solver/solve_pipe_puzzle1.py}.
 
 Получается такой результат (выводит угол для каждой ячейки и (псевдо)графическое представление):
 
@@ -205,7 +205,7 @@ for r in range(HEIGHT):
 
 Теперь следующий вопрос это, сколько здесь возможных решений?
 Используя раннее описанный метод (\ref{SMTEnumerate}), я немного изменил скрипт солвера
-\footnote{\url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/pipe/solver/solve_pipe_puzzle2.py}} и солвер
+\footnote{\url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/pipe/solver/solve_pipe_puzzle2.py}} и солвер
 сказал что возможно два решения.
 
 Сравним их используя gvimdiff:

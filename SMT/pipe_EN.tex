@@ -65,7 +65,7 @@ these cells are transforming into empty cells.
 Hence, at the end, all cells has at least two joints, and the whole plumbing system has no connections with outer
 world---I hope this would make things clearer.
 
-The C source code of generator is here: \url{https://github.com/dennis714/SAT_SMT_article/tree/master/SMT/pipe/generator}.
+The C source code of generator is here: \url{https://github.com/DennisYurichev/SAT_SMT_article/tree/master/SMT/pipe/generator}.
 All horizontal joints are stored in the global array \textit{hjoints[]} and vertical in \textit{vjoints[]}.
 
 The C program generates ANSI-colored output like it has been showed above (\ref{fig:pipe_shuffled}, \ref{fig:pipe_solved}) plus
@@ -189,7 +189,7 @@ for r in range(HEIGHT):
             s.add(T[r][c]==t, B[r][c]==t, L[r][c]==t, R[r][c]==t) # §\pmboxdrawuni{254B}§
 \end{lstlisting}
 
-Full source code is here: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/pipe/solver/solve_pipe_puzzle1.py}.
+Full source code is here: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/pipe/solver/solve_pipe_puzzle1.py}.
 
 It produces this result (prints angle for each cell and (pseudo)graphical representation):
 
@@ -205,7 +205,7 @@ of all this, we just defined cells, (half-)joints and defined relations between 
 
 Now the next question is, how many solutions are possible?
 Using method described earlier (\ref{SMTEnumerate}), I've altered solver script
-\footnote{\url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/pipe/solver/solve_pipe_puzzle2.py}} and solver
+\footnote{\url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/pipe/solver/solve_pipe_puzzle2.py}} and solver
 said two solutions are possible.
 
 Let's compare these two solutions using gvimdiff:

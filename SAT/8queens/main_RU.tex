@@ -124,7 +124,7 @@ s SOLUTIONS 5
 Теперь мы должны перечислить ряды, столбцы и диагонали, и собрать все клозы:
 
 \lstinputlisting{SAT/8queens/8queens.py}
-( \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SAT/8queens/8queens.py} )
+( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/8queens/8queens.py} )
 
 Возможно, ф-ция \TT{gen\_diagonal()} выглядит не очень эстетично:
 она перечисляет также поддиагонали более длинных диагоналей, которые уже были раннее.
@@ -134,7 +134,7 @@ s SOLUTIONS 5
 Также, я использовал ф-цию \TT{AtMost1} для каждого столбца, это поможет генерировать чуть меньше клозов.
 Каждый столбец будет содержать ферзя в любом случае, это следует из первого правила (\TT{POPCNT1} для каждого ряда).
 
-После запуска, получаем CNF-файл с 64-я переменными и 736-я клозами (\url{https://github.com/dennis714/SAT_SMT_article/blob/master/SAT/8queens/8queens.cnf}).
+После запуска, получаем CNF-файл с 64-я переменными и 736-я клозами (\url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/8queens/8queens.cnf}).
 Вот одно из решений:
 
 \begin{lstlisting}

@@ -9,7 +9,7 @@ As it turns out, though overkill, this can be solved using Z3 with little effort
 
 \lstinputlisting{SMT/spreadsheet/1.py}
 
-( \url{https://github.com/dennis714/yurichev.com/blob/master/blog/spreadsheet/1.py} )
+( \url{https://github.com/DennisYurichev/yurichev.com/blob/master/blog/spreadsheet/1.py} )
 
 All we do is just creating pack of variables for each cell, named A0, B1, etc, of integer type.
 All of them are stored in \textit{cells[]} dictionary.
@@ -60,7 +60,7 @@ else:
     print s.unsat_core()
 \end{lstlisting}
 
-( \url{https://github.com/dennis714/yurichev.com/blob/master/blog/spreadsheet/2.py} )
+( \url{https://github.com/DennisYurichev/yurichev.com/blob/master/blog/spreadsheet/2.py} )
 
 We should explicitly turn on unsat core support and use \textit{assert\_and\_track()} instead of \textit{add()} method,
 because this feature slows down the whole process, and is turned off by default.
@@ -147,5 +147,5 @@ which seems to be processed in couple of seconds.
 
 \subsubsection{The files}
 
-The files, including Mathematica notebook: \url{https://github.com/dennis714/yurichev.com/tree/master/blog/spreadsheet}.
+The files, including Mathematica notebook: \url{https://github.com/DennisYurichev/yurichev.com/tree/master/blog/spreadsheet}.
 

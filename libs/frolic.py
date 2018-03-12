@@ -2,7 +2,7 @@
 
 # Python utils
 
-# dennis(a)yurichev, 2017
+# dennis(a)yurichev, 2017-2018
 
 def read_lines_from_file (fname):
     f=open(fname)

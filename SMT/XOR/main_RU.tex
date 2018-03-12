@@ -11,9 +11,9 @@
 
 \lstinputlisting{SMT/XOR/1.py}
 
-( Исходный код: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/XOR/1.py} )
+( Исходный код: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/XOR/1.py} )
 
-Попробуем на маленьком файле из 350 байт\footnote{\url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/XOR/cipher1.txt}}:
+Попробуем на маленьком файле из 350 байт\footnote{\url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/XOR/cipher1.txt}}:
 
 \begin{lstlisting}
 % python 1.py cipher1.txt
@@ -102,7 +102,7 @@ len= 19
 ...
 \end{lstlisting}
 
-( Исходный код: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/XOR/2.py} )
+( Исходный код: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/XOR/2.py} )
 
 Теперь это что-то:
 
@@ -148,7 +148,7 @@ plain=
 ...
 \end{lstlisting}
 
-( Исходный код: \url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/XOR/3.py} )
+( Исходный код: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/XOR/3.py} )
 
 Ключ похоже корректный:
 
@@ -186,12 +186,12 @@ plain=
 
 Надо сказать что чем б\'{о}льший мы имеем шифротекст для анализа, тем лучше.
 Этот 350-байтный файл на самом деле это начало б\'{о}льшего файла, который я приготовил
-(\url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/XOR/cipher2.txt}, 12903 байт).
+(\url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/XOR/cipher2.txt}, 12903 байт).
 И корректный ключ для него может быть найден без дополнительных \textit{эвристик}, которые были здесь использованы.
 
 SMT-солвер это слишком для такой задачи. Я однажды решил эту проблему в более наивной манере, и это было намного быстрее:
 \url{https://yurichev.com/blog/XOR_mask_2/}.
 Тем не менее, это еще одна демонстрация оптимизационной проблемы.
 
-Файлы: \url{https://github.com/dennis714/SAT_SMT_article/tree/master/SMT/XOR}.
+Файлы: \url{https://github.com/DennisYurichev/SAT_SMT_article/tree/master/SMT/XOR}.
 

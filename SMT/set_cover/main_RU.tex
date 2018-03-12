@@ -18,11 +18,11 @@
 из исходных годов от Apple.
 Такие процедуры тестировать не легко.
 Вот моя версия:
-\url{https://github.com/dennis714/SAT_SMT_article/blob/master/SMT/set_cover/compression.c}.
+\url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/set_cover/compression.c}.
 Я добавил генерацию случайных входных данных для сжатия.
 Эта генерация зависит от некоторого изначального входного значения (\textit{seed}).
 Стандартные ф-ции \TT{srand()}/\TT{rand()} не рекомендуется использовать, но для такой простой задачи как у нас, это ОК.
-Я сгенерирую\footnote{\url{https://github.com/dennis714/yurichev.com/blob/master/blog/set_cover/gen_gcov_tests.sh}}
+Я сгенерирую\footnote{\url{https://github.com/DennisYurichev/yurichev.com/blob/master/blog/set_cover/gen_gcov_tests.sh}}
 1000 тестов с сидами 0..999, это создаст случайные данны для сжатия/разжатия/проверки.
 
 После того, как процедура сжатия/разжатия закончила работу,
@@ -81,7 +81,7 @@ python set_cover.py  18.95s user 0.03s system 99% cpu 18.988 total
 обновите).
 Это относительно свежая возможность в Z3, так что, вероятно, она не была стабильна в предыдущих версиях?
 
-Файлы: \url{https://github.com/dennis714/SAT_SMT_article/tree/master/SMT/set_cover}.
+Файлы: \url{https://github.com/DennisYurichev/SAT_SMT_article/tree/master/SMT/set_cover}.
 
 Дальнейшее чтение:
 \url{https://en.wikipedia.org/wiki/Set_cover_problem},
