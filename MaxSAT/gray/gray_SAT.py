@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import subprocess, os, itertools
-import frolic, Xu
+import my_utils, SAT_lib
 
 BITS=5
 
@@ -13,7 +13,7 @@ ROWS=2**BITS
 MASK=ROWS-1 # 0x1f for 5 bits, 0xf for 4 bits, etc
 
 def do_all():
-    s=Xu.Xu(maxsat=True)
+    s=SAT_lib.SAT_lib(maxsat=True)
 
     code=[s.alloc_BV(BITS) for r in range(ROWS)]
     ch=[s.alloc_BV(BITS) for r in range(ROWS)]

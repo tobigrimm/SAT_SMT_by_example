@@ -1,8 +1,8 @@
+#!/usr/bin/env python3
+
 #-*- coding: utf-8 -*-
 
-#!/usr/bin/env python
-
-import subprocess, os, frolic, Xu
+import subprocess, os, my_utils, SAT_lib
 
 BITS_PER_COLOR=3
 BITS_PER_SELECTOR=5
@@ -58,7 +58,7 @@ def do_all(turns):
     facelets=None
     selectors=None
 
-    s=Xu.Xu(False)
+    s=SAT_lib.SAT_lib(False)
 
     alloc_facelets_and_selectors(STATES)
 
@@ -220,24 +220,24 @@ def do_all(turns):
     add_r("B4",["B4","B4","B4","B4","B4","B4","R4","F4","L4","B4","B4","B4","D1","F1","U1","B2","B1","B3"])
 
     if s.solve()==False:
-        print "unsat!"
+        print ("unsat!")
         exit(0)
     
     turn_name=["FCW","FH","FCCW","UCW","UH","UCCW","DCW","DH","DCCW","RCW","RH","RCCW","LCW","LH","LCCW","BCW","BH","BCCW"]
 
-    print "sat!"
+    print ("sat!")
     for turn in selectors:
         # 'turn' is array of 5 variables
         # convert each variable to "1" or "0" string and create 5-digit string:
         rt="".join([str(s.get_var_from_solution(bit)) for bit in turn])
         # reverse string, convert it to integer and use it as index for array to get a move name:
-        print turn_name[int(frolic.rvr(rt),2)]
+        print (turn_name[int(my_utils.rvr(rt),2)])
 
-    print ""
+    print ("")
 
 def main():
     for i in range(11,0,-1):
-        print "TURNS=", i
+        print ("TURNS=", i)
         do_all(i)
 
 main()

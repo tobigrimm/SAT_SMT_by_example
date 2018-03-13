@@ -11,14 +11,14 @@
 # TODO: get rid of *fix* functions?
 
 import subprocess, os, itertools
-import frolic
+import my_utils
 
 # BV=[MSB...LSB]
 def BV_to_number(BV):
     # coeff=1, 2^1, 2^2 ... 2^(len(BV)-1)
     coeff=1
     rt=0
-    for v in frolic.rvr(BV):
+    for v in my_utils.rvr(BV):
         rt=rt+coeff*v
         coeff=coeff*2
     return rt
@@ -28,15 +28,15 @@ def BV_to_number(BV):
 def n_to_BV (n, size):
     out=[0]*size
     i=0
-    for var in frolic.rvr(bin(n)[2:]):
+    for var in my_utils.rvr(bin(n)[2:]):
         if var=='1':
             out[i]=1
         else:
             out[i]=0
         i=i+1
-    return frolic.rvr(out)
+    return my_utils.rvr(out)
 
-class Xu:
+class SAT_lib:
 
     def __init__(self, maxsat):
         self.last_var=1
@@ -47,8 +47,7 @@ class Xu:
 
         self.maxsat=maxsat
 
-        self.SAT_SOLVER="minisat"
-        self.MAXSAT_SOLVER="open-wbo"
+        #self.SAT_SOLVER="minisat"
 
         self.remove_CNF_file=True
         #self.remove_CNF_file=False
@@ -74,19 +73,19 @@ class Xu:
             print ("(minisat) unknown retcode: ", child.returncode)
             exit(0)
 
-        solution=frolic.read_lines_from_file("results.txt")[1].split(" ")
+        solution=my_utils.read_lines_from_file("results.txt")[1].split(" ")
         # remove last "variable", which is 0
         assert solution[-1]=='0'
         solution=solution[:-1]
         os.remove ("results.txt")
 
         return solution
-
-    # FIXME: this function and run_maxsat_solver are almost the same!
-    def run_plingeling (self):
+    
+    # cmd_line is an array
+    def run_plingeling_or_open_wbo (self, cmd_line):
         tmp_fname="tmp.out"
         logfile=open(tmp_fname, "w")
-        child = subprocess.Popen(["plingeling", self.CNF_fname], stdout=logfile)
+        child = subprocess.Popen(cmd_line, stdout=logfile)
 
         child.wait()
         logfile.flush()
@@ -110,38 +109,19 @@ class Xu:
         os.remove(tmp_fname)
         solution=" ".join(tmp).split(" ")
         return solution
+
+    def run_plingeling (self):
+        return self.run_plingeling_or_open_wbo(["plingeling", self.CNF_fname])
 
     def run_sat_solver(self):
         #return self.run_minisat()
         return self.run_plingeling()
 
+    def run_open_wbo_solver (self):
+        return self.run_plingeling_or_open_wbo(["open-wbo", "-algorithm=1", self.CNF_fname])
+
     def run_maxsat_solver (self):
-        tmp_fname="tmp.out"
-        logfile=open(tmp_fname, "w")
-        child = subprocess.Popen([self.MAXSAT_SOLVER, "-algorithm=1", self.CNF_fname], stdout=logfile)
-        #child = subprocess.Popen([self.MAXSAT_SOLVER, self.CNF_fname], stdout=logfile)
-        child.wait()
-        logfile.flush()
-        logfile.close()
-
-        tmp=[]
-        logfile=open(tmp_fname, "r")
-        while True:
-            line = logfile.readline()
-            if line.startswith("s UNSAT"):
-                logfile.close()
-                return None
-            elif line.startswith("v "):
-                tmp.append (line[2:].rstrip())
-            elif line=='':
-                break
-            else:
-                pass
-
-        logfile.close()
-        os.remove(tmp_fname)
-        solution=" ".join(tmp).split(" ")
-        return solution
+        return self.run_open_wbo_solver()
 
     def write_CNF(self):
         if self.maxsat==False:
@@ -368,7 +348,7 @@ class Xu:
         self.add_comment("hamming1")
         assert len(l1)==len(l2)
         XORed=self.BV_XOR(l1, l2)
-        self.POPCNT1(XORed)
+        self.make_one_hot(XORed)
 
     def fix_EQ(self, v1, v2):
         self.add_clause([self.neg(v1), v2])
@@ -430,7 +410,7 @@ class Xu:
         assert len(X)==len(Y)
         # first full-adder could be half-adder
         # start with lowest bits:
-        inputs=frolic.rvr(list(zip(X,Y)))
+        inputs=my_utils.rvr(list(zip(X,Y)))
         carry=self.const_false
         sums=[]
         for pair in inputs:
@@ -438,7 +418,7 @@ class Xu:
             # so it is used in the each FA() call from the previous FA() call.
             s, carry = self.FA(pair[0], pair[1], carry)
             sums.append(s)
-        return frolic.rvr(sums), carry
+        return my_utils.rvr(sums), carry
 
     # bit is 0 or 1.
     # i.e., if it's 0, output is 0 (all bits)
@@ -454,12 +434,12 @@ class Xu:
         #initial:
         prev=[self.const_false]*len(X)
         # first adder can be skipped, but I left thing "as is" to make it simpler
-        for Y_bit in frolic.rvr(Y):
+        for Y_bit in my_utils.rvr(Y):
             s, carry = self.adder(self.mult_by_bit(X, Y_bit), prev)
             out.append(s[-1])
             prev=[carry] + s[:-1]
     
-        return prev + frolic.rvr(out)
+        return prev + my_utils.rvr(out)
 
     def NEG(self, x):
         # invert all bits
@@ -530,7 +510,7 @@ class Xu:
         X=minuend
         Y=self.BV_NOT(subtrahend)
 
-        inputs=frolic.rvr(list(zip(X,Y)))
+        inputs=my_utils.rvr(list(zip(X,Y)))
         carry=self.const_true
         sums=[]
         for pair in inputs:
@@ -539,7 +519,7 @@ class Xu:
             st, carry = self.FA(pair[0], pair[1], carry)
             sums.append(st)
 
-        return frolic.rvr(sums), carry
+        return my_utils.rvr(sums), carry
 
     # 0 if a<b
     # 1 if a>=b
@@ -565,7 +545,7 @@ class Xu:
         wide_divisor=self.shift_left([self.const_false]*BITS+divisor, BITS-1)
         quotient=[]
         for b in range(BITS):
-            enable=self.NOT(self.OR(wide_divisor[:BITS]))
+            enable=self.NOT(self.OR_list(wide_divisor[:BITS]))
             divident, q_bit=self.div_blk(enable, divident, wide_divisor[BITS:])
             quotient.append(q_bit)
             wide_divisor=self.shift_right_1(wide_divisor)

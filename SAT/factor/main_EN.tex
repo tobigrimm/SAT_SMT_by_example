@@ -166,7 +166,7 @@ And the adder:
         assert len(X)==len(Y)
         # first full-adder could be half-adder
         # start with lowest bits:
-        inputs=frolic.rvr(list(zip(X,Y)))
+        inputs=my_utils.rvr(list(zip(X,Y)))
         carry=self.const_false
         sums=[]
         for pair in inputs:
@@ -174,7 +174,7 @@ And the adder:
             # so it is used in the each FA() call from the previous FA() call.
             s, carry = self.FA(pair[0], pair[1], carry)
             sums.append(s)
-        return frolic.rvr(sums), carry
+        return my_utils.rvr(sums), carry
 \end{lstlisting}
 
 \subsubsection{Binary multiplier in SAT}
@@ -244,12 +244,12 @@ I would build separate block, "multiply by one bit" as a latch for each partial 
         #initial:
         prev=[self.const_false]*len(X)
         # first adder can be skipped, but I left thing "as is" to make it simpler
-        for Y_bit in frolic.rvr(Y):
+        for Y_bit in my_utils.rvr(Y):
             s, carry = self.adder(self.mult_by_bit(X, Y_bit), prev)
             out.append(s[-1])
             prev=[carry] + s[:-1]
     
-        return prev + frolic.rvr(out)
+        return prev + my_utils.rvr(out)
 \end{lstlisting}
 
 AND gate is constructed here using Tseitin transformations.

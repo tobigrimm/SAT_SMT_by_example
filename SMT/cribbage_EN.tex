@@ -1,0 +1,35 @@
+\subsection{Cribbage}
+
+I've found this problem in [Ronald L. Graham, Donald E. Knuth, Oren Patashnik -- Concrete Mathematics]:
+
+\begin{framed}
+\begin{quotation}
+Cribbage players have long been aware that 15 = 7 + 8 = 4 + 5 + 6 =
+1 + 2 + 3 + 4 + 5 . Find the number of ways to represent 1050 as a sum of
+consecutive positive integers. (The trivial representation `1050' by itself
+counts as one way; thus there are four, not three, ways to represent 15
+as a sum of consecutive positive integers. Incidentally, a knowledge of
+cribbage rules is of no use in this problem.)
+\end{quotation}
+\end{framed}
+
+My solution:
+
+\lstinputlisting{SMT/cribbage.py}
+
+The result:
+
+\begin{lstlisting}
+(3 terms) 349 + ... + 351 == 1050
+(4 terms) 261 + ... + 264 == 1050
+(5 terms) 208 + ... + 212 == 1050
+(7 terms) 147 + ... + 153 == 1050
+(12 terms) 82 + ... + 93 == 1050
+(15 terms) 63 + ... + 77 == 1050
+(20 terms) 43 + ... + 62 == 1050
+(21 terms) 40 + ... + 60 == 1050
+(25 terms) 30 + ... + 54 == 1050
+(28 terms) 24 + ... + 51 == 1050
+(35 terms) 13 + ... + 47 == 1050
+\end{lstlisting}
+

@@ -2,7 +2,7 @@
 
 #!/usr/bin/env python
 
-import itertools, subprocess, os, frolic, Xu
+import itertools, subprocess, os, my_utils, SAT_lib
 
 SIZE=8
 SKIP_SYMMETRIES=True
@@ -35,17 +35,17 @@ def add_2D_array_as_negated_constraint(s, a):
 def main():
     global first_var
 
-    s=Xu.Xu(False)
+    s=SAT_lib.SAT_lib(False)
 
     _vars=s.alloc_BV(SIZE**2)
     first_var=int(_vars[0])
 
     # enumerate all rows:
     for row in range(SIZE):
-        s.POPCNT1([row_col_to_var(row, col) for col in range(SIZE)])
+        s.make_one_hot([row_col_to_var(row, col) for col in range(SIZE)])
 
     # enumerate all columns:
-    # POPCNT1() could be used here as well:
+    # make_one_hot() could be used here as well:
     for col in range(SIZE):
         s.AtMost1([row_col_to_var(row, col) for row in range(SIZE)])
 
@@ -82,10 +82,10 @@ def main():
         # if we skip symmetries, rotate/reflect soluion and add them as negated constraints:
         if SKIP_SYMMETRIES:
             for a in range(4):
-                tmp=frolic.rotate_rect_array(solution_as_2D_bool_array, a)
+                tmp=my_utils.rotate_rect_array(solution_as_2D_bool_array, a)
                 add_2D_array_as_negated_constraint(s, tmp)
         
-                tmp=frolic.reflect_horizontally(frolic.rotate_rect_array(solution_as_2D_bool_array, a))
+                tmp=my_utils.reflect_horizontally(my_utils.rotate_rect_array(solution_as_2D_bool_array, a))
                 add_2D_array_as_negated_constraint(s, tmp)
 
         sol_n=sol_n+1

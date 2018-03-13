@@ -99,6 +99,7 @@ Out[16]= (!a||!b||!c||d||e||f||g||h)&&(!a||!b||c||!d||e||f||g||h)&&(!a||!b||c||d
 
 \end{lstlisting}
 
+% TODO \ref{}
 Используя тот же способ, что и в примере с ``Сапёром'', я могу конвертировать \ac{CNF}-выражение в список клозов:
 
 \begin{lstlisting}
@@ -487,9 +488,9 @@ Out[18]= (!a||!b||!c||!center||!d)&&(!a||!b||!c||!center||!e)&&(!a||!b||!c||!cen
 
 \end{lstlisting}
 
-\lstinputlisting{SAT/GoL/stillife1.py}
+\lstinputlisting{SAT/GoL/SL1.py}
 
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/GoL/stillife1.py} )
+( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/GoL/SL1.py} )
 
 Что получим для $2 \cdot 2$?
 
@@ -508,7 +509,7 @@ Out[18]= (!a||!b||!c||!center||!d)&&(!a||!b||!c||!center||!e)&&(!a||!b||!c||!cen
 unsat!
 \end{lstlisting}
 
-Оба решения корректы: пустой квадрат трансформируется в пустой квадрат (клетки не будут рождены).
+Оба решения корректны: пустой квадрат трансформируется в пустой квадрат (клетки не будут рождены).
 Квадрат $2 \cdot 2$ также известен как ''натюрморт''.
 
 Что насчет квадрата $3 \cdot 3$?
@@ -592,7 +593,7 @@ unsat!
 
 \end{lstlisting}
 
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/GoL/stillife2.py} )
+( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/GoL/SL2.py} )
 
 Теперь мы видим, что квадрат $3 \cdot 3$ имеет 3 возможных натюрморта:
 
@@ -763,7 +764,7 @@ unsat!
 
 \end{lstlisting}
 
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/GoL/stillife.py} )
+( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/GoL/SL3.py} )
 
 Это действительно поплотнее:
 
