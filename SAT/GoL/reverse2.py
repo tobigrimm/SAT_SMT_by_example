@@ -3,10 +3,26 @@
 import os
 from GoL_SAT_utils import *
 
+#"""
 final_state=[
 " * ",
 "* *",
 " * "]
+#"""
+
+"""
+final_state=[
+"             ",
+"   *     *   ",
+"    *   *    ",
+"   *******   ",
+"  ** *** **  ",
+" *********** ",
+" * ******* * ",
+" * *     * * ",
+"    ** **    ",
+"             "]
+"""
 
 H=len(final_state) # HEIGHT
 W=len(final_state[0]) # WIDTH

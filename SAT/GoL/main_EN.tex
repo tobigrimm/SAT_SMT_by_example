@@ -22,7 +22,7 @@ if center==false
 We can get rid of ``if'' construction:
 
 \begin{lstlisting}
-result=(center=true && (popcnt2(neighbours) || popcnt3(neighbours))) || (center=false && popcnt3(neighbours))
+result=(center==true && (popcnt2(neighbours) || popcnt3(neighbours))) || (center==false && popcnt3(neighbours))
 \end{lstlisting}
 
 \dots where ``center'' is state of central cell, ``neighbours'' are 8 neighbouring cells, popcnt2 is a function which

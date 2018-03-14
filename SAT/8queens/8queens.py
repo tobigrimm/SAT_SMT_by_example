@@ -1,6 +1,6 @@
-#-*- coding: utf-8 -*-
+#!/usr/bin/env python3
 
-#!/usr/bin/env python
+#-*- coding: utf-8 -*-
 
 import itertools, subprocess, os, my_utils, SAT_lib
 
@@ -59,12 +59,12 @@ def main():
     sol_n=1
     while True:
         if s.solve()==False:
-            print "unsat!"
-            print "solutions total=", sol_n-1
+            print ("unsat!")
+            print ("solutions total=", sol_n-1)
             exit(0)
 
         # print solution:
-        print "solution number", sol_n, ":"
+        print ("solution number", sol_n, ":")
 
         # get solution and make 2D array of bools:
         solution_as_2D_bool_array=[]
@@ -74,7 +74,7 @@ def main():
         # print 2D array:
         for row in range(SIZE):
             tmp=[([" ", "*"][solution_as_2D_bool_array[row][col]]+"|") for col in range(SIZE)]
-            print "|"+"".join(tmp)
+            print ("|"+"".join(tmp))
 
         # add 2D array as negated constraint:
         add_2D_array_as_negated_constraint(s, solution_as_2D_bool_array)

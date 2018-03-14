@@ -24,7 +24,7 @@ if center==false
 Мы можем избавиться от конструкции ``if'':
 
 \begin{lstlisting}
-result=(center=true && (popcnt2(neighbours) || popcnt3(neighbours))) || (center=false && popcnt3(neighbours))
+result=(center==true && (popcnt2(neighbours) || popcnt3(neighbours))) || (center==false && popcnt3(neighbours))
 \end{lstlisting}
 
 \dots где ``center'' это состояние центральной клетки, ``neighbours'' это 8 соседних клеток, popcnt2 это ф-ция,
