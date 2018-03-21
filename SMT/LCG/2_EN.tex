@@ -1,0 +1,118 @@
+\subsection{Can rand() generate 10 consecutive zeroes?}
+
+I've always been wondering, if it's possible or not.
+As of simplest linear congruential generator from MSVC's rand(), I could get a state at which rand() will output 8 zeroes modulo 10:
+
+\lstinputlisting{SMT/LCG/LCG10.py}
+
+\begin{lstlisting}
+sat
+[state3 = 1181667981,
+ state4 = 342792988,
+ state5 = 4116856175,
+ state7 = 1741999969,
+ state8 = 3185636512,
+ state2 = 1478548498,
+ state6 = 4036911734,
+ state1 = 286227003,
+ state9 = 1700675811]
+\end{lstlisting}
+
+This is a case if, in some video game, you'll find a code:
+
+\begin{lstlisting}
+for (int i=0; i<8; i++)
+    printf ("%d\n", rand() % 10);
+\end{lstlisting}
+
+... and at some point, this piece of code can generate 8 zeroes in row, if the state will be 286227003 (decimal).
+
+Just checked this piece of code in MSVC 2015:
+
+\begin{lstlisting}
+// MSVC 2015 x86
+
+#include <stdio.h>
+
+int main()
+{
+	srand(286227003);
+
+	for (int i=0; i<8; i++)
+		printf ("%d\n", rand() % 10);
+};
+\end{lstlisting}
+
+Yes, its output is 8 zeroes!
+
+What about other modulos?
+
+I can get 4 consecutive zeroes modulo 100:
+
+\lstinputlisting{SMT/LCG/LCG100.py}
+
+\begin{lstlisting}
+sat
+[state3 = 635704497,
+ state4 = 1644979376,
+ state2 = 1055176198,
+ state1 = 3865742399,
+ state5 = 1389375667]
+\end{lstlisting}
+
+However, 4 consecutive zeroes modulo 100 is impossible (given these constants at least), this gives ``unsat'':
+\url{https://github.com/DennisYurichev/yurichev.com/...LCG100_v1.py}.
+
+... and 3 consecutive zeroes modulo 1000:
+
+\lstinputlisting{SMT/LCG/LCG1000.py}
+
+\begin{lstlisting}
+sat
+[state3 = 1179663182,
+ state2 = 720934183,
+ state1 = 4090229556,
+ state4 = 786474201]
+\end{lstlisting}
+
+What if we could use rand()'s output without division? Which is in 0..0x7fff range (i.e., 15 bits)?
+As it can be checked quickly, 2 zeroes at output is possible:
+
+\lstinputlisting{SMT/LCG/LCG.py}
+
+\begin{lstlisting}
+sat
+[state2 = 20057, state1 = 3385131726, state3 = 22456]
+\end{lstlisting}
+
+\subsubsection{UNIX time and srand(time(NULL))}
+
+Given the fact that it's highly popular to initialize LCG PRNG with UNIX time (i.e., \TT{srand(time(NULL))}), you can probably calculate a moment in time so that LCG PRNG will be initialized as you want to.
+
+For example, can we get a moment in time from now (5-Dec-2017) till 12-Dec-2017 (that is one week from now), when, if initialized by UNIX time, rand() will output as many similar numbers (modulo 10), as possible?
+
+\lstinputlisting{SMT/LCG/LCG10_time.py}
+
+Yes:
+
+\begin{lstlisting}
+sat
+[state3 = 2234253076,
+ state4 = 497021319,
+ state5 = 4160988718,
+ c = 3,
+ state2 = 333151205,
+ state6 = 46785593,
+ state1 = 1512500810,
+ state7 = 1158878744]
+\end{lstlisting}
+
+If \TT{srand(time(NULL))} will be executed at \TT{Tue Dec  5 21:06:50 EET 2017} (this precise second, UNIX time=1512500810), a next 6 \TT{rand() \% 10} lines will output six numbers of 3 in a row.
+Don't know if it useful or not, but you've got the idea.
+
+\subsubsection{etc:}
+
+The files: \url{https://github.com/DennisYurichev/yurichev.com/...}
+
+Further work: check glibc's rand(), Mersenne Twister, etc. Simple 32-bit LCG as described can be checked using simple brute-force, I think.
+

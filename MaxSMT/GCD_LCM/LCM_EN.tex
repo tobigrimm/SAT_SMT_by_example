@@ -1,0 +1,41 @@
+\subsubsection{Explanation of the Least Common Multiple}
+
+Many people use \ac{LCM} in school. Sum up $\frac{1}{4}$ and $\frac{1}{6}$.
+To find an answer mentally, you ought to find Lowest Common Denominator, which can be 4*6=24.
+Now you can sum up $\frac{6}{24} + \frac{4}{24} = \frac{10}{24}$.
+
+But the lowest denominator is also a LCM.
+LCM of 4 and 6 is 12: $\frac{3}{12} + \frac{2}{12} = \frac{5}{12}$.
+
+To find LCM of 4 and 6, we are going to solve the following diophantine (i.e., allowing only integer solutions) system of equations:
+
+$4x = 6y = LCM$
+
+... where LCM>0 and as small, as possible.
+
+\begin{lstlisting}
+#!/usr/bin/env python
+
+from z3 import *
+
+opt = Optimize()
+
+x,y,LCM=Ints('x y LCM')
+
+opt.add(x*4==LCM)
+opt.add(y*6==LCM)
+opt.add(LCM>0)
+
+h=opt.minimize(LCM)
+
+print (opt.check())
+print (opt.model())
+\end{lstlisting}
+
+The (correct) answer:
+
+\begin{lstlisting}
+sat
+[y = 2, x = 3, LCM = 12]
+\end{lstlisting}
+

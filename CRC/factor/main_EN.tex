@@ -1,0 +1,17 @@
+\subsection{Factorize GF(2)/CRC polynomials}
+
+GF(2)/CRC polynomials, like usual numbers, can also be factored, because a polynomial can be a product of two other polynomial (or not).
+
+Some people say that good CRC polynomial should be irreducible (i.e., cannot be factored), some other say that this is not a requirement.
+I've checked several CRC-16 and CRC-32 polynomials from \href{https://en.wikipedia.org/wiki/Cyclic_redundancy_check}{the Wikipedia article}.
+
+% TODO \ref{}
+The multiplier is constructed in the same manner, as I did it earlier for integer factorization using SAT.
+Factors are not prime integers, but prime polynomials.
+
+Another important thing to notice is that replacing XOR with addition will make this script factor integers, because addition in GF(2) is XOR.
+
+Also, can be used for tests, online GF(2) polynomials factorization: \url{http://www.ee.unb.ca/cgi-bin/tervo/factor.pl?binary=101}.
+
+\lstinputlisting{CRC/factor/factor_GF2.py}
+

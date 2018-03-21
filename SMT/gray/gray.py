@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 from z3 import *
 
@@ -93,27 +93,29 @@ m=s.model()
 
 # get the model.
 
-print "code table:"
+print ("code table:")
 
 for i in range(ROWS):
+    t=""
     for bit in range(BITS):
         # comma at the end means "no newline":
-        print bool_to_int(is_true(m[code[i][BITS-1-bit]])),
-    print ""
+        t=t+str(bool_to_int(is_true(m[code[i][BITS-1-bit]])))+" "
+    print (t)
 
-print "ch table:"
+print ("ch table:")
 
 stat={}
 
 for i in range(ROWS):
+    t=""
     for bit in range(BITS):
         x=is_true(m[ch[i][BITS-1-bit]])
         if x:
             # increment if bit is present in dict, set 1 if not present
             stat[bit]=stat.get(bit, 0)+1
         # comma at the end means "no newline":
-        print bool_to_int(x),
-    print ""
+        t=t+str(bool_to_int(x))+" "
+    print (t)
 
-print "stat (bit number: number of changes): ", stat
+print ("stat (bit number: number of changes): ", stat)
 

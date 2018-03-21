@@ -1,0 +1,147 @@
+\subsubsection{Explanation of the \ac{GCD}}
+
+What is Greatest common divisor (\ac{GCD})?
+
+Let's suppose, you want to cut a rectangle by squares. What is maximal square could be?
+
+For a 14*8 rectangle, this is 2*2 square:
+
+% TODO make these blocks horizontally arranged:
+\begin{lstlisting}
+**************
+**************
+**************
+**************
+**************
+**************
+**************
+**************
+\end{lstlisting}
+
+% TODO tex symbol:
+->
+
+\begin{lstlisting}
+** ** ** ** ** ** **
+** ** ** ** ** ** **
+                  
+** ** ** ** ** ** **
+** ** ** ** ** ** **
+                  
+** ** ** ** ** ** **
+** ** ** ** ** ** **
+                  
+** ** ** ** ** ** **
+** ** ** ** ** ** **
+\end{lstlisting}
+
+What for 14*7 rectangle? It's 7*7 square:
+
+\begin{lstlisting}
+**************
+**************
+**************
+**************
+**************
+**************
+**************
+\end{lstlisting}
+
+->
+
+\begin{lstlisting}
+******* *******
+******* *******
+******* *******
+******* *******
+******* *******
+******* *******
+******* *******
+\end{lstlisting}
+
+14*9 rectangle? 1, i.e., smallest possible.
+
+\begin{lstlisting}
+**************
+**************
+**************
+**************
+**************
+**************
+**************
+**************
+**************
+**************
+\end{lstlisting}
+
+Also, GCD can be used to determine biggest ``granule'' for problem like \ref{XkcdILP}, and this is 0.05 or 5 for that example.
+
+To compute GCD, one of the oldest algorithms is used: \href{https://en.wikipedia.org/wiki/Euclidean_algorithm}{Euclidean algorithm}.
+But, I can demonstrate how to make things much less efficient, but more spectacular.
+
+To find GCD of 14 and 8, we are going to solve this system of equations:
+
+% TODO texify
+\begin{lstlisting}
+x*GCD=14
+y*GCD=8
+\end{lstlisting}
+
+Then we drop $x$ and $y$, we don't need them.
+This system can be solved using paper and pencil, but GCD must be as big as possible.
+Here we can use Z3 in MaxSMT mode:
+
+\begin{lstlisting}
+#!/usr/bin/env python
+
+from z3 import *
+
+opt = Optimize()
+
+x,y,GCD=Ints('x y GCD')
+
+opt.add(x*GCD==14)
+opt.add(y*GCD==8)
+
+h=opt.maximize(GCD)
+
+print (opt.check())
+print (opt.model())
+\end{lstlisting}
+
+That works:
+
+\begin{lstlisting}
+sat
+[y = 4, x = 7, GCD = 2]
+\end{lstlisting}
+
+What if we need to find GCD for 3 numbers?
+Maybe we are going to fill a space with biggest possible cubes?
+
+\begin{lstlisting}
+#!/usr/bin/env python
+
+from z3 import *
+
+opt = Optimize()
+
+x,y,z,GCD=Ints('x y z GCD')
+
+opt.add(x*GCD==300)
+opt.add(y*GCD==333)
+opt.add(z*GCD==900)
+
+h=opt.maximize(GCD)
+
+print (opt.check())
+print (opt.model())
+\end{lstlisting}
+
+This is 3:
+
+\begin{lstlisting}
+sat
+[z = 300, y = 111, x = 100, GCD = 3]
+\end{lstlisting}
+

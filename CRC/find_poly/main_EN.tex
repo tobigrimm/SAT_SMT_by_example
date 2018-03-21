@@ -1,0 +1,52 @@
+\subsection{Finding (good) CRC polynomial}
+
+Finding good CRC polynomial is tricky, and my results can't compete with other tested popular CRC polynomial.
+Nevertheless, it was fun to use Z3 to find them.
+
+I just generate 32 random samples, all has size between 1 and 32 bytes.
+Then I flip 1..3 random bits and I add a constraint: CRC hash of the sample and hash of the modified sample (with 1..3 bits flipped) must differ.
+
+\lstinputlisting{CRC/find_poly/CRC_find_poly.py}
+
+Several polynomials for CRC8:
+
+\begin{lstlisting}
+poly=0xf9
+poly=0x50
+poly=0x90
+...
+\end{lstlisting}
+
+... for CRC16:
+
+\begin{lstlisting}
+poly=0xf7af
+poly=0x368
+poly=0x268
+poly=0x228
+...
+\end{lstlisting}
+
+... for CRC32:
+
+\begin{lstlisting}
+poly=0x1683a5ab
+poly=0x78553eda
+poly=0x7a153eda
+poly=0x7b353eda
+...
+\end{lstlisting}
+
+... for CRC64:
+
+\begin{lstlisting}
+poly=0x8000000000000006
+poly=0x926b19b536a62f10
+poly=0x4a7bb0a7da78a370
+poly=0xbbc781e7e83dabf0
+...
+\end{lstlisting}
+
+Problem: at least this one. CRC must be able to detect errors in very long buffers, up to $2^{32}$ for CRC32. We can't feed that huge buffers to SMT solver.
+I had success only with samples up to $\approx 32$ bytes.
+

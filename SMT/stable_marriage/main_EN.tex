@@ -1,0 +1,82 @@
+\subsection{Stable marriage problem}
+
+See also in
+\href{https://en.wikipedia.org/wiki/Stable_marriage_problem}{Wikipedia} and 
+\href{https://rosettacode.org/wiki/Stable_marriage_problem}{Rosetta code}.
+
+Layman's explanation in Russian: \url{https://lenta.ru/articles/2012/10/15/nobel/}.
+
+My solution is much less efficient, because much simpler/better algorithm exists (Gale/Shapley algorithm),
+but I did it to demonstrate the essence of the problem plus as a yet another SMT-solvers and Z3 demonstration.
+
+See comments:
+
+\lstinputlisting{SMT/stable_marriage/stable.py}
+
+( The source code: \url{URL/stable.py} )
+
+Result is seems to be correct:
+
+\begin{lstlisting}
+sat
+
+ManChoice:
+abe <-> ivy
+bob <-> cath
+col <-> dee
+dan <-> fay
+ed <-> jan
+fred <-> bea
+gav <-> gay
+hal <-> eve
+ian <-> hope
+jon <-> abi
+
+WomanChoice:
+abi <-> jon
+bea <-> fred
+cath <-> bob
+dee <-> col
+eve <-> hal
+fay <-> dan
+gay <-> gav
+hope <-> ian
+ivy <-> abe
+jan <-> ed
+\end{lstlisting}
+
+This is what we did in plain English language.
+``Connect men and women somehow, we don't care how.
+But no pair must exist of those who prefer each other (simultaneously) over their current spouses''.
+Gale/Shapley algorithm uses ``steps'' to ``stabilize'' marriage.
+There are no ``steps'', all pairs are married couples already.
+
+Another important thing to notice: only one solution must exist.
+
+\begin{lstlisting}
+...
+
+results=[]
+
+# enumerate all possible solutions:
+while True:
+    if s.check() == sat:
+        m = s.model()
+        #print m
+        results.append(m)
+        block = []
+        for d in m:
+            c=d()
+            block.append(c != m[d])
+        s.add(Or(block))
+    else:
+        print "results total=", len(results)
+        break
+
+...
+\end{lstlisting}
+
+( The source code: \url{URL/stable2.py} )
+
+That reports only 1 model available, which is correct indeed.
+

@@ -1,8 +1,9 @@
+#!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
 from z3 import *
 from operator import add
-import itertools, frolic, Z3_utils
+import itertools, my_utils, Z3_utils
 
 """
 board=[ "********",
@@ -87,7 +88,7 @@ TILES_TOTAL=len(tiles)
 
 def lists_has_adjacent_cells(l1, l2):
     # enumerate all possible combinations of items from two lists:
-    return any([frolic.adjacent_coords(q[0][0], q[0][1], q[1][0], q[1][1]) for q in itertools.product(l1, l2)])
+    return any([my_utils.adjacent_coords(q[0][0], q[0][1], q[1][0], q[1][1]) for q in itertools.product(l1, l2)])
 
 def can_be_placed(into, irow, icol, tile):
     rt=[]
@@ -138,12 +139,12 @@ def find_all_placements_with_rotations(poly_type, tile):
     rt=[]
     for a in range(4):
 
-        t1=frolic.rotate_rect_array(tile, a)
+        t1=my_utils.rotate_rect_array(tile, a)
         if t1 not in duplicates:
             duplicates.append(t1)
             rt=rt+find_all_placements(poly_type, t1)
 
-        t2=frolic.reflect_horizontally(frolic.rotate_rect_array(tile, a))
+        t2=my_utils.reflect_horizontally(my_utils.rotate_rect_array(tile, a))
         if t2 not in duplicates:
             duplicates.append(t2)
             rt=rt+find_all_placements(poly_type, t2)
@@ -183,9 +184,9 @@ def print_solution(solution):
             else:
                 # skip holes in board:
                 s=s+" "
-        print s
+        print (s)
 
-    print ""
+    print ("")
 
     # print colored solution:
 
@@ -197,20 +198,20 @@ def print_solution(solution):
             if board[row][col]=='*':
                 for a in range(TILES_TOTAL):
                     if (row,col) in solution[a][1]:
-                        s=s+frolic.ANSI_set_normal_color(coloring[a])+"██"
+                        s=s+my_utils.ANSI_set_normal_color(coloring[a])+"██"
                         break
             else:
                 # skip holes in board:
                 s=s+"  "
-        print s
+        print (s)
 
-    print frolic.ANSI_reset()
+    print (my_utils.ANSI_reset())
 
 init_rows=[]
 for i in range(TILES_TOTAL):
     init_rows=init_rows+find_all_placements_with_rotations(i,tiles[i])
 
-print "len(init_rows)=", len(init_rows)
+print ("len(init_rows)=", len(init_rows))
 
 # init_rows is a list of tuples
 # each tuple has poly type (num) + list of coordinates on board at which it can cover
@@ -290,7 +291,7 @@ while True:
 
         #These are four tiles with coordinates on board for each tile.
 
-        print "solution number", sol_n
+        print ("solution number", sol_n)
         sol_n=sol_n+1
         print_solution(solution)
 
@@ -301,6 +302,6 @@ while True:
             block.append(c != m[d])
         s.add(Or(block))
     else:
-        print "results total=", len(results)
+        print ("results total=", len(results))
         break
 

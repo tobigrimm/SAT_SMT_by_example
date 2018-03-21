@@ -90,7 +90,7 @@ Same story about applied operations like addition and subtraction---they all als
 Real cryptoalgorithms, like IDEA, can use several operations from different groups, like XOR, addition and multiplication.
 Applying them all in specific order will make resulting expression irreducible.
 
-When I prepared this part, I tried to make an example of such amateur hash function:
+When I prepared this article, I tried to make an example of such amateur hash function:
 
 \lstinputlisting{crypto/1.c}
 
@@ -118,7 +118,7 @@ One funny thing to mention: if you try to implement amateur cryptoalgorithm in V
 maybe in brute-force way,
 you can find that \ac{EDA} tools can optimize many things during synthesis
 (this is the word they use for ``compilation'') and can leave cryptoalgorithm much smaller/simpler than it was.
-Even if you try to implement DES algorithm \textit{in bare metal} with a fixed key,
+Even if you try to implement \ac{DES} algorithm \textit{in bare metal} with a fixed key,
 Altera Quartus can optimize first round of it and make it smaller than others.
 
 \subsubsection{Bugs}

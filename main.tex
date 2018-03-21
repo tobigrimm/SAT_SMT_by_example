@@ -70,8 +70,8 @@
 \lstset{
     %backgroundcolor=\color{lstbgcolor},
     %backgroundcolor=\color{light-gray},
-    %basicstyle=\ttfamily\small, 
-    basicstyle=\ttfamily\footnotesize, 
+    basicstyle=\ttfamily\small, 
+    %basicstyle=\ttfamily\footnotesize, 
     literate={~} {$\sim$}{1},
     breaklines=true,
     frame=single,
@@ -96,6 +96,8 @@
 \EN{
 \input{intro_EN}
 \input{SMT/main_EN}
+\input{CRC/main_EN}
+\input{MaxSMT/main_EN}
 \input{pgm_synth/main_EN}
 \input{toy_decompiler/main_EN}
 \input{symbolic/main_EN}
@@ -108,6 +110,8 @@
 \RU{
 \input{intro_RU}
 \input{SMT/main_RU}
+%\input{CRC/main_RU}
+\input{MaxSMT/main_RU}
 \input{pgm_synth/main_RU}
 \input{toy_decompiler/main_RU}
 \input{symbolic/main_RU}
@@ -121,6 +125,8 @@
 \section{Acronyms used}
 
 \begin{acronym}
+\acro{GCD}{Greatest Common Divisor}
+\acro{LCM}{Least Common Multiple}
 \acro{CNF}{Conjunctive normal form}
 \acro{DNF}{Disjunctive normal form}
 \acro{DSL}{Domain-specific language}
@@ -155,6 +161,9 @@
 \acro{API}{Application programming interface}
 \acro{NSA}{National Security Agency}
 \acro{DPLL}{Davis–Putnam–Logemann–Loveland}
+\acro{QF}{Quantifier Free}
+\acro{LIA}{Linear Integer Arithmetic}
+
 \end{acronym}
 
 \end{document}
