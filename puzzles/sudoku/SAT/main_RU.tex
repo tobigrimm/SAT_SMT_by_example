@@ -1,4 +1,4 @@
-\subsection{Sudoku в SAT}
+\subsubsection{Sudoku в SAT}
 \label{Sudoku_SAT}
 
 Кто-то может подумать, что мы можем закодировать каждое число 1..9 в двоичном виде: 5 бит или переменных было бы достаточно.
@@ -35,8 +35,8 @@
 Используя эту операцию мы можем сделать каждый ряд в головоломке Судоку уникальным, каждый столбец уникальным,
 и каждый квадрат $3 \cdot 3=9$ тоже уникальным.
 
-\lstinputlisting{SAT/sudoku/sudoku_SAT.py}
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/sudoku/sudoku_SAT.py} )
+\lstinputlisting{puzzles/sudoku/SAT/sudoku_SAT.py}
+( \url{https://github.com/DennisYurichev/SAT_SMT_article/.../sudoku_SAT.py} )
 
 Ф-ция \TT{make\_distinct\_bits\_in\_vector()} сохраняет корректность кодирования.\\
 Ф-ция \TT{make\_distinct\_vectors()} делает 9 чисел уникальными.\\
@@ -65,7 +65,7 @@ len(clauses)= 12195
 Picosat говорит что эта SAT-проблема имеет только одно решение.
 Действительно, как говорят, настоящая головоломка Судоку может иметь только одно решение.
 
-\subsubsection{Избавление от одного вызова POPCNT1}
+\paragraph{Избавление от одного вызова POPCNT1}
 \label{OR_in_POPCNT1}
 
 Чтобы сделать 9 уникальный чисел 1..9 мы можем использовать ф-цию \TT{POPCNT1}, чтобы сделать уникальным каждый ряд

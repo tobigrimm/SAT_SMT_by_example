@@ -1,0 +1,34 @@
+sat
+
+ 1  1  5  5  5  5  3  3  6  6 
+ 1  5  5  5  5 11  3  3  6  2 
+ 1  5  5  5  3  3  3  3  6  2 
+ 1  1  5  7  3  3  3  3  6  2 
+ 7  1  1  1  7  3  6  6  6  2 
+ 7  7  7  1  3  3  6  2  2  2 
+ 4  4  7  1  6  6  6  9  9  9 
+ 6  4  7  1  9  9  9  9  8  9 
+ 6  4  7  1  9  7  7  8  8  9 
+ 4  4  7  7  7  7  8  8  9  9 
+
+ R D|L   |    | R  |L  D|    | R  |L  D| R D|L   |
+  UD| R D|L  D| R D|L U |    | R D|L U |  UD|   D|
+  UD|  U | RU |L U | R D|LR  |L U |    |  UD|  UD|
+ RU |L  D|    |    | RU |L  D|    |    |  UD|  UD|
+   D| RU |LR  |L  D|    |  UD| R D|LR  |L U |  UD|
+ RU |LR  |L  D|  UD| R  |L U |  UD| R  |LR  |L U |
+    |   D|  UD|  UD| R  |LR  |L U | R D|LR  |L  D|
+    |  UD|  UD|  UD| R D|LR  |LR  |L U |   D|  UD|
+    |  UD|  UD|  U |  U | R D|L   | R D|L U |  UD|
+ R  |L U | RU |LR  |LR  |L U |    |  U | R  |L U |
+
+┏1 5┓ 3┓┏6
+┃┏┓┏┛ ┏┛┃2
+┃5┗┛┏━┛ ┃┃
+┗┓  ┗┓  ┃┃
+7┗━┓ ┃┏━┛┃
+┗━┓┃3┛┃2━┛
+ 4┃┃6━┛┏━┓
+ ┃┃┃┏━━┛8┃
+ ┃┃19┏7┏┛┃
+4┛┗━━┛ 89┛

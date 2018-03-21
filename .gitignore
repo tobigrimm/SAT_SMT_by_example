@@ -13,4 +13,5 @@ tmp.cnf
 *.rle
 libs/plingeling
 libs/open-wbo
+*.ni*
 

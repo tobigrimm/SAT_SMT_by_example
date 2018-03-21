@@ -1,4 +1,4 @@
-\subsection{Sudoku in SAT}
+\subsubsection{Sudoku in SAT}
 \label{Sudoku_SAT}
 
 One might think that we can encode each 1..9 number in binary form: 5 bits or variables would be enough.
@@ -32,8 +32,8 @@ After applying \TT{POPCNT1} function 9+9=18 times we'll have 9 unique numbers in
 
 Using that operation we can make each row of Sudoku puzzle unique, each column unique and also each $3 \cdot 3=9$ box.
 
-\lstinputlisting{SAT/sudoku/sudoku_SAT.py}
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/sudoku/sudoku_SAT.py} )
+\lstinputlisting{puzzles/sudoku/SAT/sudoku_SAT.py}
+( \url{https://github.com/DennisYurichev/SAT_SMT_article/.../sudoku_SAT.py} )
 
 The \TT{make\_distinct\_bits\_in\_vector()} function preserves consistency of encoding.\\
 The \TT{make\_distinct\_vectors()} function makes 9 numbers unique.\\
@@ -62,7 +62,7 @@ Same solution as earlier: \ref{sudoku_SMT}.
 Picosat tells this SAT instance has only one solution.
 Indeed, as they say, true Sudoku puzzle can have only one solution.
 
-\subsubsection{Getting rid of one POPCNT1 function call}
+\paragraph{Getting rid of one POPCNT1 function call}
 \label{OR_in_POPCNT1}
 
 To make 9 unique 1..9 numbers we can use \TT{POPCNT1} function to make each row in matrix be unique and

@@ -1,0 +1,18 @@
+sat
+
+2 2 2 4 4 4 4 
+2 3 2 2 2 5 4 
+2 3 3 3 1 5 4 
+2 5 5 5 1 5 4 
+2 5 1 1 1 5 4 
+2 5 1 5 5 5 4 
+2 5 5 5 4 4 4 
+
+ R D| LR  | L  D|  R  | LR  | LR  | L  D| 
+  UD|    D|  RU | LR  | L   |    D|   UD| 
+  UD|  RU | LR  | L   |    D|   UD|   UD| 
+  UD|  R D| LR  | L   |   UD|   UD|   UD| 
+  UD|   UD|  R D| LR  | L U |   UD|   UD| 
+  UD|   UD|   U |  R D| LR  | L U |   UD| 
+  U |  RU | LR  | L U |  R  | LR  | L U | 
+
