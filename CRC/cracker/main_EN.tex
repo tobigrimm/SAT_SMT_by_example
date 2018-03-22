@@ -7,7 +7,7 @@ Also, you can bruteforce 32-bit polynomial, but 64-bit polynomials is too much.
 
 Deducing all these parameters is surprisingly simple using Z3, just get two values for 01 byte and 02, or any other bytes.
 
-\lstinputlisting{CRC/cracker/CRC_cracker.py}
+\lstinputlisting[style=custompy]{CRC/cracker/CRC_cracker.py}
 
 This is for CRC-16:
 
@@ -27,7 +27,7 @@ One of these results is correct.
 
 We can get something even if we have only one result for one input byte:
 
-\begin{lstlisting}
+\begin{lstlisting}[style=custompy]
 # recipe-259177-1.py, CRC-64-ISO
 width=64
 samples=["\x01"]

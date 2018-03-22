@@ -81,6 +81,30 @@
     inputencoding=utf8
 }
 
+\definecolor{digits}{RGB}{0,0,0}
+\definecolor{colkw}{RGB}{0,0,0}
+
+%\definecolor{colstr}{RGB}{80,80,80}
+%\definecolor{colid}{RGB}{80,80,80}
+
+\definecolor{colstr}{RGB}{0,0,0}
+\definecolor{colid}{RGB}{0,0,0}
+
+\definecolor{colcomment}{RGB}{130,130,130}
+%\definecolor{colcomment}{RGB}{170,170,170}
+
+\definecolor{colbg}{RGB}{255,255,255}
+
+\lstdefinestyle{custompy}{
+  language=Python,
+  showstringspaces=false,
+  backgroundcolor=\color{colbg},
+  keywordstyle=\color{colkw},
+  commentstyle=\color{colcomment},
+  identifierstyle=\color{colid},
+  stringstyle=\color{colstr}
+}
+
 % с fullflexible в русской версии "+-----+" выглядит длиннее! ХЗ, почему
 
 \author{\AUTHOR}
