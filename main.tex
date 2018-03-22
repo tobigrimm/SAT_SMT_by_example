@@ -38,7 +38,7 @@
 \usepackage{color}
 \usepackage{float}
 \usepackage{tikz}
-\usepackage[margin=0.5in,headheight=12.5pt]{geometry}
+%\usepackage[margin=0.5in,headheight=12.5pt]{geometry}
 \usepackage[footnote,printonlyused,withpage]{acronym}
 \usetikzlibrary{arrows}
 \usepackage[nottoc]{tocbibind}
@@ -58,10 +58,13 @@
 \EN{\newcommand{\AUTHOR}{Dennis Yurichev \TT{<dennis@yurichev.com>}}}
 \RU{\newcommand{\AUTHOR}{Денис Юричев \TT{<dennis@yurichev.com>}}}
 
+\definecolor{linkcolor}{RGB}{10,0,190}
+
 \hypersetup{
     pdftex,
     colorlinks=true,
-    allcolors=blue,
+    allcolors=linkcolor,
+    %allcolors=darkblue,
     pdfauthor={\AUTHOR},
     pdftitle={\TITLE},
     pdfpagemode=None
@@ -70,7 +73,9 @@
 \lstset{
     %backgroundcolor=\color{lstbgcolor},
     %backgroundcolor=\color{light-gray},
-    basicstyle=\ttfamily\small, 
+    %basicstyle=\ttfamily\small, 
+    basicstyle=\ttfamily\normalsize,
+    %basicstyle=\ttfamily\large,
     %basicstyle=\ttfamily\footnotesize, 
     literate={~} {$\sim$}{1},
     breaklines=true,
