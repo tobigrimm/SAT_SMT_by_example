@@ -1,0 +1,206 @@
+\subsection{Альфаметика}
+
+Согласно Дональду Кнуту, термин ``Альфаметика'' был придуман Дж. Эйч. Аш. Хантером.
+Это головоломка: какие десятичные цифры в пределах 0..9 нужно присвоить каждой букве, чтобы это уравнение было справедливо?
+
+\begin{lstlisting}
+  SEND
++ MORE
+ -----
+ MONEY
+\end{lstlisting}
+
+Для Z3 это легко:
+
+\lstinputlisting{puzzles/alphametics/alpha.py}
+
+Вывод:
+
+\begin{lstlisting}
+sat
+[E, = 5,
+ S, = 9,
+ M, = 1,
+ N, = 6,
+ D, = 7,
+ R, = 8,
+ O, = 0,
+ Y = 2]
+\end{lstlisting}
+
+Вот еще одна, из \ac{TAOCP} том IV (\url{http://www-cs-faculty.stanford.edu/~uno/fasc2b.ps.gz}):
+
+\lstinputlisting{puzzles/alphametics/alpha2.py}
+
+\begin{lstlisting}
+sat
+[L, = 6,
+ S, = 7,
+ N, = 2,
+ T, = 1,
+ I, = 5,
+ V = 3,
+ A, = 8,
+ R, = 9,
+ O, = 4,
+ TRIO = 1954,
+ SONATA, = 742818,
+ VIOLA, = 35468,
+ VIOLIN, = 354652]
+\end{lstlisting}
+
+% TODO URL
+Эту головоломку я нашел в примерах pySMT:
+
+\lstinputlisting{puzzles/alphametics/alpha3.py}
+
+\begin{lstlisting}
+sat
+[D = 5, R = 4, O = 3, E = 8, L = 6, W = 7, H = 2]
+\end{lstlisting}
+
+%%% 
+
+Это упражнение Q209 из
+[Companion to the Papers of Donald Knuth]\footnote{\url{http://www-cs-faculty.stanford.edu/~knuth/cp.html}}.
+
+\begin{lstlisting}
+ KNIFE
+  FORK
+ SPOON
+  SOUP
+------
+SUPPER
+\end{lstlisting}
+
+В целях упрощения, я добавил ф-цию (list\_to\_expr()):
+
+\lstinputlisting{puzzles/alphametics/alpha4.py}
+
+\begin{lstlisting}
+sat
+[K = 7,
+ N = 4,
+ R = 9,
+ I = 1,
+ E = 6,
+ S = 0,
+ O = 3,
+ F = 5,
+ U = 8,
+ P = 2,
+ SUPPER = 82269,
+ SOUP = 382,
+ SPOON = 2334,
+ FORK = 5397,
+ KNIFE = 74156]
+\end{lstlisting}
+
+S это 0, так что значение SUPPER начинается с (убранного) нуля. Скажем так, нам это не нравится.
+Добавим это, чтобы это исправить:
+
+\begin{lstlisting}
+s.add(S!=0)
+\end{lstlisting}
+
+\begin{lstlisting}
+sat
+[K = 8,
+ N = 4,
+ R = 3,
+ I = 7,
+ E = 6,
+ S = 1,
+ O = 9,
+ F = 2,
+ U = 0,
+ P = 5,
+ SUPPER = 105563,
+ SOUP = 1905,
+ SPOON = 15994,
+ FORK = 2938,
+ KNIFE = 84726]
+\end{lstlisting}
+
+\paragraph{Создание своей собственной головоломки}
+
+Вот проблема: есть только 10 букв, но как их выбрать из числа слов?
+Мы можем использовать Z3 для этого:
+
+\lstinputlisting{puzzles/alphametics/gen.py}
+
+Это первая сгенерированная головоломка:
+
+\begin{lstlisting}
+sat
+EGGS
+JELLY
+LUNCH
+C 5
+E 6
+G 3
+H 7
+J 0
+L 1
+N 4
+S 8
+U 2
+Y 9
+\end{lstlisting}
+
+Что если мы хотим, чтобы слово ``CAKE'' присутствовало в числе ``слагаемых''?
+
+Добавим это:
+
+\begin{lstlisting}
+s.add(word_used[words.index('CAKE')])
+\end{lstlisting}
+
+\begin{lstlisting}
+sat
+CAKE
+TEA
+LUNCH
+A 8
+C 3
+E 1
+H 9
+J 6
+K 2
+L 0
+N 5
+T 7
+U 4
+\end{lstlisting}
+
+Добавим это:
+
+\begin{lstlisting}
+s.add(word_used[words.index('EGGS')])
+\end{lstlisting}
+
+Теперь оно может найти пару к EGGS:
+
+\begin{lstlisting}
+sat
+EGGS
+HONEY
+LUNCH
+C 6
+E 7
+G 9
+H 4
+L 5
+N 8
+O 2
+S 3
+U 0
+Y 1
+\end{lstlisting}
+
+\paragraph{Файлы}
+
+\url{https://github.com/DennisYurichev/...}
+
+
+

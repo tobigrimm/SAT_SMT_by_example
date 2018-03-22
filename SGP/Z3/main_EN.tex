@@ -1,0 +1,51 @@
+\subsection{Kirkman's Schoolgirl Problem (Z3Py)}
+
+\begin{framed}
+\begin{quotation}
+
+Fifteen young ladies in a school walk out three abreast for seven days in succession: it is required to arrange them daily so that no two shall walk twice abreast.
+
+\end{quotation}
+\end{framed}
+
+( \url{https://en.wikipedia.org/wiki/Kirkman%27s_schoolgirl_problem} )
+
+This is naive and straightforward solution:
+
+\lstinputlisting{SGP/Z3/kirkman.py}
+
+\begin{lstlisting}
+sat
+group for each person:
+person:A B C D E F G H I J K L M N O
+day=0: 2 2 3 1 0 0 3 4 0 1 1 3 4 4 2
+day=1: 2 1 2 4 3 1 4 4 2 1 0 3 0 3 0
+day=2: 4 3 1 0 4 0 4 2 2 1 2 3 3 0 1
+day=3: 4 3 1 4 2 1 3 1 0 2 3 4 2 0 0
+day=4: 3 0 0 1 1 2 4 3 4 3 2 2 4 0 1
+day=5: 2 4 1 1 4 3 3 4 0 0 2 0 1 2 3
+day=6: 0 2 4 2 4 0 1 3 2 1 4 3 0 1 3
+
+persons grouped:
+day=0: EFI  DJK  ABO  CGL  HMN
+day=1: KMO  BFJ  ACI  ELN  DGH
+day=2: DFN  CJO  HIK  BLM  AEG
+day=3: INO  CFH  EJM  BGK  ADL
+day=4: BCN  DEO  FKL  AHJ  GIM
+day=5: IJL  CDM  AKN  FGO  BEH
+day=6: AFM  GJN  BDI  HLO  CEK
+\end{lstlisting}
+
+It took $\approx 48$ seconds on my old Intel Xeon E3-1220 3.10GHz.
+
+I've also tried to represent each number (group in which schoolgirl/golfer is) as a single bit:
+
+\lstinputlisting{SGP/Z3/kirkman2.py}
+
+This is way faster, $\approx 1.5$ seconds on the same CPU.
+
+Unfortunately, sample \ac{SGP} are out of reach. Yet?
+\url{http://www.mathpuzzle.com/MAA/54-Golf%20Tournaments/mathgames_08_14_07.html}.
+
+The files: ...
+

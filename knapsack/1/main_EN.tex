@@ -1,0 +1,30 @@
+\subsection{Popsicles}
+
+Found this problem at \url{http://artofproblemsolving.com/wiki/index.php?title=2017_AMC_12A_Problems/Problem_1}:
+
+\begin{framed}
+\begin{quotation}
+
+Pablo buys popsicles for his friends. The store sells single popsicles for $\$$1 each, 3-popsicle boxes for $\$$2,
+and 5-popsicle boxes for $\$$3. What is the greatest number of popsicles that Pablo can buy with $\$$8?
+
+\end{quotation}
+\end{framed}
+
+This is optimization problem, and the solution using z3:
+
+\lstinputlisting{knapsack/1/popsicles.py}
+
+The result:
+
+\begin{lstlisting}
+sat
+[box3pop = 1,
+ box5pop = 2,
+ cost_total = 8,
+ pop_total = 13,
+ box1pop = 0]
+\end{lstlisting}
+
+% TODO See also github, oo, etc.
+

@@ -1,0 +1,205 @@
+\subsection{Alphametics}
+
+According to Donald Knuth, the term ``Alphametics'' was coined by J. A. H. Hunter.
+This is a puzzle: what decimal digits in 0..9 range must be assigned to each letter,
+so the following equation will be true?
+
+\begin{lstlisting}
+  SEND
++ MORE
+ -----
+ MONEY
+\end{lstlisting}
+
+So is easy for Z3:
+
+\lstinputlisting{puzzles/alphametics/alpha.py}
+
+Output:
+
+\begin{lstlisting}
+sat
+[E, = 5,
+ S, = 9,
+ M, = 1,
+ N, = 6,
+ D, = 7,
+ R, = 8,
+ O, = 0,
+ Y = 2]
+\end{lstlisting}
+
+Another one, also from \ac{TAOCP} volume IV (\url{http://www-cs-faculty.stanford.edu/~uno/fasc2b.ps.gz}):
+
+\lstinputlisting{puzzles/alphametics/alpha2.py}
+
+\begin{lstlisting}
+sat
+[L, = 6,
+ S, = 7,
+ N, = 2,
+ T, = 1,
+ I, = 5,
+ V = 3,
+ A, = 8,
+ R, = 9,
+ O, = 4,
+ TRIO = 1954,
+ SONATA, = 742818,
+ VIOLA, = 35468,
+ VIOLIN, = 354652]
+\end{lstlisting}
+
+% TODO URL
+This puzzle I've found in pySMT examples:
+
+\lstinputlisting{puzzles/alphametics/alpha3.py}
+
+\begin{lstlisting}
+sat
+[D = 5, R = 4, O = 3, E = 8, L = 6, W = 7, H = 2]
+\end{lstlisting}
+
+%%% 
+
+This is an exercise Q209 from the 
+[Companion to the Papers of Donald Knuth]\footnote{\url{http://www-cs-faculty.stanford.edu/~knuth/cp.html}}.
+
+\begin{lstlisting}
+ KNIFE
+  FORK
+ SPOON
+  SOUP
+------
+SUPPER
+\end{lstlisting}
+
+I've added a helper function (list\_to\_expr()) to make things simpler:
+
+\lstinputlisting{puzzles/alphametics/alpha4.py}
+
+\begin{lstlisting}
+sat
+[K = 7,
+ N = 4,
+ R = 9,
+ I = 1,
+ E = 6,
+ S = 0,
+ O = 3,
+ F = 5,
+ U = 8,
+ P = 2,
+ SUPPER = 82269,
+ SOUP = 382,
+ SPOON = 2334,
+ FORK = 5397,
+ KNIFE = 74156]
+\end{lstlisting}
+
+S is zero, so SUPPER value is starting with leading (removed) zero. Let's say, we don't like it. Add this to resolve it:
+
+\begin{lstlisting}
+s.add(S!=0)
+\end{lstlisting}
+
+\begin{lstlisting}
+sat
+[K = 8,
+ N = 4,
+ R = 3,
+ I = 7,
+ E = 6,
+ S = 1,
+ O = 9,
+ F = 2,
+ U = 0,
+ P = 5,
+ SUPPER = 105563,
+ SOUP = 1905,
+ SPOON = 15994,
+ FORK = 2938,
+ KNIFE = 84726]
+\end{lstlisting}
+
+\paragraph{Devising your own puzzle}
+
+Here is a problem: you can only use 10 letters, but how to select them among words?
+We can try to offload this task to Z3:
+
+\lstinputlisting{puzzles/alphametics/gen.py}
+
+This is the first generated puzzle:
+
+\begin{lstlisting}
+sat
+EGGS
+JELLY
+LUNCH
+C 5
+E 6
+G 3
+H 7
+J 0
+L 1
+N 4
+S 8
+U 2
+Y 9
+\end{lstlisting}
+
+What if we want to ``CAKE'' be present among ``addends''?
+
+Add this:
+
+\begin{lstlisting}
+s.add(word_used[words.index('CAKE')])
+\end{lstlisting}
+
+\begin{lstlisting}
+sat
+CAKE
+TEA
+LUNCH
+A 8
+C 3
+E 1
+H 9
+J 6
+K 2
+L 0
+N 5
+T 7
+U 4
+\end{lstlisting}
+
+Add this:
+
+\begin{lstlisting}
+s.add(word_used[words.index('EGGS')])
+\end{lstlisting}
+
+Now it can find pair to EGGS:
+
+\begin{lstlisting}
+sat
+EGGS
+HONEY
+LUNCH
+C 6
+E 7
+G 9
+H 4
+L 5
+N 8
+O 2
+S 3
+U 0
+Y 1
+\end{lstlisting}
+
+\paragraph{The files}
+
+\url{https://github.com/DennisYurichev/...}
+
+
