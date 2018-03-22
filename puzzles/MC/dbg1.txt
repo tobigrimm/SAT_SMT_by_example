@@ -1,0 +1,67 @@
+$ ./MK85 --dump-internal-variables mc.smt2
+
+sat
+(model
+	(define-fun always_false () Bool false) ; var_no=1
+	(define-fun always_true () Bool true) ; var_no=2
+	(define-fun a () Bool false) ; var_no=3
+	(define-fun b () Bool false) ; var_no=4
+	(define-fun c () Bool false) ; var_no=5
+	(define-fun d () Bool false) ; var_no=6
+	(define-fun e () Bool true) ; var_no=7
+	(define-fun f () Bool false) ; var_no=8
+	(define-fun internal!1 () Bool false) ; var_no=9
+	(define-fun internal!2 () Bool false) ; var_no=10
+	(define-fun internal!3 () Bool false) ; var_no=11
+	(define-fun internal!4 () Bool false) ; var_no=12
+	(define-fun internal!5 () Bool false) ; var_no=13
+	(define-fun internal!6 () Bool true) ; var_no=14
+	(define-fun internal!7 () Bool true) ; var_no=15
+	(define-fun internal!8 () Bool true) ; var_no=16
+	(define-fun internal!9 () Bool true) ; var_no=17
+	(define-fun internal!10 () Bool false) ; var_no=18
+	(define-fun internal!11 () Bool false) ; var_no=19
+	(define-fun internal!12 () Bool true) ; var_no=20
+	(define-fun internal!13 () Bool false) ; var_no=21
+	(define-fun internal!14 () Bool false) ; var_no=22
+	(define-fun internal!15 () Bool true) ; var_no=23
+	(define-fun internal!16 () Bool false) ; var_no=24
+	(define-fun internal!17 () Bool false) ; var_no=25
+	(define-fun internal!18 () Bool true) ; var_no=26
+	(define-fun internal!19 () Bool true) ; var_no=27
+	(define-fun internal!20 () Bool false) ; var_no=28
+	(define-fun internal!21 () Bool true) ; var_no=29
+	(define-fun internal!22 () Bool false) ; var_no=30
+	(define-fun internal!23 () Bool true) ; var_no=31
+	(define-fun internal!24 () Bool false) ; var_no=32
+	(define-fun internal!25 () Bool true) ; var_no=33
+	(define-fun internal!26 () Bool false) ; var_no=34
+	(define-fun internal!27 () Bool false) ; var_no=35
+	(define-fun internal!28 () Bool true) ; var_no=36
+	(define-fun internal!29 () Bool true) ; var_no=37
+	(define-fun internal!30 () Bool true) ; var_no=38
+	(define-fun internal!31 () Bool false) ; var_no=39
+	(define-fun internal!32 () Bool false) ; var_no=40
+	(define-fun internal!33 () Bool false) ; var_no=41
+	(define-fun internal!34 () Bool true) ; var_no=42
+	(define-fun internal!35 () Bool true) ; var_no=43
+	(define-fun internal!36 () Bool true) ; var_no=44
+	(define-fun internal!37 () Bool true) ; var_no=45
+	(define-fun internal!38 () Bool true) ; var_no=46
+	(define-fun internal!39 () Bool true) ; var_no=47
+	(define-fun internal!40 () Bool true) ; var_no=48
+	(define-fun internal!41 () Bool true) ; var_no=49
+	(define-fun internal!42 () Bool false) ; var_no=50
+	(define-fun internal!43 () Bool true) ; var_no=51
+	(define-fun internal!44 () Bool true) ; var_no=52
+	(define-fun internal!45 () Bool true) ; var_no=53
+	(define-fun internal!46 () Bool true) ; var_no=54
+	(define-fun internal!47 () Bool true) ; var_no=55
+	(define-fun internal!48 () Bool true) ; var_no=56
+	(define-fun internal!49 () Bool true) ; var_no=57
+	(define-fun internal!50 () Bool true) ; var_no=58
+	(define-fun internal!51 () Bool false) ; var_no=59
+	(define-fun internal!52 () Bool false) ; var_no=60
+	(define-fun internal!53 () Bool false) ; var_no=61
+	(define-fun internal!54 () Bool true) ; var_no=62
+)

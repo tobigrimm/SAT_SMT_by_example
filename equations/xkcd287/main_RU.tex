@@ -1,9 +1,9 @@
-\subsection{Решение XKCD 287 используя Z3}
+\subsection{Решение XKCD 287 (Z3Py)}
 \label{XkcdILP}
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=7]{SMT/xkcd287/np_complete.png}
+\includegraphics[scale=7]{equations/xkcd287/np_complete.png}
 \caption{xkcd \#287}
 \end{figure}
 
@@ -13,7 +13,7 @@
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=7]{SMT/xkcd287/287_v1.png}
+\includegraphics[scale=7]{equations/xkcd287/287_v1.png}
 \caption{xkcd \#287}
 \end{figure}
 
@@ -26,34 +26,9 @@ $2.15a + 2.75b + 3.35c + 3.55d + 4.20e + 5.80f == 15.05$,
 где a..f это целочисленные.
 Так что это линейное диофантово уравнение.
 
-\begin{lstlisting}
-#!/usr/bin/python
+\lstinputlisting{equations/xkcd287/xkcd287.py}
 
-from z3 import *
-
-a,b,c,d,e,f = Ints('a b c d e f')
-s = Solver()
-s.add(215*a + 275*b + 335*c + 355*d + 420*e + 580*f == 1505, a>=0, b>=0, c>=0, d>=0, e>=0, f>=0)
-
-results=[]
-
-# enumerate all possible solutions:
-while True:
-    if s.check() == sat:
-        m = s.model()
-        print m
-        results.append(m)
-        block = []
-        for d in m:
-            c=d()
-            block.append(c != m[d])
-        s.add(Or(block))
-    else:
-        print "results total=", len(results)
-        break
-\end{lstlisting}
-
-( Исходный код: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/xkcd287/xkcd287.py} )
+( Исходный код: \url{https://github.com/DennisYurichev/.../xkcd287.py} )
 
 Тут только 2 решения:
 
@@ -80,4 +55,8 @@ Out[]= {{a -> 1, b -> 0, c -> 0, d -> 2, e -> 0, f -> 1},
 Другие способы решения:
 \url{https://stackoverflow.com/questions/141779/solving-the-np-complete-problem-in-xkcd},
 \url{http://www.explainxkcd.com/wiki/index.php/287:_NP-Complete}.
+
+\subsection{XKCD 287 в формате SMT-LIB 2.x}
+
+\lstinputlisting{equations/xkcd287/xkcd287.smt}
 
