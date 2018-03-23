@@ -1,0 +1,97 @@
+p cnf 28 64
+-1 0
+2 0
+c generate_EQ id1=fg, id2=fi, var1=3, var2=4
+c generate_XOR id1=fg id2=fi var1=3 var2=4 out id=internal!1 out var=9
+-3 -4 -9 0
+3 4 -9 0
+3 -4 9 0
+-3 4 9 0
+c generate_NOT id=internal!1 var=9, out id=internal!2 out var=10
+-10 -9 0
+10 9 0
+c generate_NOT id=internal!2 var=10, out id=internal!3 out var=11
+-11 -10 0
+11 10 0
+c create_assert() id=internal!3 var=11
+11 0
+c generate_EQ id1=tg, id2=ti, var1=5, var2=6
+c generate_XOR id1=tg id2=ti var1=5 var2=6 out id=internal!4 out var=12
+-5 -6 -12 0
+5 6 -12 0
+5 -6 12 0
+-5 6 12 0
+c generate_NOT id=internal!4 var=12, out id=internal!5 out var=13
+-13 -12 0
+13 12 0
+c generate_NOT id=internal!5 var=13, out id=internal!6 out var=14
+-14 -13 0
+14 13 0
+c create_assert() id=internal!6 var=14
+14 0
+c generate_EQ id1=eg, id2=ei, var1=7, var2=8
+c generate_XOR id1=eg id2=ei var1=7 var2=8 out id=internal!7 out var=15
+-7 -8 -15 0
+7 8 -15 0
+7 -8 15 0
+-7 8 15 0
+c generate_NOT id=internal!7 var=15, out id=internal!8 out var=16
+-16 -15 0
+16 15 0
+c generate_NOT id=internal!8 var=16, out id=internal!9 out var=17
+-17 -16 0
+17 16 0
+c create_assert() id=internal!9 var=17
+17 0
+c generate_AND id1=fg id2=ti var1=3 var2=6 out id=internal!10 out var=18
+-3 -6 18 0
+3 -18 0
+6 -18 0
+c generate_EQ id1=ei, id2=internal!10, var1=8, var2=18
+c generate_XOR id1=ei id2=internal!10 var1=8 var2=18 out id=internal!11 out var=19
+-8 -18 -19 0
+8 18 -19 0
+8 -18 19 0
+-8 18 19 0
+c generate_NOT id=internal!11 var=19, out id=internal!12 out var=20
+-20 -19 0
+20 19 0
+c create_assert() id=internal!12 var=20
+20 0
+c generate_NOT id=eg var=7, out id=internal!13 out var=21
+-21 -7 0
+21 7 0
+c generate_OR id1=internal!13 id2=tg var1=21 var2=5 out id=internal!14 out var=22
+21 5 -22 0
+-21 22 0
+-5 22 0
+c generate_EQ id1=fi, id2=internal!14, var1=4, var2=22
+c generate_XOR id1=fi id2=internal!14 var1=4 var2=22 out id=internal!15 out var=23
+-4 -22 -23 0
+4 22 -23 0
+4 -22 23 0
+-4 22 23 0
+c generate_NOT id=internal!15 var=23, out id=internal!16 out var=24
+-24 -23 0
+24 23 0
+c create_assert() id=internal!16 var=24
+24 0
+c generate_OR id1=fg id2=eg var1=3 var2=7 out id=internal!17 out var=25
+3 7 -25 0
+-3 25 0
+-7 25 0
+c generate_AND id1=ti id2=internal!17 var1=6 var2=25 out id=internal!18 out var=26
+-6 -25 26 0
+6 -26 0
+25 -26 0
+c generate_EQ id1=ti, id2=internal!18, var1=6, var2=26
+c generate_XOR id1=ti id2=internal!18 var1=6 var2=26 out id=internal!19 out var=27
+-6 -26 -27 0
+6 26 -27 0
+6 -26 27 0
+-6 26 27 0
+c generate_NOT id=internal!19 var=27, out id=internal!20 out var=28
+-28 -27 0
+28 27 0
+c create_assert() id=internal!20 var=28
+28 0

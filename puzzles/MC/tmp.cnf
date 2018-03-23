@@ -1,0 +1,218 @@
+p cnf 62 151
+-1 0
+2 0
+c generate_AND id1=b id2=c var1=4 var2=5 out id=internal!1 out var=9
+-4 -5 9 0
+4 -9 0
+5 -9 0
+c generate_AND id1=internal!1 id2=d var1=9 var2=6 out id=internal!2 out var=10
+-9 -6 10 0
+9 -10 0
+6 -10 0
+c generate_AND id1=internal!2 id2=e var1=10 var2=7 out id=internal!3 out var=11
+-10 -7 11 0
+10 -11 0
+7 -11 0
+c generate_AND id1=internal!3 id2=f var1=11 var2=8 out id=internal!4 out var=12
+-11 -8 12 0
+11 -12 0
+8 -12 0
+c generate_EQ id1=a, id2=internal!4, var1=3, var2=12
+c generate_XOR id1=a id2=internal!4 var1=3 var2=12 out id=internal!5 out var=13
+-3 -12 -13 0
+3 12 -13 0
+3 -12 13 0
+-3 12 13 0
+c generate_NOT id=internal!5 var=13, out id=internal!6 out var=14
+-14 -13 0
+14 13 0
+c create_assert() id=internal!6 var=14
+14 0
+c generate_NOT id=c var=5, out id=internal!7 out var=15
+-15 -5 0
+15 5 0
+c generate_NOT id=d var=6, out id=internal!8 out var=16
+-16 -6 0
+16 6 0
+c generate_AND id1=internal!7 id2=internal!8 var1=15 var2=16 out id=internal!9 out var=17
+-15 -16 17 0
+15 -17 0
+16 -17 0
+c generate_NOT id=e var=7, out id=internal!10 out var=18
+-18 -7 0
+18 7 0
+c generate_AND id1=internal!9 id2=internal!10 var1=17 var2=18 out id=internal!11 out var=19
+-17 -18 19 0
+17 -19 0
+18 -19 0
+c generate_NOT id=f var=8, out id=internal!12 out var=20
+-20 -8 0
+20 8 0
+c generate_AND id1=internal!11 id2=internal!12 var1=19 var2=20 out id=internal!13 out var=21
+-19 -20 21 0
+19 -21 0
+20 -21 0
+c generate_EQ id1=b, id2=internal!13, var1=4, var2=21
+c generate_XOR id1=b id2=internal!13 var1=4 var2=21 out id=internal!14 out var=22
+-4 -21 -22 0
+4 21 -22 0
+4 -21 22 0
+-4 21 22 0
+c generate_NOT id=internal!14 var=22, out id=internal!15 out var=23
+-23 -22 0
+23 22 0
+c create_assert() id=internal!15 var=23
+23 0
+c generate_AND id1=a id2=b var1=3 var2=4 out id=internal!16 out var=24
+-3 -4 24 0
+3 -24 0
+4 -24 0
+c generate_EQ id1=c, id2=internal!16, var1=5, var2=24
+c generate_XOR id1=c id2=internal!16 var1=5 var2=24 out id=internal!17 out var=25
+-5 -24 -25 0
+5 24 -25 0
+5 -24 25 0
+-5 24 25 0
+c generate_NOT id=internal!17 var=25, out id=internal!18 out var=26
+-26 -25 0
+26 25 0
+c create_assert() id=internal!18 var=26
+26 0
+c generate_NOT id=b var=4, out id=internal!19 out var=27
+-27 -4 0
+27 4 0
+c generate_AND id1=a id2=internal!19 var1=3 var2=27 out id=internal!20 out var=28
+-3 -27 28 0
+3 -28 0
+27 -28 0
+c generate_NOT id=c var=5, out id=internal!21 out var=29
+-29 -5 0
+29 5 0
+c generate_AND id1=internal!20 id2=internal!21 var1=28 var2=29 out id=internal!22 out var=30
+-28 -29 30 0
+28 -30 0
+29 -30 0
+c generate_NOT id=a var=3, out id=internal!23 out var=31
+-31 -3 0
+31 3 0
+c generate_AND id1=internal!23 id2=b var1=31 var2=4 out id=internal!24 out var=32
+-31 -4 32 0
+31 -32 0
+4 -32 0
+c generate_NOT id=c var=5, out id=internal!25 out var=33
+-33 -5 0
+33 5 0
+c generate_AND id1=internal!24 id2=internal!25 var1=32 var2=33 out id=internal!26 out var=34
+-32 -33 34 0
+32 -34 0
+33 -34 0
+c generate_OR id1=internal!22 id2=internal!26 var1=30 var2=34 out id=internal!27 out var=35
+30 34 -35 0
+-30 35 0
+-34 35 0
+c generate_NOT id=a var=3, out id=internal!28 out var=36
+-36 -3 0
+36 3 0
+c generate_NOT id=b var=4, out id=internal!29 out var=37
+-37 -4 0
+37 4 0
+c generate_AND id1=internal!28 id2=internal!29 var1=36 var2=37 out id=internal!30 out var=38
+-36 -37 38 0
+36 -38 0
+37 -38 0
+c generate_AND id1=internal!30 id2=c var1=38 var2=5 out id=internal!31 out var=39
+-38 -5 39 0
+38 -39 0
+5 -39 0
+c generate_OR id1=internal!27 id2=internal!31 var1=35 var2=39 out id=internal!32 out var=40
+35 39 -40 0
+-35 40 0
+-39 40 0
+c generate_EQ id1=d, id2=internal!32, var1=6, var2=40
+c generate_XOR id1=d id2=internal!32 var1=6 var2=40 out id=internal!33 out var=41
+-6 -40 -41 0
+6 40 -41 0
+6 -40 41 0
+-6 40 41 0
+c generate_NOT id=internal!33 var=41, out id=internal!34 out var=42
+-42 -41 0
+42 41 0
+c create_assert() id=internal!34 var=42
+42 0
+c generate_NOT id=a var=3, out id=internal!35 out var=43
+-43 -3 0
+43 3 0
+c generate_NOT id=b var=4, out id=internal!36 out var=44
+-44 -4 0
+44 4 0
+c generate_AND id1=internal!35 id2=internal!36 var1=43 var2=44 out id=internal!37 out var=45
+-43 -44 45 0
+43 -45 0
+44 -45 0
+c generate_NOT id=c var=5, out id=internal!38 out var=46
+-46 -5 0
+46 5 0
+c generate_AND id1=internal!37 id2=internal!38 var1=45 var2=46 out id=internal!39 out var=47
+-45 -46 47 0
+45 -47 0
+46 -47 0
+c generate_NOT id=d var=6, out id=internal!40 out var=48
+-48 -6 0
+48 6 0
+c generate_AND id1=internal!39 id2=internal!40 var1=47 var2=48 out id=internal!41 out var=49
+-47 -48 49 0
+47 -49 0
+48 -49 0
+c generate_EQ id1=e, id2=internal!41, var1=7, var2=49
+c generate_XOR id1=e id2=internal!41 var1=7 var2=49 out id=internal!42 out var=50
+-7 -49 -50 0
+7 49 -50 0
+7 -49 50 0
+-7 49 50 0
+c generate_NOT id=internal!42 var=50, out id=internal!43 out var=51
+-51 -50 0
+51 50 0
+c create_assert() id=internal!43 var=51
+51 0
+c generate_NOT id=a var=3, out id=internal!44 out var=52
+-52 -3 0
+52 3 0
+c generate_NOT id=b var=4, out id=internal!45 out var=53
+-53 -4 0
+53 4 0
+c generate_AND id1=internal!44 id2=internal!45 var1=52 var2=53 out id=internal!46 out var=54
+-52 -53 54 0
+52 -54 0
+53 -54 0
+c generate_NOT id=c var=5, out id=internal!47 out var=55
+-55 -5 0
+55 5 0
+c generate_AND id1=internal!46 id2=internal!47 var1=54 var2=55 out id=internal!48 out var=56
+-54 -55 56 0
+54 -56 0
+55 -56 0
+c generate_NOT id=d var=6, out id=internal!49 out var=57
+-57 -6 0
+57 6 0
+c generate_AND id1=internal!48 id2=internal!49 var1=56 var2=57 out id=internal!50 out var=58
+-56 -57 58 0
+56 -58 0
+57 -58 0
+c generate_NOT id=e var=7, out id=internal!51 out var=59
+-59 -7 0
+59 7 0
+c generate_AND id1=internal!50 id2=internal!51 var1=58 var2=59 out id=internal!52 out var=60
+-58 -59 60 0
+58 -60 0
+59 -60 0
+c generate_EQ id1=f, id2=internal!52, var1=8, var2=60
+c generate_XOR id1=f id2=internal!52 var1=8 var2=60 out id=internal!53 out var=61
+-8 -60 -61 0
+8 60 -61 0
+8 -60 61 0
+-8 60 61 0
+c generate_NOT id=internal!53 var=61, out id=internal!54 out var=62
+-62 -61 0
+62 61 0
+c create_assert() id=internal!54 var=62
+62 0
