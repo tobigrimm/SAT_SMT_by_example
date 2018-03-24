@@ -353,16 +353,15 @@ class SAT_lib:
     def fix_EQ(self, v1, v2):
         self.add_clause([self.neg(v1), v2])
         self.add_clause([v1, self.neg(v2)])
-        #self.fix(self.EQ(v1, v2), True) # FIXME: suboptimal?
-
-    # bitvectors must equal to each other.
+    
+    # bitvectors must be equal to each other.
     def fix_BV_EQ(self, l1, l2):
         #print len(l1), len(l2)
         assert len(l1)==len(l2)
         self.add_comment("fix_BV_EQ")
         for p in zip(l1, l2):
             self.fix_EQ(p[0], p[1])
-    
+
     def BV_EQ(self, l1, l2):
         #print len(l1), len(l2)
         assert len(l1)==len(l2)
@@ -378,8 +377,6 @@ class SAT_lib:
         assert len(l1)==len(l2)
         self.add_comment("fix_BV_NEQ")
         t=[self.XOR(l1[i], l2[i]) for i in range(len(l1))]
-        #print t
-        #self.fix(self.OR(t), True)
         self.add_clause(t)
 
     # full-adder, as found by Mathematica using truth table:
