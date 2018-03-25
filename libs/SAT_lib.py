@@ -588,6 +588,12 @@ class SAT_lib:
     def get_val_from_solution(self,var):
         return BV_to_number(self.get_BV_from_solution(var))
 
+    def make_distinct_BVs (self, lst):
+        assert type(lst)==list
+        assert type(lst[0])==list
+        for pair in itertools.combinations(lst, r=2):
+            self.fix_BV_NEQ(pair[0], pair[1])
+
 """
 to be added:
 
