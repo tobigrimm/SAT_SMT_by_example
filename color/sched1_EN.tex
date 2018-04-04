@@ -1,0 +1,48 @@
+\subsection{Using graph coloring in scheduling}
+
+I've found this problem in the ``Discrete Structures, Logic and Computability'' book by James L. Hein:
+
+\begin{figure}[H]
+\label{fig:pipe_shuffled}
+\centering
+\includegraphics[scale=0.75]{color/fig144.png}
+\caption{Graph}
+\end{figure}
+
+\begin{framed}
+\begin{quotation}
+Suppose some people form committees to do various tasks. The problem is to schedule the committee meetings in as few time slots as possible.
+To simplify the discussion, we’ll represent each person with a number. For example, let S = {1, 2, 3, 4, 5, 6, 7} represent a set of seven people, and suppose they have formed six three-person committees as follows:
+
+S1 = {1, 2, 3}, S2 = {2, 3, 4}, S3 = {3, 4, 5}, S4 = {4, 5, 6}, S5 = {5, 6, 7}, S6 = {1, 6, 7}.
+
+We can model the problem with the graph pictured in Figure 1.4.4, where the committee names are the vertices and an edge connects two vertices if a person belongs to both committees represented by the vertices.
+If each committee meets for one hour, what is the smallest number of hours needed for the committees to do their work?
+From the graph, it follows that an edge between two committees means that they have at least one member in common.
+Thus, they cannot meet at the same time. No edge between committees means that they can meet at the same time.
+For example, committees S1 and S4 can meet the first hour. Then committees S2 and S5 can meet the second hour.
+Finally, committees S3 and S6 can meet the third hour. Can you see why three hours is the smallest number of hours that the six committees can meet?
+\end{quotation}
+\end{framed}
+
+And this is solution:
+
+\lstinputlisting[style=custompy]{color/sched1.py}
+
+The result:
+
+\begin{lstlisting}
+hour: 0 committees: [1, 4]
+hour: 1 committees: [2, 5]
+hour: 2 committees: [3, 6]
+\end{lstlisting}
+
+If you increase total number of hours to 4, the result is somewhat sparser:
+
+\begin{lstlisting}
+hour: 0 committees: [3]
+hour: 1 committees: [1, 4]
+hour: 2 committees: [2, 5]
+hour: 3 committees: [6]
+\end{lstlisting}
+
