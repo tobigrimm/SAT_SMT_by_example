@@ -1,0 +1,189 @@
+\subsection{Recreational math, calculator's keypad and divisibility}
+
+I've once read about this puzzle.
+Imagine calculator's keypad:
+
+\begin{lstlisting}
+789
+456
+123
+\end{lstlisting}
+
+If you form any rectangle or square out of keys, like:
+
+\begin{lstlisting}
+ 7 8 9
++---+
+|4 5|6
+|1 2|3
++---+
+\end{lstlisting}
+
+The number is 4521. Or 2145, or 5214.
+All these numbers are divisible by 11, 111 and 111.
+One explanation: \url{https://files.eric.ed.gov/fulltext/EJ891796.pdf}.
+
+However, I could try to prove that all these numbers are indeed divisible.
+
+\begin{lstlisting}[style=custompy]
+
+from z3 import *
+
+"""
+We will keep track on numbers using row/col representation:
+
+ |0 1 2 <-col
+-|- - -
+0|7 8 9
+1|4 5 6
+2|1 2 3
+^
+|
+row
+
+"""
+
+# map coordinates to number on keypad:
+def coords_to_num (r, c):
+    return If(And(r==0, c==0), 7,
+    If(And(r==0, c==1), 8,
+    If(And(r==0, c==2), 9,
+    If(And(r==1, c==0), 4,
+    If(And(r==1, c==1), 5,
+    If(And(r==1, c==2), 6,
+    If(And(r==2, c==0), 1,
+    If(And(r==2, c==1), 2,
+    If(And(r==2, c==2), 3, 9999)))))))))
+
+s=Solver()
+
+# coordinates of upper left corner:
+from_r, from_c = Ints('from_r from_c')
+# coordinates of bottom right corner:
+to_r, to_c = Ints('to_r to_c')
+
+# all coordinates are in [0..2]:
+s.add(And(from_r>=0, from_r<=2, from_c>=0, from_c<=2))
+s.add(And(to_r>=0, to_r<=2, to_c>=0, to_c<=2))
+
+# bottom-right corner is always under left-upper corner, or equal to it, or to the right of it:
+s.add(to_r>=from_r)
+s.add(to_c>=from_c)
+
+# numbers on keypads for all 4 corners:
+LT, RT, BL, BR = Ints('LT RT BL BR')
+
+# ... which are:
+s.add(LT==coords_to_num(from_r, from_c))
+s.add(RT==coords_to_num(from_r, to_c))
+s.add(BL==coords_to_num(to_r, from_c))
+s.add(BR==coords_to_num(to_r, to_c))
+
+# 4 possible 4-digit numbers formed by passing by 4 corners:
+n1, n2, n3, n4 = Ints('n1 n2 n3 n4')
+
+s.add(n1==LT*1000 + RT*100 + BR*10 + BL)
+s.add(n2==RT*1000 + BR*100 + BL*10 + LT)
+s.add(n3==BR*1000 + BL*100 + LT*10 + RT)
+s.add(n4==BL*1000 + LT*100 + RT*10 + BR)
+
+# what we're going to do?
+prove=False
+enumerate_rectangles=True
+
+assert prove != enumerate_rectangles
+
+if prove:
+    # prove by finding counterexample.
+    # find any variable state for which remainder will be non-zero:
+    s.add(And((n1%11) != 0), (n1%111) != 0, (n1%1111) != 0)
+    s.add(And((n2%11) != 0), (n2%111) != 0, (n2%1111) != 0)
+    s.add(And((n3%11) != 0), (n3%111) != 0, (n3%1111) != 0)
+    s.add(And((n4%11) != 0), (n4%111) != 0, (n4%1111) != 0)
+
+    # this is impossible, we're getting unsat here, because no counterexample exist:
+    print s.check()
+
+# ... or ...
+
+if enumerate_rectangles:
+    # enumerate all possible solutions:
+    results=[]
+    while True:
+        if s.check() == sat:
+            m = s.model()
+            #print_model(m)
+            print m
+            print m[n1]
+            print m[n2]
+            print m[n3]
+            print m[n4]
+            results.append(m)
+            block = []
+            for d in m:
+                c=d()
+                block.append(c != m[d])
+            s.add(Or(block))
+        else:
+            print "results total=", len(results)
+            break
+
+\end{lstlisting}
+
+Enumeration. only 36 rectangles exist on 3*3 keypad:
+
+\begin{lstlisting}
+[n1 = 7821,
+ BL = 1,
+ n2 = 8217,
+ to_r = 2,
+ LT = 7,
+ RT = 8,
+ BR = 2,
+ n4 = 1782,
+ from_r = 0,
+ n3 = 2178,
+ from_c = 0,
+ to_c = 1]
+7821
+8217
+2178
+1782
+[n1 = 7931,
+ BL = 1,
+ n2 = 9317,
+ to_r = 2,
+ LT = 7,
+ RT = 9,
+ BR = 3,
+ n4 = 1793,
+ from_r = 0,
+ n3 = 3179,
+ from_c = 0,
+ to_c = 2]
+7931
+9317
+3179
+1793
+
+...
+
+[n1 = 5522,
+ BL = 2,
+ n2 = 5225,
+ to_r = 2,
+ LT = 5,
+ RT = 5,
+ BR = 2,
+ n4 = 2552,
+ from_r = 1,
+ n3 = 2255,
+ from_c = 1,
+ to_c = 1]
+5522
+5225
+2255
+2552
+results total= 36
+\end{lstlisting}
+

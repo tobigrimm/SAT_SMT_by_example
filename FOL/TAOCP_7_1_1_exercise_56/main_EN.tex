@@ -1,0 +1,32 @@
+\subsection{Exercise 56 from TAOCP ``7.1.1 Boolean Basics'', solving it using Z3}
+
+Page 41 from fasc0b.ps or \url{http://www.cs.utsa.edu/~wagner/knuth/fasc0b.pdf}.
+
+\begin{figure}[H]
+\label{fig:pipe_shuffled}
+\centering
+\frame{\includegraphics[scale=0.6]{FOL/TAOCP_7_1_1_exercise_56/fasc0b_page41.png}}
+\caption{Page 41}
+\end{figure}
+
+For exists/forall/forall:
+
+\lstinputlisting{FOL/TAOCP_7_1_1_exercise_56/KnuthEAA.smt}
+
+All the rest: \url{FIXME}.
+
+Results:
+
+\lstinputlisting{FOL/TAOCP_7_1_1_exercise_56/1.sh}
+
+\begin{lstlisting}
+unsat
+unsat
+unsat
+sat
+unsat
+unsat
+sat
+sat
+\end{lstlisting}
+

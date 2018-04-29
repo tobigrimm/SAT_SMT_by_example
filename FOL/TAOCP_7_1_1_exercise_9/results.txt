@@ -1,0 +1,7 @@
+% z3 -smt2 Knuth_a.smt
+unsat
+% z3 -smt2 Knuth_b.smt
+sat
+% z3 -smt2 Knuth_c.smt
+sat
+
