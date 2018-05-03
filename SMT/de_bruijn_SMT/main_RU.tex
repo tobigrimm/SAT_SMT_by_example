@@ -43,24 +43,23 @@ int LZCNT(uint32_t x)
 Но я понял что Z3 тоже может это сделать, и хотя это слишком, но зато подходит для демонстрации.
 
 % TODO translate
-\lstinputlisting{SMT/de_bruijn/64.py}
+\lstinputlisting[style=custompy]{SMT/de_bruijn_SMT/64.py}
 
 Мы просто перечисляем все 6-битные части идущие внахлест и говорим Z3, что они должны быть уникальными (см \TT{Distinct}).
 Вывод:
 
-\lstinputlisting{SMT/de_bruijn/output.txt}
+\lstinputlisting{SMT/de_bruijn_SMT/output.txt}
 
 Части внахлест легко видимы.
 Так что константа это \textit{0x79c52dd0991abf60}.
 Проверим:
 
 % TODO translate
-\lstinputlisting{SMT/de_bruijn/64.c}
+\lstinputlisting{SMT/de_bruijn_SMT/64.c}
 
 Работает!
 
 Больше о последовательностях де Брёйна:
-\url{https://yurichev.com/blog/de_bruijn/},
 \url{https://chessprogramming.wikispaces.com/De+Bruijn+sequence},
 \url{https://chessprogramming.wikispaces.com/De+Bruijn+Sequence+Generator}.
 

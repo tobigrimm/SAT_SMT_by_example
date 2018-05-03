@@ -1,0 +1,118 @@
+\subsection{Yet another explanation of modulo inverse using SMT-solvers}
+
+\subsubsection{Introduction}
+
+Let's imagine, we work on 4-bit CPU, it has 4-bit registers, each can hold a value in 0..15 range.
+
+Now we want to divide by 3 using multiplication.
+Let's find modulo inverse of 3 using Wolfram Mathematica:
+
+\begin{lstlisting}
+In[]:= PowerMod[3, -1, 16]
+Out[]= 11
+\end{lstlisting}
+
+This is in fact solution of a $3m=16k+1$ equation ($16 = 2^4$):
+
+\begin{lstlisting}
+In[]:= FindInstance[3 m == 16 k + 1, {m, k}, Integers]
+Out[]= {{m -> 11, k -> 2}}
+\end{lstlisting}
+
+The "magic number" for division by 3 is 11. Multiply by 11 instead of dividing by 3 and you'll get a result (quotient).
+
+This works, let's divide 6 by 3. We can now do this by multiplying 6 by 11, this is 66=0x42, but on 4-bit register, only 0x2 will be left in register ($0x42 \equiv 2 \mod 2^4$).
+Yes, 2 is correct answer, 6/3=2.
+
+Let's divide 3, 6 and 9 by 3, by multiplying by 11 (m).
+
+% FIXME: texify
+\begin{lstlisting}[basicstyle=\tiny]
+           |123456789abcdef0|123456789abcdef0|123456789abcdef0|123456789abcdef0|123456789abcdef0|123456789abcdef0|123456789abcdef0|
+    m=11   |***********     |                |                |                |                |                |                |
+3/3 3m=33  |****************|****************|*               |                |                |                |                |
+6/3 6m=66  |****************|****************|****************|****************|**              |                |                |
+9/3 9m=99  |****************|****************|****************|****************|****************|****************|***             |
+\end{lstlisting}
+
+A "protruding" asterisk(s) (*) in the last non-empty chunk is what will be left in 4-bit register.
+This is 1 in case of 33, 2 if 66, 3 if 99.
+
+In fact, this "protrusion" is defined by 1 in the equation we've solved.
+Let's replace 1 with 2:
+
+\begin{lstlisting}
+In[]:= FindInstance[3 m == 16 k + 2, {m, k}, Integers]
+Out[]= {{m -> 6, k -> 1}}
+\end{lstlisting}
+
+Now the new "magic number" is 6.
+Let's divide 3 by 3. 3*6=18=0x12, 2 will be left in 4-bit register. This is incorrect, we have 2 instead of 1. 2 asterisks are "protruding".
+Let's divide 6 by 3. 6*6=36=0x24, 4 will be left in the register. This is also incorrect, we now have 4 "protruding" asterisks instead of correct 2.
+
+Replace 1 in the equation by 0, and nothing will "protrude".
+
+Now the problem: this only works for dividends in 3x form, i.e., which can be divided by 3 with no remainder.
+Try to divide 4 by 3, 4*11=44=0x2c, 12 will be left in register, this is incorrect.
+The correct quotient is 1.
+
+We can also notice that the 4-bit register is "overflown" during multiplication twice as much as in "incorrect" result in low 4 bits.
+
+Here is what we can do: use only high 4 bits and drop low 4 bits.
+4*11=0x2c and 2 is high 4 bits.
+Divide 2 by 2, this is 1.
+
+Let's "divide" 8 by 3. 8*11=88=0x58. 5/2=2, this is correct answer again.
+
+Now this is the formula we can use on our 4-bit CPU to divide numbers by 3: "x*3 >> 4 / 2" or "x*3 >> 5".
+This is the same as almost all modern compilers do instead of integer division, but they do this for 32-bit and 64-bit registers.
+
+\subsubsection{Back to SMT-solver}
+
+By which constant we must multiply a random number, so that the result would be as if we divided them by 3?
+
+\begin{lstlisting}
+from z3 import *
+
+m=BitVec('m', 32)
+
+s=Solver()
+
+# wouldn't work for 10, etc
+divisor=3
+
+# random constant, must be divisible by divisor:
+const=(0x1234567*divisor)
+
+s.add(const*m == const/divisor)
+
+print s.check()
+print "%x" % s.model()[m].as_long()
+\end{lstlisting}
+
+The magic number is:
+
+\begin{lstlisting}
+sat
+aaaaaaab
+\end{lstlisting}
+
+Indeed, this is modulo inverse of 3 modulo $2^{32}$: \url{https://www.wolframalpha.com/input/?i=PowerMod%5B3,-1,2%5E32%5D}.
+
+Let's check using \href{https://github.com/DennisYurichev/progcalc}{my calculator}:
+
+\begin{lstlisting}
+[3] 123456*0xaaaaaaab
+[3] (unsigned) 353492988371136 0x141800000a0c0 0b1010000011000000000000000000000001010000011000000
+[4] 123456/3
+[4] (unsigned) 41152 0xa0c0 0b1010000011000000
+\end{lstlisting}
+
+The problem is simple enough to be solved using MK85:
+
+\lstinputlisting{equations/modinv/modinv.smt}
+
+\lstinputlisting{equations/modinv/modinv.correct}
+
+However, it wouldn't work for 10, because there are no modulo inverse of 10 modulo $2^{32}$, SMT solver would give "unsat".
+

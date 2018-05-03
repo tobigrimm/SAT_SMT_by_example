@@ -1,0 +1,33 @@
+1 instructions for OUTPUTS TT (Knuth's representation)= 0000
+r0=input                 1100
+r1=input                 1010
+r2=ANDN r1, r1           0000
+
+1 instructions for OUTPUTS TT (Knuth's representation)= 0100
+r0=input                 1100
+r1=input                 1010
+r2=ANDN r0, r1           0010
+
+1 instructions for OUTPUTS TT (Knuth's representation)= 0010
+r0=input                 1100
+r1=input                 1010
+r2=ANDN r1, r0           0100
+
+2 instructions for OUTPUTS TT (Knuth's representation)= 0001
+r0=input                 1100
+r1=input                 1010
+r2=ANDN r0, r1           0010
+r3=ANDN r2, r1           1000
+
+2 instructions for OUTPUTS TT (Knuth's representation)= 0101
+r0=input                 1100
+r1=input                 1010
+r2=ANDN r1, r1           0000
+r3=ANDN r2, r1           1010
+
+2 instructions for OUTPUTS TT (Knuth's representation)= 0011
+r0=input                 1100
+r1=input                 1010
+r2=ANDN r0, r1           0010
+r3=ANDN r2, r0           1100
+
