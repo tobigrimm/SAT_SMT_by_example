@@ -1,4 +1,5 @@
 \subsection{Assignment problem}
+\label{assign_problem}
 
 I've found this at \url{http://www.math.harvard.edu/archive/20_spring_05/handouts/assignment_overheads.pdf} and took screenshot:
 
@@ -45,5 +46,11 @@ Again, as it is in the corresponding PDF presentation:
 \frame{\includegraphics[scale=0.6]{MaxSMT/assign_problem/2.png}}
 \end{figure}
 
-(However, I've no idea what ``z3name'' variables mean, perhaps, some internal variables?)
+(However, I've no idea what ``z3name'' variables mean, perhaps, some internal variables?)\\
+\\
+The problem can also be stated in SMT-LIB 2.0 format, and solved using MK85:
+
+\lstinputlisting{MaxSMT/assign_problem/assign_problem.smt}
+
+\lstinputlisting[caption=The result]{MaxSMT/assign_problem/assign_problem.correct}
 

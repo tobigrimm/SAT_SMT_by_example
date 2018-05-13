@@ -1,0 +1,81 @@
+initial (random):
+1 0 0 1 0 1 0 1 
+1 1 0 1 0 1 1 1 
+0 1 1 1 1 0 1 1 
+0 1 1 1 0 0 0 0 
+0 0 1 0 1 1 1 0 
+1 1 0 0 1 0 0 1 
+0 1 0 0 1 1 1 1 
+1 1 1 1 1 0 1 1 
+total= 39
+
+trying 1 steps
+1 0 0 1 0 1 0 1 
+1 1 0 1 0 1 1 1 
+0 1 1 1 1 0 1 1 
+0 1 1 1 0 0 0 0 
+0 0 1 0 1 1 1 0 
+1 1 0 0 1 0 0 1 
+0 1 0 0 1 1 1 1 
+0 0 0 0 0 1 0 0 
+total= 33
+horizontal,  0
+
+trying 2 steps
+1 0 0 1 0 1 0 1 
+1 1 0 1 0 1 1 1 
+1 0 0 0 0 1 0 0 
+0 1 1 1 0 0 0 0 
+0 0 1 0 1 1 1 0 
+1 1 0 0 1 0 0 1 
+0 1 0 0 1 1 1 1 
+0 0 0 0 0 1 0 0 
+total= 29
+horizontal,  5
+horizontal,  0
+
+trying 3 steps
+1 0 0 1 0 0 0 1 
+1 1 0 1 0 0 1 1 
+1 0 0 0 0 0 0 0 
+0 1 1 1 0 1 0 0 
+0 0 1 0 1 0 1 0 
+1 1 0 0 1 1 0 1 
+0 1 0 0 1 0 1 1 
+0 0 0 0 0 0 0 0 
+total= 25
+horizontal,  0
+horizontal,  5
+vertical,  2
+
+trying 4 steps
+1 1 0 0 0 1 0 0 
+1 0 0 0 0 1 1 0 
+0 0 1 0 1 0 1 0 
+0 0 1 0 0 0 0 1 
+1 0 0 0 0 0 0 0 
+1 0 0 1 1 0 0 0 
+0 0 0 1 1 1 1 0 
+1 0 1 0 1 0 1 0 
+total= 23
+horizontal,  3
+vertical,  6
+vertical,  0
+vertical,  4
+
+trying 5 steps
+0 0 0 0 0 0 1 0 
+0 1 0 0 0 0 0 0 
+0 0 0 1 0 0 1 1 
+0 0 0 1 1 0 0 0 
+0 1 0 0 0 1 1 0 
+1 0 1 0 0 0 0 1 
+0 0 1 0 0 1 1 1 
+1 0 0 1 0 0 1 1 
+total= 21
+horizontal,  6
+horizontal,  7
+vertical,  3
+vertical,  5
+vertical,  6
+

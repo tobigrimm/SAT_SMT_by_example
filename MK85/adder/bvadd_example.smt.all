@@ -1,0 +1,65 @@
+(model
+	(define-fun a () (_ BitVec 4) (_ bv0 4)) ; 0x0
+	(define-fun b () (_ BitVec 4) (_ bv4 4)) ; 0x4
+)
+(model
+	(define-fun a () (_ BitVec 4) (_ bv12 4)) ; 0xc
+	(define-fun b () (_ BitVec 4) (_ bv8 4)) ; 0x8
+)
+(model
+	(define-fun a () (_ BitVec 4) (_ bv4 4)) ; 0x4
+	(define-fun b () (_ BitVec 4) (_ bv0 4)) ; 0x0
+)
+(model
+	(define-fun a () (_ BitVec 4) (_ bv8 4)) ; 0x8
+	(define-fun b () (_ BitVec 4) (_ bv12 4)) ; 0xc
+)
+(model
+	(define-fun a () (_ BitVec 4) (_ bv3 4)) ; 0x3
+	(define-fun b () (_ BitVec 4) (_ bv1 4)) ; 0x1
+)
+(model
+	(define-fun a () (_ BitVec 4) (_ bv1 4)) ; 0x1
+	(define-fun b () (_ BitVec 4) (_ bv3 4)) ; 0x3
+)
+(model
+	(define-fun a () (_ BitVec 4) (_ bv2 4)) ; 0x2
+	(define-fun b () (_ BitVec 4) (_ bv2 4)) ; 0x2
+)
+(model
+	(define-fun a () (_ BitVec 4) (_ bv10 4)) ; 0xa
+	(define-fun b () (_ BitVec 4) (_ bv10 4)) ; 0xa
+)
+(model
+	(define-fun a () (_ BitVec 4) (_ bv7 4)) ; 0x7
+	(define-fun b () (_ BitVec 4) (_ bv13 4)) ; 0xd
+)
+(model
+	(define-fun a () (_ BitVec 4) (_ bv14 4)) ; 0xe
+	(define-fun b () (_ BitVec 4) (_ bv6 4)) ; 0x6
+)
+(model
+	(define-fun a () (_ BitVec 4) (_ bv6 4)) ; 0x6
+	(define-fun b () (_ BitVec 4) (_ bv14 4)) ; 0xe
+)
+(model
+	(define-fun a () (_ BitVec 4) (_ bv13 4)) ; 0xd
+	(define-fun b () (_ BitVec 4) (_ bv7 4)) ; 0x7
+)
+(model
+	(define-fun a () (_ BitVec 4) (_ bv5 4)) ; 0x5
+	(define-fun b () (_ BitVec 4) (_ bv15 4)) ; 0xf
+)
+(model
+	(define-fun a () (_ BitVec 4) (_ bv15 4)) ; 0xf
+	(define-fun b () (_ BitVec 4) (_ bv5 4)) ; 0x5
+)
+(model
+	(define-fun a () (_ BitVec 4) (_ bv11 4)) ; 0xb
+	(define-fun b () (_ BitVec 4) (_ bv9 4)) ; 0x9
+)
+(model
+	(define-fun a () (_ BitVec 4) (_ bv9 4)) ; 0x9
+	(define-fun b () (_ BitVec 4) (_ bv11 4)) ; 0xb
+)
+Model count: 16

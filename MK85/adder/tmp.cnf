@@ -1,0 +1,137 @@
+p cnf 40 114
+c always false
+-1 0
+c always true
+2 0
+c generate_adder
+c add_FA inputs=3, 7, cin=1, s=11, cout=15
+c add_Tseitin_XOR 16=3^7
+-3 -7 -16 0
+3 7 -16 0
+3 -7 16 0
+-3 7 16 0
+c add_Tseitin_XOR 11=16^1
+-16 -1 -11 0
+16 1 -11 0
+16 -1 11 0
+-16 1 11 0
+c add_Tseitin_AND 17=16&1
+-16 -1 17 0
+16 -17 0
+1 -17 0
+c add_Tseitin_AND 18=3&7
+-3 -7 18 0
+3 -18 0
+7 -18 0
+c add_Tseitin_OR2 15=17|18
+17 18 -15 0
+-17 15 0
+-18 15 0
+c add_FA inputs=4, 8, cin=15, s=12, cout=19
+c add_Tseitin_XOR 20=4^8
+-4 -8 -20 0
+4 8 -20 0
+4 -8 20 0
+-4 8 20 0
+c add_Tseitin_XOR 12=20^15
+-20 -15 -12 0
+20 15 -12 0
+20 -15 12 0
+-20 15 12 0
+c add_Tseitin_AND 21=20&15
+-20 -15 21 0
+20 -21 0
+15 -21 0
+c add_Tseitin_AND 22=4&8
+-4 -8 22 0
+4 -22 0
+8 -22 0
+c add_Tseitin_OR2 19=21|22
+21 22 -19 0
+-21 19 0
+-22 19 0
+c add_FA inputs=5, 9, cin=19, s=13, cout=23
+c add_Tseitin_XOR 24=5^9
+-5 -9 -24 0
+5 9 -24 0
+5 -9 24 0
+-5 9 24 0
+c add_Tseitin_XOR 13=24^19
+-24 -19 -13 0
+24 19 -13 0
+24 -19 13 0
+-24 19 13 0
+c add_Tseitin_AND 25=24&19
+-24 -19 25 0
+24 -25 0
+19 -25 0
+c add_Tseitin_AND 26=5&9
+-5 -9 26 0
+5 -26 0
+9 -26 0
+c add_Tseitin_OR2 23=25|26
+25 26 -23 0
+-25 23 0
+-26 23 0
+c add_FA inputs=6, 10, cin=23, s=14, cout=27
+c add_Tseitin_XOR 28=6^10
+-6 -10 -28 0
+6 10 -28 0
+6 -10 28 0
+-6 10 28 0
+c add_Tseitin_XOR 14=28^23
+-28 -23 -14 0
+28 23 -14 0
+28 -23 14 0
+-28 23 14 0
+c add_Tseitin_AND 29=28&23
+-28 -23 29 0
+28 -29 0
+23 -29 0
+c add_Tseitin_AND 30=6&10
+-6 -10 30 0
+6 -30 0
+10 -30 0
+c add_Tseitin_OR2 27=29|30
+29 30 -27 0
+-29 27 0
+-30 27 0
+c generate_const(val=4, width=4). var_no=[31..34]
+-31 0
+-32 0
+33 0
+-34 0
+c generate_EQ for two bitvectors, v1=[11...14], v2=[31...34]
+c generate_BVXOR v1=[11...14] v2=[31...34]
+c add_Tseitin_XOR 35=11^31
+-11 -31 -35 0
+11 31 -35 0
+11 -31 35 0
+-11 31 35 0
+c add_Tseitin_XOR 36=12^32
+-12 -32 -36 0
+12 32 -36 0
+12 -32 36 0
+-12 32 36 0
+c add_Tseitin_XOR 37=13^33
+-13 -33 -37 0
+13 33 -37 0
+13 -33 37 0
+-13 33 37 0
+c add_Tseitin_XOR 38=14^34
+-14 -34 -38 0
+14 34 -38 0
+14 -34 38 0
+-14 34 38 0
+c generate_OR_list(var=35, width=4) var out=39
+c add_Tseitin_OR_list(var=35, width=4, var_out=39)
+35 36 37 38 -39 0
+-35 39 0
+-36 39 0
+-37 39 0
+-38 39 0
+c generate_NOT id=internal!8 var=39, out id=internal!9 out var=40
+-40 -39 0
+40 39 0
+c create_assert() id=internal!9 var=40
+40 0

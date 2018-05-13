@@ -1,0 +1,44 @@
+\subsection{Coin flipping problem}
+\label{coin_flip}
+
+Found this on reddit:
+
+\begin{lstlisting}
+Coin flipping problem (KOI '06) (self.algorithms)
+
+Hi. I'm struggling on this problem for weeks.
+
+There is no official solution for this Korean Olympiad in Informatics problem.
+
+The input is N × N coin boards, (0 < N < 33) 'H' means the coin's head is facing upward, and 'T' means the tail is facing upward.
+
+The problem is minimizing T-coins with some operations:
+
+    Flip all the coins in the same row.
+    Flip all the coins in the same column.
+
+Naïve O(N*2N) algorithm makes TLE. There are some heuristic approaches (Simulated Annealing) and branch-and-cut algorithm which reduces running time to about 200ms, but I have no idea to solve this problem in poly-time, or reduce this problem to any famous NP-complete problem.
+
+Would you give some idea for me?
+\end{lstlisting}
+
+( \url{https://www.reddit.com/r/algorithms/comments/7aq9if/coin_flipping_problem_koi_06/} )
+
+My solution for Z3:
+
+\lstinputlisting[style=custompy]{puzzles/coin_flip/coin_z3.py}
+
+Results:
+
+\lstinputlisting{puzzles/coin_flip/z3.txt}
+
+And also MaxSAT solution (Open-WBO MaxSAT solver): 
+
+\lstinputlisting[style=custompy]{puzzles/coin_flip/coin_MaxSAT.py}
+
+Results:
+
+\lstinputlisting{puzzles/coin_flip/SAT.txt}
+
+4-5 row/column flips can be achieved using this on 8*8 board (like chessboard) in reasonable time (couple of minutes).
+

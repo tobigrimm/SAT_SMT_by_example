@@ -5,10 +5,10 @@
 *.log
 *.out
 *.pdf
-*SAT/*/SAT_lib.py
-*SAT/*/my_utils.py
-*SAT/*/plingeling
-*SAT/*/open-wbo
+*/*/SAT_lib.py
+*/*/my_utils.py
+*/*/plingeling
+*/*/open-wbo
 *.rle
 libs/plingeling
 libs/open-wbo
