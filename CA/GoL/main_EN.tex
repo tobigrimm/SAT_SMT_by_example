@@ -1,6 +1,8 @@
 \subsection{Conway's ``Game of Life''}
 
-\subsubsection{Reversing back state of ``Game of Life''}
+\newcommand{\CURPATH}{CA/GoL}
+
+\subsubsection{Reversing back the state of ``Game of Life''}
 
 How could we reverse back a known state of GoL?
 This can be solved by brute-force, but this is extremely slow and inefficient.
@@ -200,11 +202,11 @@ def cell_is_true (center, a):
 ...
 \end{lstlisting}
 
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/GoL/GoL_SAT_utils.py} )
+( \url{.../GoL/GoL_SAT_utils.py} )
 
-\lstinputlisting{SAT/GoL/reverse1.py}
+\lstinputlisting{\CURPATH/reverse1.py}
 
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/GoL/reverse1.py} )
+( \url{.../reverse1.py} )
 
 Here is the result:
 
@@ -280,7 +282,7 @@ while True:
 
 \end{lstlisting}
 
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/GoL/reverse2.py} )
+( \url{.../GoL/reverse2.py} )
 
 Functions \TT{reflect\_vertically()}, \TT{reflect\_horizontally} and \TT{rotate\_squarearray()}
 are simple array manipulation routines.
@@ -484,9 +486,9 @@ Out[18]= (!a||!b||!c||!center||!d)&&(!a||!b||!c||!center||!e)&&(!a||!b||!c||!cen
 
 \end{lstlisting}
 
-\lstinputlisting{SAT/GoL/SL1.py}
+\lstinputlisting{\CURPATH/SL1.py}
 
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/GoL/SL1.py} )
+( \url{.../GoL/SL1.py} )
 
 What we've got for $2 \cdot 2$?
 
@@ -589,7 +591,7 @@ We can also do this for each column as well.
 
 \end{lstlisting}
 
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/GoL/SL2.py} )
+( \url{.../GoL/SL2.py} )
 
 Now we can see that $3 \cdot 3$ square has 3 possible ``still lives'':
 
@@ -759,7 +761,7 @@ To achieve this, we just split the whole square by 5-cell chunks and add clause 
 
 \end{lstlisting}
 
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/GoL/SL3.py} )
+( \url{.../GoL/SL3.py} )
 
 This is indeed denser:
 
@@ -925,5 +927,5 @@ This is most dense. Unfortunaly, it's impossible to construct ``still life'' wit
 
 \subsubsection{The source code}
 
-Source code and Wolfram Mathematica notebook: \url{https://github.com/DennisYurichev/SAT_SMT_article/tree/master/SAT/GoL}.
+Source code and Wolfram Mathematica notebook: \url{...GoL}.
 

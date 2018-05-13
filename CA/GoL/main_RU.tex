@@ -1,5 +1,7 @@
 \subsection{Игра ``Жизнь'' Конвея}
 
+\newcommand{\CURPATH}{CA/GoL}
+
 \subsubsection{Откатывание состояния игры ``Жизнь'' назад}
 
 Можно ли откатить назад известное состояние игры?
@@ -203,11 +205,11 @@ def cell_is_true (center, a):
 ...
 \end{lstlisting}
 
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/GoL/GoL_SAT_utils.py} )
+( \url{.../GoL/GoL_SAT_utils.py} )
 
-\lstinputlisting{SAT/GoL/reverse1.py}
+\lstinputlisting{\CURPATH/reverse1.py}
 
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/GoL/reverse1.py} )
+( \url{.../GoL/reverse1.py} )
 
 И вот результат:
 
@@ -283,7 +285,7 @@ while True:
 
 \end{lstlisting}
 
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/GoL/reverse2.py} )
+( \url{.../GoL/reverse2.py} )
 
 Ф-ции \TT{reflect\_vertically()}, \TT{reflect\_horizontally} and \TT{rotate\_squarearray()} просто преобразуют массив.
 
@@ -488,9 +490,9 @@ Out[18]= (!a||!b||!c||!center||!d)&&(!a||!b||!c||!center||!e)&&(!a||!b||!c||!cen
 
 \end{lstlisting}
 
-\lstinputlisting{SAT/GoL/SL1.py}
+\lstinputlisting{\CURPATH/SL1.py}
 
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/GoL/SL1.py} )
+( \url{.../GoL/SL1.py} )
 
 Что получим для $2 \cdot 2$?
 
@@ -593,7 +595,7 @@ unsat!
 
 \end{lstlisting}
 
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/GoL/SL2.py} )
+( \url{.../GoL/SL2.py} )
 
 Теперь мы видим, что квадрат $3 \cdot 3$ имеет 3 возможных натюрморта:
 
@@ -764,7 +766,7 @@ unsat!
 
 \end{lstlisting}
 
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/GoL/SL3.py} )
+( \url{.../GoL/SL3.py} )
 
 Это действительно поплотнее:
 
@@ -930,5 +932,5 @@ unsat!
 
 \subsubsection{Исходный код}
 
-Исходный код и файл для Wolfram Mathematica: \url{https://github.com/DennisYurichev/SAT_SMT_article/tree/master/SAT/GoL}.
+Исходный код и файл для Wolfram Mathematica: \url{.../GoL}.
 

@@ -1,0 +1,23 @@
+\subsection{One-dimensional cellular automata and Z3 SMT-solver}
+
+Remember John Conway's Game of Life? It's a two-dimensional CA.
+This one is one-dimensional.
+
+It was fully described in Stephen Wolfram's book ``New Kind of Science''.
+Including, the famous Rule 110: \url{https://en.wikipedia.org/wiki/Rule_110}.
+
+Can we find \textit{oscillators} (repeating states) and \textit{gliders} (repeating and shifted states)?
+
+N.B.: state is \textit{wrapped}: the leftmost invisible cell is a rightmost one and vice versa.
+
+The source code: 
+
+\lstinputlisting[style=custompy]{CA/1D/1D_CA.py}
+
+Some \textit{oscillators} and \textit{gliders} are nice: 
+
+\lstinputlisting{CA/1D/selected.txt}
+
+\verb|SHIFTED=0| means \textit{oscillator}, \verb|SHIFTED=1| means \textit{glider} slipping left,
+\verb|SHIFTED=2| --- slipping right.
+
