@@ -71,12 +71,14 @@ Now I'll use Z3 SMT-solver for topological sort, which is overkill, but quite sp
 is to add constraint for each edge (or ``connection'') in graph, if ``a -> b'', then ``a'' must be less then ``b'', where
 each variable reflects ordering.
 
-\lstinputlisting{SMT/tsort/tsort.py}
+\lstinputlisting{SMT/tsort/tsort_MK85.py}
 
 Almost the same result, but also correct:
 
 \begin{lstlisting}
-sat
-[3, 5, 7, 0, 1, 2, 4, 6]
+True
+[5, 7, 1, 3, 0, 4, 6, 2]
 \end{lstlisting}
+
+The solution using Z3: FIXME URL
 

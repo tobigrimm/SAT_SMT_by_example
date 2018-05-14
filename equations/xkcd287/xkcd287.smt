@@ -1,4 +1,5 @@
 ; tested using MK85
+; would work for Z3 if you uncomment "check-sat" and "get-model" and comment "get-all models"
 
 (set-logic QF_BV)
 (set-info :smt-lib-version 2.0)

@@ -1,0 +1,18 @@
+\subsection{\ac{ITE} example}
+
+From Daniel Kroening and Ofer Strichman - "Decision Procedures, An Algorithmic Point of View", 2ed:
+
+\begin{lstlisting}
+
+Problem 2.3 (modeling: program equivalence). Show that the two if-then-else expressions below are equivalent:
+
+!(a || b) ? h : !(a == b) ? f : g
+
+!(!a || !b) ? g : (!a && !b) ? h : f
+
+You can assume that the variables have only one bit.
+
+\end{lstlisting}
+
+\lstinputlisting{proofs/ITE_equiv.smt}
+
