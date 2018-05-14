@@ -1,5 +1,7 @@
 \subsection{Proving sorting network correctness}
 
+\renewcommand{\CURPATH}{proofs/sorting_network}
+
 Sorting networks are highly popular in electronics, GPGPU and even in SAT encodings:
 \url{https://en.wikipedia.org/wiki/Sorting_network}.
 
@@ -15,7 +17,7 @@ There is a smallest network (only 25 comparators) for 9-channel sorting network:
 \begin{figure}[H]
 \label{fig:pipe_shuffled}
 \centering
-\includegraphics[scale=0.75]{SMT/sorting_network/network9.png}
+\includegraphics[scale=0.75]{\CURPATH/network9.png}
 \caption{Smallest}
 \end{figure}
 
@@ -31,7 +33,7 @@ I don't know (yet) how they proved it, but it's interesting, that it's extremely
 We just construct network out of comparators/swappers and asking Z3 to find counterexample, for which the output of the network will not be sorted.
 And it can't, meaning, output's state is always sorted, no matter what values are plugged into inputs.
 
-\lstinputlisting{SMT/sorting_network/test9.py}
+\lstinputlisting{\CURPATH/test9.py}
 
 ( The full source code: \url{URL/test9.py}. )
 
