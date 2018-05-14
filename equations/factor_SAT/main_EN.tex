@@ -1,6 +1,8 @@
 \subsection{Integer factorization using SAT solver}
 \label{factor_SAT}
 
+\renewcommand{\CURPATH}{equations/factor_SAT}
+
 See also: integer factorization using Z3 SMT solver (\ref{factor_Z3}).
 
 We are going to simulate electronic circuit of binary multiplier in SAT and then ask solver, what multiplier's inputs must be so the output will be a desired number?
@@ -16,7 +18,7 @@ These are basic elements of adders.
 % FIXME: TikZ!
 \begin{figure}[H]
 \centering
-\includegraphics[scale=1]{SAT/factor/half_adder.png}
+\includegraphics[scale=1]{\CURPATH/half_adder.png}
 \caption{Half-adder}
 \end{figure}
 
@@ -27,7 +29,7 @@ Full-adder:
 % FIXME: TikZ!
 \begin{figure}[H]
 \centering
-\includegraphics[scale=1]{SAT/factor/full_adder.png}
+\includegraphics[scale=1]{\CURPATH/full_adder.png}
 \caption{Full-adder}
 \end{figure}
 
@@ -209,7 +211,7 @@ This is 4-bit binary multiplier. It takes 4-bit inputs and produces 8-bit output
 % FIXME: TikZ!
 \begin{figure}[H]
 \centering
-\includegraphics[scale=1]{SAT/factor/bin_mult.png}
+\includegraphics[scale=1]{\CURPATH/bin_mult.png}
 \caption{4-bit binary multiplier}
 \end{figure}
 
@@ -259,7 +261,7 @@ In fact, full-adder can be constructed without Mathematica, using logic gates, a
 
 \subsubsection{Glueing all together}
 
-\lstinputlisting{SAT/factor/factor_SAT.py}
+\lstinputlisting{\CURPATH/factor_SAT.py}
 I just connect our number to output of multiplier and ask SAT solver to find inputs.
 If it's UNSAT, this is prime number.
 Then we factor factors recursively.
@@ -314,7 +316,7 @@ It can factor numbers up to maybe $\textasciitilde{}2^{40}$, while Wolfram Mathe
 $\textasciitilde{}2^{80}$ easily.
 
 % FIXME URL
-The full source code: \url{https://github.com/DennisYurichev/yurichev.com/blob/master/blog/factor_SAT/factor_SAT.py}.</p>
+The full source code: \url{.../factor_SAT.py}.
 
 \subsubsection{Division using multiplier}
 
@@ -322,10 +324,10 @@ Hard to believe, but why we couldn't define one of factors and ask SAT solver to
 Then it will divide numbers!
 But, unfortunately, this is somewhat impractical, since it will work only if remainder is zero:
 
-\lstinputlisting{SAT/factor/div.py}
+\lstinputlisting{\CURPATH/div.py}
 
 % FIXME URL
-The full source code: \url{https://github.com/DennisYurichev/yurichev.com/blob/master/blog/factor_SAT/div.py}.
+The full source code: \url{.../div.py}.
 
 It works very fast, but still, slower than conventional ways.
 
