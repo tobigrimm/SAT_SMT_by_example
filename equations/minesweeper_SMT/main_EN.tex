@@ -1,13 +1,15 @@
 \subsection{Cracking Minesweeper with Z3 SMT solver}
 \label{minesweeper_SMT}
 
+\renewcommand{\CURPATH}{equations/minesweeper_SMT}
+
 For those who are not very good at playing Minesweeper (like me), it's possible to predict bombs' placement without touching debugger.
 
 Here is a clicked somewhere and I see revealed empty cells and cells with known number of ``neighbours'':
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.75]{SMT/minesweeper/1.png}
+\includegraphics[scale=0.75]{\CURPATH/1.png}
 \end{figure}
 
 What we have here, actually? Hidden cells, empty cells (where bombs are not present), and empty cells with numbers, which shows how many bombs are placed nearby.
@@ -67,7 +69,7 @@ And if the equation will be unsatisfiable, that would imply that a bomb cannot b
 
 \subsubsection{The code}
 
-\lstinputlisting{SMT/minesweeper/minesweeper_solver.py}
+\lstinputlisting{\CURPATH/minesweeper_solver.py}
 
 The code is almost self-explanatory.
 We need border for the same reason, why Conway's "Game of Life" implementations also has border (to make calculation
@@ -91,7 +93,7 @@ These are cells where I can click safely, so I did:
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.75]{SMT/minesweeper/2.png}
+\includegraphics[scale=0.75]{\CURPATH/2.png}
 \end{figure}
 
 Now we have more information, so we update input:
@@ -124,7 +126,7 @@ I click on these cells again:
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.75]{SMT/minesweeper/3.png}
+\includegraphics[scale=0.75]{\CURPATH/3.png}
 \end{figure}
 
 I update it again:
@@ -149,7 +151,7 @@ row=9 col=4, unsat!
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.75]{SMT/minesweeper/4.png}
+\includegraphics[scale=0.75]{\CURPATH/4.png}
 \end{figure}
 
 This is last update:
@@ -178,12 +180,8 @@ Voila!
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.75]{SMT/minesweeper/5.png}
+\includegraphics[scale=0.75]{\CURPATH/5.png}
 \end{figure}
 
-The source code: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/minesweeper/minesweeper_solver.py}.
-
 Some discussion on HN: \url{https://news.ycombinator.com/item?id=13797375}.
-
-See also: cracking Minesweeper using SAT solver: \ref{minesweeper_SAT}.
 

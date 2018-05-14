@@ -1,13 +1,15 @@
 \subsection{Взлом Сапёра при помощи Z3 SMT-солвера}
 \label{minesweeper_SMT}
 
+\renewcommand{\CURPATH}{equations/minesweeper_SMT}
+
 Для тех кто не очень хорошо играет в Сапёр (как я), можно предсказывать расположение бомб без помощи отладчика.
 
 Вот я где-то нажал и я вижу пустые ячейки и ячейки с количеством ``соседей'':
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.75]{SMT/minesweeper/1.png}
+\includegraphics[scale=0.75]{\CURPATH/1.png}
 \end{figure}
 
 Что у нас тут, на самом деле? Скрытые ячейки, пустые ячейки (где нет бомб) и пустые ячейки с числами,
@@ -69,7 +71,7 @@ R3 & ? & 1 & . \\
 
 \subsubsection{Код}
 
-\lstinputlisting{SMT/minesweeper/minesweeper_solver.py}
+\lstinputlisting{\CURPATH/minesweeper_solver.py}
 
 Этот код самодокументирован и его легко понять без объяснений.
 Граница нужна по той же причине, почему реализации игры "Жизнь" Конвея также имеют границу (чтобы сделать
@@ -94,7 +96,7 @@ row=8 col=9, unsat!
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.75]{SMT/minesweeper/2.png}
+\includegraphics[scale=0.75]{\CURPATH/2.png}
 \end{figure}
 
 Теперь у нас больше информации и мы обновляем входное условие:
@@ -127,7 +129,7 @@ row=9 col=6, unsat!
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.75]{SMT/minesweeper/3.png}
+\includegraphics[scale=0.75]{\CURPATH/3.png}
 \end{figure}
 
 Обновляю снова:
@@ -152,7 +154,7 @@ row=9 col=4, unsat!
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.75]{SMT/minesweeper/4.png}
+\includegraphics[scale=0.75]{\CURPATH/4.png}
 \end{figure}
 
 Последнее обновление:
@@ -181,12 +183,10 @@ row=9 col=2, unsat!
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.75]{SMT/minesweeper/5.png}
+\includegraphics[scale=0.75]{\CURPATH/5.png}
 \end{figure}
 
-Исходный код: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/minesweeper/minesweeper_solver.py}.
+Исходный код: \url{.../minesweeper_solver.py}.
 
 Обсуждение на HN: \url{https://news.ycombinator.com/item?id=13797375}.
-
-См.также: взлом Сапёра при помощи SAT-солвера: \ref{minesweeper_SAT}.
 
