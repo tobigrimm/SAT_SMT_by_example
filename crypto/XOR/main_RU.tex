@@ -1,18 +1,22 @@
-\subsection{Cracking simple XOR cipher with Z3}
+% TODO translate listings
+
+\subsection{Взлом простого XOR-шифра при помощи Z3}
 \label{XOR_Z3}
 
-Here is a problem: a text encrypted with simple XOR cipher.
-Trying all possible keys is not an option.
+\renewcommand{\CURPATH}{crypto/XOR}
 
-Relationships between plain text, cipher text and key can be described using simple system of equations.
-But we can do more: we can ask Z3 to find such a key (array of bytes), so the plain text will have as many lowercase
-letters (a...z) as possible, but a solution will still satisfy all conditions.
+Вот например задача: текст зашифрованный простым XOR-шифром.
+Подбирать длинный ключ это не вариант.
 
-\lstinputlisting{SMT/XOR/1.py}
+Отношения между исходным текстом, шифротекстом и ключом можно описать используя простую систему уравнений.
+Но мы можем даже еще больше: мы можем попросить Z3 найти такой ключ (массив байт), для которого в исходном тексте
+будет как можно больше строчных букв (a...z), но решение будет удовлетворять всем условиям.
 
-( The source code: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/XOR/1.py} )
+\lstinputlisting{\CURPATH/1.py}
 
-Let's try it on a small 350-bytes file\footnote{\url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/XOR/cipher1.txt}}:
+( Исходный код: \url{.../1.py} )
+
+Попробуем на маленьком файле из 350 байт\footnote{\url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/XOR/cipher1.txt}}:
 
 \begin{lstlisting}
 % python 1.py cipher1.txt
@@ -56,14 +60,14 @@ len= 18
 len= 19
 \end{lstlisting}
 
-This is not readable. But what is interesting, the solution exist only for 17-byte key.
+Это не читается. Но вот что интересно, решение существует только для 17-байтного ключа.
 
-What do we know about English language texts?
-Digits are rare there, so we can \textit{minimize} them in plain text.
+Что мы значем о текстах на английском языке?
+Цифры редки, так что мы можем \textit{минимизировать} их в исходном тексте.
 
-There are so called \textit{digraphs}---a very popular combinations of two letters.
-The most popular in English are: \textit{th}, \textit{he}, \textit{in} and \textit{er}.
-We can count them in plain text and \textit{maximize} them:
+Существуют так называемые \textit{диграфы} --- очень популярные комбинации двух букв.
+В английском, наиболее популярные: \textit{th}, \textit{he}, \textit{in} и \textit{er}.
+Мы можем считать их в исходном тексте и \textit{максимизировать} их:
 
 \begin{lstlisting}
 ...
@@ -101,9 +105,9 @@ We can count them in plain text and \textit{maximize} them:
 ...
 \end{lstlisting}
 
-( The source code: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/XOR/2.py} )
+( Исходный код: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/XOR/2.py} )
 
-Now this is something familiar:
+Теперь это что-то:
 
 \begin{lstlisting}
 len= 17
@@ -135,8 +139,8 @@ plain=
 00000150: 20 73 68 72 74 20 74 68  69 63 68 20 69 73         shrt thich is
 \end{lstlisting}
 
-Several characters are wrong.
-But we can fix them, adding these conditions:
+Некоторые буквы неправильные.
+Мы можем это исправить, добавив эти условия:
 
 \begin{lstlisting}
 ...
@@ -147,9 +151,9 @@ But we can fix them, adding these conditions:
 ...
 \end{lstlisting}
 
-( The source code: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/XOR/3.py} )
+( Исходный код: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/XOR/3.py} )
 
-This key is seems correct:
+Ключ похоже корректный:
 
 \begin{lstlisting}
 len= 17
@@ -181,16 +185,16 @@ plain=
 00000150: 20 73 6F 72 74 20 77 68  69 63 68 20 69 73         sort which is
 \end{lstlisting}
 
-So this is correct 17-byte XOR-key.
+Так что это правильный 17-байтный XOR-ключ.
 
-Needless to say, that the bigger ciphertext for analysis we have, the better.
-That 350-byte file is in fact the beginning of bigger file I prepared
-(\url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/XOR/cipher2.txt}, 12903 bytes).
-And a correct key for it can be found for it without additional \textit{heuristics} we used here.
+Надо сказать что чем б\'{о}льший мы имеем шифротекст для анализа, тем лучше.
+Этот 350-байтный файл на самом деле это начало б\'{о}льшего файла, который я приготовил
+(\url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/XOR/cipher2.txt}, 12903 байт).
+И корректный ключ для него может быть найден без дополнительных \textit{эвристик}, которые были здесь использованы.
 
-SMT solver is overkill for this. I once solved this problem naively, and it was much faster:
+SMT-солвер это слишком для такой задачи. Я однажды решил эту проблему в более наивной манере, и это было намного быстрее:
 \url{https://yurichev.com/blog/XOR_mask_2/}.
-Nevertheless, this is yet another demonstration of yet another optimization problem.
+Тем не менее, это еще одна демонстрация оптимизационной проблемы.
 
-The files: \url{https://github.com/DennisYurichev/SAT_SMT_article/tree/master/SMT/XOR}.
+Файлы: \url{https://github.com/DennisYurichev/SAT_SMT_article/tree/master/SMT/XOR}.
 
