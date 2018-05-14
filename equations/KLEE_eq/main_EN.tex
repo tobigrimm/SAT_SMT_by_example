@@ -4,7 +4,7 @@ Let's revisit school-level system of equations from (\ref{eq2_SMT}).
 
 We will force KLEE to find a path, where all the constraints are satisfied:
 
-\lstinputlisting{KLEE/klee_eq1.c}
+\lstinputlisting[style=customc]{equations/KLEE_eq/klee_eq1.c}
 
 % FIXME:
 \begin{lstlisting}
@@ -50,6 +50,6 @@ This is indeed correct solution to the system of equations.
 KLEE has \textit{intrinsic} \TT{klee\_assume()} which tells KLEE to cut path if some constraint is not satisfied.
 So we can rewrite our example in such cleaner way:
 
-\lstinputlisting{KLEE/klee_eq2.c}
+\lstinputlisting[style=customc]{equations/KLEE_eq/klee_eq2.c}
 
 

@@ -1,13 +1,11 @@
 \subsection{Proving bizarre XOR alternative using SAT solver}
 \label{weird_XOR_SAT}
 
-I once wrote about quite bizarre XOR alternative I've found using aha! superoptimizer: \ref{weird_XOR}.
-
 Now let's try to prove it using SAT.
 
 We would build an electric circuit for $x \oplus y = -2*(x \& y) + (x + y)$ like that:
 
-% TikZ!
+% TODO TikZ!
 \begin{lstlisting}
 x --- +---+
       |AND| --- +---+     
@@ -58,7 +56,7 @@ def chk1():
 \end{lstlisting}
 
 % FIXME URL
-The full source code: \url{https://github.com/DennisYurichev/yurichev.com/blob/master/blog/XOR_SAT/XOR_SAT.py}.
+The full source code: \url{...XOR_SAT.py}.
 
 SAT solver returns "unsat", meaning, it couldn't find such a pair.
 In other words, it couldn't find a counterexample.
@@ -140,5 +138,5 @@ def chk2():
 \end{lstlisting}
 
 % FIXME URL
-The source code: \url{https://github.com/DennisYurichev/yurichev.com/blob/master/blog/XOR_SAT/XOR_SAT.py}.
+The source code: \url{...XOR_SAT.py}.
 
