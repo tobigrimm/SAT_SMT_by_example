@@ -1,0 +1,41 @@
+\subsection{Решение Problem Euler 31: ``Суммы монет''}
+
+\begin{framed}
+\begin{quotation}
+В Англии валютой являются фунты стерлингов £ и пенсы p, и в обращении есть восемь монет:
+
+    1p, 2p, 5p, 10p, 20p, 50p, £1 (100p) и £2 (200p).
+
+£2 возможно составить следующим образом:
+
+    1×£1 + 1×50p + 2×20p + 1×5p + 1×2p + 3×1p
+
+Сколькими разными способами можно составить £2, используя любое количество монет?
+\end{quotation}
+\end{framed}
+( \href{http://euler.jakumo.org/problems/view/31.html}{Problem Euler 31 --- Суммы монет} )
+
+\label{SMTEnumerate}
+Используя Z3 для решения такой задачи это слишком, и медленно, но тем не менее, это работает, выдавая все возможные решения.
+Фрагмент кода для блокирования уже найденнго решения и поиска следующего, таким образом, вычисляя считая все возможные решения,
+был взят из ответа на Stack Overflow
+\footnote{\url{http://stackoverflow.com/questions/11867611/z3py-checking-all-solutions-for-equation}, 
+another question: \url{http://stackoverflow.com/questions/13395391/z3-finding-all-satisfying-models}}.
+Это также называется ``model counting'' (подсчет моделей).
+Констрайнты вроде ``a>=0'' должны присутствовать, иначе Z3 будет находить решения с отрицательными числами.
+
+\lstinputlisting[style=custompy]{equations/pe31/pe31.py}
+
+Работает очень медленно, и вот что выдает:
+
+\begin{lstlisting}
+[h = 0, g = 0, f = 0, e = 0, d = 0, c = 0, b = 0, a = 200]
+[f = 1, b = 5, a = 0, d = 1, g = 1, h = 0, c = 2, e = 1]
+[f = 0, b = 1, a = 153, d = 0, g = 0, h = 0, c = 1, e = 2]
+...
+[f = 0, b = 31, a = 33, d = 2, g = 0, h = 0, c = 17, e = 0]
+[f = 0, b = 30, a = 35, d = 2, g = 0, h = 0, c = 17, e = 0]
+[f = 0, b = 5, a = 50, d = 2, g = 0, h = 0, c = 24, e = 0]
+\end{lstlisting}
+
+Всего 73682 результатов.

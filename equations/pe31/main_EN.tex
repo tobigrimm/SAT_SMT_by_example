@@ -1,8 +1,6 @@
 % TODO use MK85
 \subsection{Solving Problem Euler 31: ``Coin sums''}
 
-(This text was first published in my blog\footnote{\url{http://dennisyurichev.blogspot.de/2013/05/in-england-currency-is-made-up-of-pound.html}} at 10-May-2013.)
-
 \begin{framed}
 \begin{quotation}
 In England the currency is made up of pound, £, and pence, p, and there are eight coins in general circulation:
@@ -24,41 +22,7 @@ another question: \url{http://stackoverflow.com/questions/13395391/z3-finding-al
 This is also called ``model counting''.
 Constraints like ``a>=0'' must be present, because Z3 solver will find solutions with negative numbers.
 
-% TODO: cleanup:
-\begin{lstlisting}
-#!/usr/bin/python
-
-from z3 import *
-
-a,b,c,d,e,f,g,h = Ints('a b c d e f g h')
-s = Solver()
-s.add(1*a + 2*b + 5*c + 10*d + 20*e + 50*f + 100*g + 200*h == 200, 
-   a>=0, b>=0, c>=0, d>=0, e>=0, f>=0, g>=0, h>=0)
-result=[]
-
-while True:
-    if s.check() == sat:
-        m = s.model()
-        print m
-        result.append(m)
-        # Create a new constraint the blocks the current model
-        block = []
-        for d in m:
-            # d is a declaration
-            if d.arity() > 0:
-                raise Z3Exception("uninterpreted functions are not suppported")
-            # create a constant from declaration
-            c=d()
-            #print c, m[d]
-            if is_array(c) or c.sort().kind() == Z3_UNINTERPRETED_SORT:
-                raise Z3Exception("arrays and uninterpreted sorts are not supported")
-            block.append(c != m[d])
-        #print "new constraint:",block
-        s.add(Or(block))
-    else:
-        print len(result)
-        break
-\end{lstlisting}
+\lstinputlisting[style=custompy]{equations/pe31/pe31.py}
 
 Works very slow, and this is what it produces:
 
