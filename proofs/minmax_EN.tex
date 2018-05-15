@@ -1,0 +1,12 @@
+\subsection{Proving branchless min/max functions are correct}
+
+... from \url{https://graphics.stanford.edu/~seander/bithacks.html#IntegerMinOrMax}.
+
+Which are, $min(x,y) = y \oplus ((x \oplus y) \wedge (-(x < y)))$
+
+And $max(x,y) = x \oplus ((x \oplus y) \wedge (-(x < y)))$
+
+\lstinputlisting[label=Unsigned version]{proofs/minmax.smt}
+
+\lstinputlisting[label=Signed version]{proofs/minmax_signed.smt}
+
