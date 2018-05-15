@@ -1,6 +1,8 @@
 \subsection{Взлом Сапёра при помощи SAT}
 \label{minesweeper_SAT}
 
+\renewcommand{\CURPATH}{equations/minesweeper_SAT}
+
 \subsubsection{Простая ф-ция подсчета бит (\textit{population count})}
 
 Прежде всего, нам нужно как считать количество соседних бомб.
@@ -69,12 +71,12 @@ Out[]= (! a || ! b || ! c) && (! a || ! b || ! d) && (! a || !
 Я написал Питоновскую ф-цию для конвертирования вывода Mathematica в \ac{CNF}-файл, который можно подать на вход
 SAT-солверу:
 
-\lstinputlisting{SAT/minesweeper/tst.py}
+\lstinputlisting{\CURPATH/tst.py}
 
 Она заменяет переменные a/b/c/... на переданные имена переменных (1/2/3...), перерабатыает синтаксис, итд.
 Вот результат:
 
-\lstinputlisting{SAT/minesweeper/tst1.cnf}
+\lstinputlisting{\CURPATH/tst1.cnf}
 
 Могу запустить:
 
@@ -184,11 +186,11 @@ a&&b&&c&&d&&e&&f&&g&&h
 
 Мы также используем здесь информацию из предыдущего решения Сапёра: \ref{minesweeper_SMT}.
 
-\lstinputlisting{SAT/minesweeper/minesweeper_SAT.py}
+\lstinputlisting{\CURPATH/minesweeper_SAT.py}
 
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/minesweeper/minesweeper_SAT.py} ) \\
+( \url{.../minesweeper_SAT.py} ) \\
 \\
-Выходной \ac{CNF}-файл большой, вплоть до $\approx 2000$ клозов, и даже больше, вот, например: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/minesweeper/sample.cnf}.
+Выходной \ac{CNF}-файл большой, вплоть до $\approx 2000$ клозов, и даже больше, вот, например: \url{.../sample.cnf}.
 
 Так или иначе, это работает так же, как мой предыдущий скрипт для Z3Py:
 
@@ -204,5 +206,5 @@ row=8, col=9, unsat!
 \dots но работает намного быстрее, даже учитывая запуск внешней программы.
 Вероятно, версию для Z3Py можно было бы оптимизировать получше?
 
-Файлы, включая файл для Wolfram Mathematica: \url{https://github.com/DennisYurichev/SAT_SMT_article/tree/master/SAT/minesweeper}.
+Файлы, включая файл для Wolfram Mathematica: \url{.../minesweeper}.
 

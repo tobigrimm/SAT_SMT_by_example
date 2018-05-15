@@ -1,15 +1,21 @@
 \subsection{Recalculating micro-spreadsheet using Z3Py}
 
-There is a nice exercise\footnote{Blog post in Russian: \url{http://thesz.livejournal.com/280784.html}}:
+\renewcommand{\CURPATH}{equations/spreadsheet}
+
+There is a nice exercise\footnote{The blog post in Russian: \url{http://thesz.livejournal.com/280784.html}}:
 write a program to recalculate micro-spreadsheet, like this one:
 
-\lstinputlisting{SMT/spreadsheet/test1}
+\lstinputlisting{\CURPATH/test1}
 
-As it turns out, though overkill, this can be solved using Z3 with little effort:
+The result must be:
 
-\lstinputlisting{SMT/spreadsheet/1.py}
+\lstinputlisting{\CURPATH/test1_result}
 
-( \url{https://github.com/DennisYurichev/yurichev.com/blob/master/blog/spreadsheet/1.py} )
+As it turns out, though overkill, this can be solved using MK85 with little effort:
+
+\lstinputlisting{\CURPATH/spreadsheet_MK85.py}
+
+( \url{...spreadsheet/spreadsheet_MK85.py} )
 
 All we do is just creating pack of variables for each cell, named A0, B1, etc, of integer type.
 All of them are stored in \textit{cells[]} dictionary.
@@ -24,21 +30,19 @@ which is highly dangerous
 imagine if end-user could add a string to cell other than expression?
 Nevertheless, it serves our purposes well, because this is a simplest way to pass a string with expression into Z3.
 
-Z3 do the job with little effort:
+\subsubsection{Z3}
 
-\begin{lstlisting}
- % python 1.py test1
-sat
-1       0       135     82041
-123     10      12      11
-667     11      1342    83383
-\end{lstlisting}
+The source code almost the same:
+
+\lstinputlisting{\CURPATH/spreadsheet_Z3_1.py}
+
+( \url{...spreadsheet/spreadsheet_Z3_1.py} )
 
 \subsubsection{Unsat core}
 
 Now the problem: what if there is circular dependency? Like:
 
-\lstinputlisting{SMT/spreadsheet/test_circular}
+\lstinputlisting{\CURPATH/test_circular}
 
 Two first cells of the last row (C0 and C1) are linked to each other.
 Our program will just tells ``unsat'', meaning, it couldn't satisfy all constraints together.
@@ -60,7 +64,7 @@ else:
     print s.unsat_core()
 \end{lstlisting}
 
-( \url{https://github.com/DennisYurichev/yurichev.com/blob/master/blog/spreadsheet/2.py} )
+( \url{.../spreadsheet_Z3_2.py} )
 
 We should explicitly turn on unsat core support and use \textit{assert\_and\_track()} instead of \textit{add()} method,
 because this feature slows down the whole process, and is turned off by default.
@@ -83,7 +87,7 @@ First, create random \ac{DAG}, like this one:
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{SMT/spreadsheet/1.png}
+\includegraphics[width=\textwidth]{\CURPATH/1.png}
 \caption{Random DAG}
 \end{figure}
 
@@ -94,58 +98,16 @@ Then we assign spreadsheet cell names to each vertex.
 Then we generate random expression with random operations/numbers/cells to each cell,
 with the use of information from topological sorted graph.
 
-Wolfram Mathematica:
-
-\begin{lstlisting}
-(* Utility functions *)
-In[1]:= findSublistBeforeElementByValue[lst_,element_]:=lst[[ 1;;Position[lst, element][[1]][[1]]-1]]
-
-(* Input in 1..∞ range. 1->A0, 2->A1, etc *)
-In[2]:= vertexToName[x_,width_]:=StringJoin[FromCharacterCode[ToCharacterCode["A"][[1]]+Floor[(x-1)/width]],ToString[Mod[(x-1),width]]]
-
-In[3]:= randomNumberAsString[]:=ToString[RandomInteger[{1,1000}]]
-
-In[4]:= interleaveListWithRandomNumbersAsStrings[lst_]:=Riffle[lst,Table[randomNumberAsString[],Length[lst]-1]]
-
-(* We omit division operation because micro-spreadsheet evaluator can't handle division by zero *)
-In[5]:= interleaveListWithRandomOperationsAsStrings[lst_]:=Riffle[lst,Table[RandomChoice[{"+","-","*"}],Length[lst]-1]]
-
-In[6]:= randomNonNumberExpression[g_,vertex_]:=StringJoin[interleaveListWithRandomOperationsAsStrings[interleaveListWithRandomNumbersAsStrings[Map[vertexToName[#,WIDTH]&,pickRandomNonDependentVertices[g,vertex]]]]]
-
-In[7]:= pickRandomNonDependentVertices[g_,vertex_]:=DeleteDuplicates[RandomChoice[findSublistBeforeElementByValue[TopologicalSort[g],vertex],RandomInteger[{1,5}]]]
-
-In[8]:= assignNumberOrExpr[g_,vertex_]:=If[VertexInDegree[g,vertex]==0,randomNumberAsString[],randomNonNumberExpression[g,vertex]]
-
-(* Main part *) 
-(* Create random graph *)
-In[21]:= WIDTH=7;HEIGHT=8;TOTAL=WIDTH*HEIGHT
-Out[21]= 56
-
-In[24]:= g=DirectedGraph[RandomGraph[BernoulliGraphDistribution[TOTAL,0.05]],"Acyclic"];
-
-...
-
-(* Generate random expressions and numbers *)
-In[26]:= expressions=Map[assignNumberOrExpr[g,#]&,VertexList[g]];
-
-(* Make 2D table of it *)
-In[27]:= t=Partition[expressions,WIDTH];
-
-(* Export as tab-separated values *)
-In[28]:= Export["/home/dennis/1.txt",t,"TSV"]
-Out[28]= /home/dennis/1.txt
-
-In[29]:= Grid[t,Frame->All,Alignment->Left]
-\end{lstlisting}
+\input{\CURPATH/math}
 
 Here is an output from \textit{Grid[]}:
 
-\input{SMT/spreadsheet/grid.tex}
+\input{\CURPATH/grid.tex}
 
 Using this script, I can generate random spreadsheet of $26 \cdot 500=13000$ cells,
-which seems to be processed in couple of seconds.
+which seems to be processed by Z3 in couple of seconds.
 
 \subsubsection{The files}
 
-The files, including Mathematica notebook: \url{https://github.com/DennisYurichev/yurichev.com/tree/master/blog/spreadsheet}.
+The files, including Mathematica notebook: \url{.../spreadsheet}.
 

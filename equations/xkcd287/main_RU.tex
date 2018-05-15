@@ -26,16 +26,15 @@ $2.15a + 2.75b + 3.35c + 3.55d + 4.20e + 5.80f == 15.05$,
 где a..f это целочисленные.
 Так что это линейное диофантово уравнение.
 
-\lstinputlisting{equations/xkcd287/xkcd287.py}
+\lstinputlisting{equations/xkcd287/xkcd287_MK85.py}
 
-( Исходный код: \url{https://github.com/DennisYurichev/.../xkcd287.py} )
+( Исходный код: \url{https://github.com/DennisYurichev/.../xkcd287_MK85.py} )
 
 Тут только 2 решения:
 
 \begin{lstlisting}
-[f = 0, b = 0, a = 7, c = 0, d = 0, e = 0]
-[f = 1, b = 0, a = 1, c = 0, d = 2, e = 0]
-results total= 2
+{'a': 7, 'c': 0, 'b': 0, 'e': 0, 'd': 0, 'f': 0}
+{'a': 1, 'c': 0, 'b': 0, 'e': 0, 'd': 2, 'f': 1}
 \end{lstlisting}
 
 Wolfram Mathematica тоже может решить это уравнение:
@@ -55,6 +54,8 @@ Out[]= {{a -> 1, b -> 0, c -> 0, d -> 2, e -> 0, f -> 1},
 Другие способы решения:
 \url{https://stackoverflow.com/questions/141779/solving-the-np-complete-problem-in-xkcd},
 \url{http://www.explainxkcd.com/wiki/index.php/287:_NP-Complete}.
+
+Решение используя Z3: \url{https://github.com/DennisYurichev/.../xkcd287_Z3.py} )
 
 \subsection{XKCD 287 в формате SMT-LIB 2.x}
 

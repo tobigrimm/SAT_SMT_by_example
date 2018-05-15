@@ -1,0 +1,171 @@
+\subsection{CRC (Циклический избыточный код)}
+
+\renewcommand{\CURPATH}{CRC/KLEE}
+
+\subsubsection{Пример изменения буфера \#1}
+
+Иногда нужно изменить часть данных, которые \textit{защищены} некоторой контрольной суммой или
+\ac{CRC}, и вы не можете изменить контрольную сумму или значение CRC, но можете изменить часто данных, так что
+сумма останется той же.
+
+Представим, что у вас есть буфер со строкой ``Hello, world!'' в начале и строкой ``and goodbye'' в конце.
+Мы можем изменить 14 символов в середине, но по каким-то причинам, они должны быть в пределах \textit{a..z}, но мы можем
+вставить туда любые символы.
+CRC64 всего блока должен быть \TT{0x12345678abcdef12}.
+
+Посмотрим\footnote{Существуют несколько немного отличающихся реализаций CRC64, та, что я тут использую, тоже может немного
+отличаться от более популярных.}:
+
+\lstinputlisting{\CURPATH/klee_CRC64.c}
+
+Так как наш код использует стандартную ф-цию Си/Си++ memcmp(), нужно добавить опцию \TT{--libc=uclibc}, так что
+KLEE будет использовать свою собственную реализацию uClibc.
+% \ref{} -> closed programs
+
+\begin{lstlisting}
+% clang -emit-llvm -c -g klee_CRC64.c
+
+% time klee --libc=uclibc klee_CRC64.bc
+\end{lstlisting}
+
+Работает около минуты (на моем ноутбуке с Intel Core i3-3110M 2.4GHz) и вот что получаем:
+
+\begin{lstlisting}
+...
+real    0m52.643s
+user    0m51.232s
+sys     0m0.239s
+...
+% ls klee-last | grep err
+test000001.user.err
+test000002.user.err
+test000003.user.err
+test000004.external.err
+
+% ktest-tool --write-ints klee-last/test000004.ktest
+ktest file : 'klee-last/test000004.ktest'
+args       : ['klee_CRC64.bc']
+num objects: 1
+object    0: name: b'buf'
+object    0: size: 46
+object    0: data: b'Hello, world!.. qqlicayzceamyw ... and goodbye'
+\end{lstlisting}
+
+Может это и медленно, но точно быстрее брутфорса.
+Действительно, $log_2{26^{14}} \approx 65.8$, что близко к 64-м битам.
+Другими словами, нужно $\approx 14$ латинских символов, чтобы закодировать 64 бита.
+И KLEE + \ac{SMT}-солверу нужно 64 бита в каком-то месте, которые он может изменить, чтобы сделать окончательную сумму
+CRC64 равной той, что нужна нам.
+
+Я попробовал уменьшить длину \textit{среднего блока} до 13-и символов: неудачно для KLEE, не хватает места.
+
+\subsubsection{Пример изменения буфера \#2}
+
+Проявил садизм: что если буфер должен содержать значение CRC64, которое, после вычисления CRC64, должно равняться тому же значению?
+Удивительно, но KLEE может решиьт и это.
+Буфер теперь будет иметь такой формат:
+
+\begin{lstlisting}
+§Hello, world! <8 байт (64-битное значение)> and goodbye <еще 6 байт>§
+\end{lstlisting}
+
+\begin{lstlisting}
+int main()
+{
+#define HEAD_STR "Hello, world!.. "
+#define HEAD_SIZE strlen(HEAD_STR)
+#define TAIL_STR " ... and goodbye"
+#define TAIL_SIZE strlen(TAIL_STR)
+// 8 bytes for 64-bit value:
+#define MID_SIZE 8
+#define BUF_SIZE HEAD_SIZE+TAIL_SIZE+MID_SIZE+6
+
+	char buf[BUF_SIZE];
+  
+	klee_make_symbolic(buf, sizeof buf, "buf");
+
+	klee_assume (memcmp (buf, HEAD_STR, HEAD_SIZE)==0);
+
+	klee_assume (memcmp (buf+HEAD_SIZE+MID_SIZE, TAIL_STR, TAIL_SIZE)==0);
+	
+	uint64_t mid_value=*(uint64_t*)(buf+HEAD_SIZE);
+	klee_assume (crc64 (0, buf, BUF_SIZE)==mid_value);
+
+	klee_assert(0);
+
+	return 0;
+}
+\end{lstlisting}
+
+Работает:
+
+\begin{lstlisting}
+% time klee --libc=uclibc klee_CRC64.bc
+...
+real    5m17.081s
+user    5m17.014s
+sys     0m0.319s
+
+% ls klee-last | grep err
+test000001.user.err
+test000002.user.err
+test000003.external.err
+
+% ktest-tool --write-ints klee-last/test000003.ktest
+ktest file : 'klee-last/test000003.ktest'
+args       : ['klee_CRC64.bc']
+num objects: 1
+object    0: name: b'buf'
+object    0: size: 46
+object    0: data: b'Hello, world!.. T+]\xb9A\x08\x0fq ... and goodbye\xb6\x8f\x9c\xd8\xc5\x00'
+\end{lstlisting}
+
+8 байт меджу двумя строками это 64-битное значение, которое равно CRC64 всего блока.
+И снова, это быстрее, чем использовать брутфорс для поиска.
+Если уменьшить последний 6-байтный буфер до 4 байт или меньше, KLEE работает слишком долго, пришлось остановить.
+
+\subsubsection{Восстановление входного буфера для заданного значения CRC32}
+
+Всегда хотелось это сделать, но всё знают, чот это невозможно для входных буферов длинее 4-х байт.
+Как показывают мои эксперименты, это все же возможно для очень маленьких буферов, содержимое которых как-то ограничено.
+
+Значение CRC32 для 6-байтной строки ``SILVER'' известно: \TT{0xDFA3DFDD}.
+KLEE может найти эту 6-байтную строку, если он знает, что каждый байт входного буфера находится в пределах \textit{A..Z}:
+
+\lstinputlisting[numbers=left]{\CURPATH/klee_SILVER.c}
+
+\begin{lstlisting}
+% clang -emit-llvm -c -g klee_SILVER.c
+...
+
+% klee klee_SILVER.bc
+...
+
+% ls klee-last | grep err
+test000013.external.err
+
+% ktest-tool --write-ints klee-last/test000013.ktest
+ktest file : 'klee-last/test000013.ktest'
+args       : ['klee_SILVER.bc']
+num objects: 1
+object    0: name: b'str'
+object    0: size: 6
+object    0: data: b'SILVER'
+\end{lstlisting}
+
+Все же, никакой магии, если убрать условие в строках 23..25 (т.е., ослабить констрайнты),
+KLEE выдаст какую-то другую строку, которая тоже будет правильна для этого значения CRC32.
+
+Это работает, потому что 6 латинских символов в пределах \textit{A..Z} содержат $\approx 28.2$ бит:
+$log_2{26^6} \approx 28.2$, что даже меньше чем 32.
+Другими словами, конечное значение CRC32 содержит достаточно бит, чтобы восстановить $\approx 28.2$ бит входа.
+
+Входной буфер может быть даже больше, если каждый его байт будет находится даже в еще более
+жестких констрайнтах (десятичные цифры, двоичные цифры, итд).
+
+\subsubsection{В сравнении с другими алгоритмами хэширования}
+
+Всё это точно так же просто еще и для других алгоритмов хэширования вроде контрольной суммы Флетчера,
+но не для криптостойких (как MD5, SHA1, etc), они защищены от такого простого криптоанализа.
+См.также: \ref{crypto}.
+

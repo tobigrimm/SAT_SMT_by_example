@@ -1,0 +1,41 @@
+\begin{lstlisting}[label=Wolfram Mathematica]
+(* Utility functions *)
+In[1]:= findSublistBeforeElementByValue[lst_,element_]:=lst[[ 1;;Position[lst, element][[1]][[1]]-1]]
+
+(* Input in 1..∞ range. 1->A0, 2->A1, etc *)
+In[2]:= vertexToName[x_,width_]:=StringJoin[FromCharacterCode[ToCharacterCode["A"][[1]]+Floor[(x-1)/width]],ToString[Mod[(x-1),width]]]
+
+In[3]:= randomNumberAsString[]:=ToString[RandomInteger[{1,1000}]]
+
+In[4]:= interleaveListWithRandomNumbersAsStrings[lst_]:=Riffle[lst,Table[randomNumberAsString[],Length[lst]-1]]
+
+(* We omit division operation because micro-spreadsheet evaluator can't handle division by zero *)
+In[5]:= interleaveListWithRandomOperationsAsStrings[lst_]:=Riffle[lst,Table[RandomChoice[{"+","-","*"}],Length[lst]-1]]
+
+In[6]:= randomNonNumberExpression[g_,vertex_]:=StringJoin[interleaveListWithRandomOperationsAsStrings[interleaveListWithRandomNumbersAsStrings[Map[vertexToName[#,WIDTH]&,pickRandomNonDependentVertices[g,vertex]]]]]
+
+In[7]:= pickRandomNonDependentVertices[g_,vertex_]:=DeleteDuplicates[RandomChoice[findSublistBeforeElementByValue[TopologicalSort[g],vertex],RandomInteger[{1,5}]]]
+
+In[8]:= assignNumberOrExpr[g_,vertex_]:=If[VertexInDegree[g,vertex]==0,randomNumberAsString[],randomNonNumberExpression[g,vertex]]
+
+(* Main part *) 
+(* Create random graph *)
+In[21]:= WIDTH=7;HEIGHT=8;TOTAL=WIDTH*HEIGHT
+Out[21]= 56
+
+In[24]:= g=DirectedGraph[RandomGraph[BernoulliGraphDistribution[TOTAL,0.05]],"Acyclic"];
+
+...
+
+(* Generate random expressions and numbers *)
+In[26]:= expressions=Map[assignNumberOrExpr[g,#]&,VertexList[g]];
+
+(* Make 2D table of it *)
+In[27]:= t=Partition[expressions,WIDTH];
+
+(* Export as tab-separated values *)
+In[28]:= Export["/home/dennis/1.txt",t,"TSV"]
+Out[28]= /home/dennis/1.txt
+
+In[29]:= Grid[t,Frame->All,Alignment->Left]
+\end{lstlisting}
