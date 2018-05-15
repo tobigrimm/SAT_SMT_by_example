@@ -1,0 +1,15 @@
+\subsection{Proving ``Determine if a word has a zero byte'' bit twiddling hack}
+
+... which is:
+
+\begin{lstlisting}
+#define haszero(v) (((v) - 0x01010101UL) & ~(v) & 0x80808080UL)
+\end{lstlisting}
+
+( \url{https://graphics.stanford.edu/~seander/bithacks.html#ZeroInWord} )
+
+The expression returns zero if there are no zero bytes in 32-bit word, or non-zero, if at least one is present.
+Here we prove that it's correct for all possible 32-bit words.
+
+\lstinputlisting{proofs/nozerobytes.smt}
+

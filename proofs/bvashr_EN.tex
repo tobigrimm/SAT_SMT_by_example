@@ -1,0 +1,14 @@
+\subsection{Arithmetical shift bit twiddling hack}
+
+Prove that \verb|((x+0x80000000) >>u n) - (0x80000000 >>u n)| 
+works like arithmetical shift (\verb|bvashr| function in SMT-LIB or \verb|SAR| x86 instruction).
+
+See: Henry Warren 2ed: "2-7 Shift Right Signed from Unsigned".
+
+Also, check if I implemented signed shift right correctly in MK85:
+\url{https://github.com/DennisYurichev/MK85/blob/834305a9851ec7976946247d42bb13d052aba005/MK85.cc#L1195}.
+
+In other words, we prove equivalence of the expression above and my implementation.
+
+\lstinputlisting{proofs/bvashr.smt}
+
