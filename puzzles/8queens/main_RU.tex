@@ -1,5 +1,7 @@
-\subsection{Задача о восьми ферзях}
+\subsection{Задача о восьми ферзях (SAT)}
 \label{EightQueens}
+
+\renewcommand{\CURPATH}{puzzles/8queens}
 
 Восемь ферзей это популярная задача, и она часто используется для измерения скорости работы SAT-солверов.
 Нужно расставить на шахматной доске 8 ферзей так, чтобы они не атаковали друг друга.
@@ -70,7 +72,7 @@
 
 Какие клозы будут сгенерированы для 5-и переменных (1..5)?
 
-\lstinputlisting{SAT/8queens/popcnt1.cnf}
+\lstinputlisting{\CURPATH/popcnt1.cnf}
 
 Да, это все возможные пары чисел 1..5 + все 5 чисел.
 
@@ -125,8 +127,8 @@ s SOLUTIONS 5
 
 Теперь мы должны перечислить ряды, столбцы и диагонали, и собрать все клозы:
 
-\lstinputlisting{SAT/8queens/8queens.py}
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/8queens/8queens.py} )
+\lstinputlisting{\CURPATH/8queens.py}
+( \url{.../8queens.py} )
 
 Возможно, ф-ция \TT{gen\_diagonal()} выглядит не очень эстетично:
 она перечисляет также поддиагонали более длинных диагоналей, которые уже были раннее.
@@ -136,7 +138,7 @@ s SOLUTIONS 5
 Также, я использовал ф-цию \TT{AtMost1} для каждого столбца, это поможет генерировать чуть меньше клозов.
 Каждый столбец будет содержать ферзя в любом случае, это следует из первого правила (\TT{make\_one\_hot} для каждого ряда).
 
-После запуска, получаем CNF-файл с 64-я переменными и 736-я клозами (\url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/8queens/8queens.cnf}).
+После запуска, получаем CNF-файл с 64-я переменными и 736-я клозами (\url{.../8queens.cnf}).
 Вот одно из решений:
 
 \begin{lstlisting}

@@ -24,32 +24,3 @@ while True:
         print "results total=", len(results)
         break
 
-"""
-for 4-bit bitvectors:
-
-...
-
-[b = 7, a = 0]
-[b = 6, a = 8]
-[b = 7, a = 8]
-[b = 6, a = 12]
-[b = 7, a = 12]
-[b = 12, a = 0]
-[b = 13, a = 0]
-[b = 12, a = 8]
-[b = 13, a = 8]
-[b = 12, a = 4]
-[b = 13, a = 4]
-[b = 12, a = 12]
-[b = 13, a = 12]
-[b = 14, a = 0]
-[b = 15, a = 0]
-[b = 14, a = 4]
-[b = 15, a = 4]
-[b = 14, a = 8]
-[b = 15, a = 8]
-[b = 14, a = 12]
-[b = 15, a = 12]
-results total= 128
-
-"""

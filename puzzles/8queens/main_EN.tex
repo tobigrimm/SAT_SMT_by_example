@@ -1,5 +1,7 @@
-\subsection{Eight queens problem}
+\subsection{Eight queens problem (SAT)}
 \label{EightQueens}
+
+\renewcommand{\CURPATH}{puzzles/8queens}
 
 Eight queens is a very popular problem and often used for measuring performance of SAT solvers.
 The problem is to place 8 queens on chess board so they will not attack each other.
@@ -68,7 +70,7 @@ which provides many important functions from combinatorics:
 
 What clauses will be generated for 5 variables (1..5)?
 
-\lstinputlisting{SAT/8queens/popcnt1.cnf}
+\lstinputlisting{\CURPATH/popcnt1.cnf}
 
 Yes, these are all possible pairs of 1..5 numbers + all 5 numbers.
 
@@ -120,8 +122,8 @@ These rules can be translated like that:
 
 Now all we need is to enumerate rows, columns and diagonals and gather all clauses:
 
-\lstinputlisting{SAT/8queens/8queens.py}
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/8queens/8queens.py} )
+\lstinputlisting{\CURPATH/8queens.py}
+( \url{.../8queens.py} )
 
 Perhaps, \TT{gen\_diagonal()} function is not very aesthetically appealing: it enumerates also subdiagonals
 of already enumerated longer diagonals.
@@ -131,7 +133,7 @@ only unique data to be present there.
 Also, I've used \TT{AtMost1} for each column, this will help to produce slightly lower number of clauses.
 Each column will have a queen anyway, this is implied from the first rule (\TT{make\_one\_hot} for each row).
 
-After running, we got CNF file with 64 variables and 736 clauses (\url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/8queens/8queens.cnf}).
+After running, we got CNF file with 64 variables and 736 clauses (\url{.../8queens.cnf}).
 Here is one solution:
 
 \begin{lstlisting}
