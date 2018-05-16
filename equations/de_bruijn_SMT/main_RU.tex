@@ -1,6 +1,8 @@
 \subsection{Генерирование последовательностей де Брёйна при помощи Z3}
 \label{DeBruijnZ3}
 
+\renewcommand{\CURPATH}{equations/de_bruijn_SMT}
+
 Нижеследующий фрагмент вполне эзотерического кода вычисляет количество начальных нулевых бит:
 \footnote{\url{https://en.wikipedia.org/wiki/Find_first_set}}:
 
@@ -26,7 +28,6 @@ int LZCNT(uint32_t x)
 (Обычно это делается более простым алгоритмом, но в нем будут условные переходы,
 а это плохо для процессоров начиная с RISC. В этом алгоритме условных переходов нет.)
 
-Больше об этом: \url{https://yurichev.com/blog/de_bruijn/}.
 Использующаяся здесь магическая константа называется \textit{последовательность де Брёйна},
 и я однажды использовал полный перебор для его поиска (один из результатов был \textit{0x4badf0d},
 который я здесь использовал).
@@ -43,23 +44,19 @@ int LZCNT(uint32_t x)
 Но я понял что Z3 тоже может это сделать, и хотя это слишком, но зато подходит для демонстрации.
 
 % TODO translate
-\lstinputlisting[style=custompy]{SMT/de_bruijn_SMT/64.py}
+\lstinputlisting[style=custompy]{\CURPATH/64.py}
 
 Мы просто перечисляем все 6-битные части идущие внахлест и говорим Z3, что они должны быть уникальными (см \TT{Distinct}).
 Вывод:
 
-\lstinputlisting{SMT/de_bruijn_SMT/output.txt}
+\lstinputlisting{\CURPATH/output.txt}
 
 Части внахлест легко видимы.
 Так что константа это \textit{0x79c52dd0991abf60}.
 Проверим:
 
 % TODO translate
-\lstinputlisting{SMT/de_bruijn_SMT/64.c}
+\lstinputlisting[style=customc]{\CURPATH/64.c}
 
 Работает!
-
-Больше о последовательностях де Брёйна:
-\url{https://chessprogramming.wikispaces.com/De+Bruijn+sequence},
-\url{https://chessprogramming.wikispaces.com/De+Bruijn+Sequence+Generator}.
 

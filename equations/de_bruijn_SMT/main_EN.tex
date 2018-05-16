@@ -1,6 +1,8 @@
 \subsection{Generating de Bruijn sequences using Z3}
 \label{DeBruijnZ3}
 
+\renewcommand{\CURPATH}{equations/de_bruijn_SMT}
+
 The following piece of quite esoteric code calculates number of leading zero bits
 \footnote{\url{https://en.wikipedia.org/wiki/Find_first_set}}:
 
@@ -26,7 +28,6 @@ int LZCNT(uint32_t x)
 (This is usually done using simpler algorithm, but it will contain conditional jumps, which is bad for
 CPUs starting at RISC. There are no conditional jumps in this algorithm.)
 
-Read more about it: \url{https://yurichev.com/blog/de_bruijn/}.
 The magic number used here is called \textit{de Bruijn sequence},
 and I once used bruteforce to find it (one of the results was \textit{0x4badf0d}, which is used here).
 But what if we need magic number for 64-bit values?
@@ -41,22 +42,18 @@ For 64-bit magic number, these are 6-bit overlapping chunks.
 To find the magic number, one can find a Hamiltonian path of a de Bruijn graph.
 But I've found that Z3 is also can do this, though, overkill, but this is more illustrative.
 
-\lstinputlisting[style=custompy]{SMT/de_bruijn_SMT/64.py}
+\lstinputlisting[style=custompy]{\CURPATH/64.py}
 
 We just enumerate all overlapping 6-bit chunks and tell Z3 that they must be unique (see \TT{Distinct}).
 Output:
 
-\lstinputlisting{SMT/de_bruijn_SMT/output.txt}
+\lstinputlisting{\CURPATH/output.txt}
 
 Overlapping chunks are clearly visible.
 So the magic number is \textit{0x79c52dd0991abf60}.
 Let's check:
 
-\lstinputlisting{SMT/de_bruijn_SMT/64.c}
+\lstinputlisting[style=customc]{\CURPATH/64.c}
 
 That works!
-
-More about de Bruijn sequences:
-\url{https://chessprogramming.wikispaces.com/De+Bruijn+sequence},
-\url{https://chessprogramming.wikispaces.com/De+Bruijn+Sequence+Generator}.
 
