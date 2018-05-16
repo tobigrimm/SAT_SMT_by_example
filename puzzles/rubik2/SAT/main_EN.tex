@@ -1,6 +1,8 @@
 \subsection{Pocket Rubik's Cube (2*2*2) and SAT solver}
 \label{PocketCubeSAT}.
 
+\renewcommand{\CURPATH}{puzzles/rubik2/SAT}
+
 I had success with my SAT-based solver, which can find an 11-turn path for a matter of 10-20 minutes on my old
 Intel Xeon E3-1220 3.10GHz.
 
@@ -70,7 +72,7 @@ Using tree of ITE gates we first can build 32-to-1 MUX, then wide 32*3-to-3 MUX.
 
 % FIXME URL
 I once have written small utility to search for shortest possible CNF formula for a specific function,
-in a bruteforce manner (\url{https://github.com/DennisYurichev/yurichev.com/blob/master/blog/rubik/XOR_CNF_bf.c}).
+in a bruteforce manner (\url{.../XOR_CNF_bf.c}).
 It was inspired by "aha! hacker assistant" by Henry Warren.
 So here is a function:
 
@@ -116,7 +118,7 @@ Hence, CNF formula is:
 
 It assures that the "output" will always be equal to one of inputs depending on "select".
 
-Now we can build a tree of ITE gates:
+Now we can build a tree of \ac{ITE} gates:
 
 \begin{lstlisting}
 def create_ITE(s,f,t):
@@ -295,7 +297,7 @@ def add_r(dst, src):
 \end{lstlisting}
 
 % FIXME URL
-Now the full source code: \url{https://github.com/DennisYurichev/yurichev.com/blob/master/blog/rubik/SAT.py}.
+Now the full source code: \url{.../SAT.py}.
 I tried to make it as concise as possible.
 It requires minisat to be installed.
 
@@ -306,7 +308,7 @@ Here is an output for a state which can be solved with 4 turns:
 set_state(0, {"F":"RYOG", "U":"YRGO", "D":"WRBO", "R":"GYWB", "L":"BYWG", "B":"BOWR"})
 \end{lstlisting}
 
-\lstinputlisting{SAT/rubik2/post_RDUR.txt}
+\lstinputlisting{\CURPATH/post_RDUR.txt}
 
 Even on my relic Intel Atom 1.5GHz netbook it takes just 20s.
 
@@ -353,7 +355,7 @@ LCCW
 ...
 \end{lstlisting}
 
-( ~5m on my old Intel Xeon E3-1220 3.10GHz. )
+( $\approx 5$ minutes on my old Intel Xeon E3-1220 3.10GHz. )
 
 I couldn't find a pure "11-turn state" which is "unsat" for 10-turn, it seems, these are rare.
 According to \href{https://en.wikipedia.org/wiki/Pocket_Cube}{wikipedia}, there are just 0.072\% of these states.
@@ -386,8 +388,8 @@ Here is mine I used, you can see that corners are correctly solved:
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.75]{SAT/rubik2/3solved.jpg}
-\caption{Rubik's cube as pocket cube}
+\includegraphics[scale=0.75]{\CURPATH/3solved.jpg}
+\caption{Solved Rubik's cube as a pocket cube}
 \end{figure}
 
 \subsubsection{Some discussion}

@@ -1,9 +1,11 @@
 \subsection{Solving pocket Rubik’s cube (2*2*2) using Z3}
 \label{PocketCubeSMT}
 
+\renewcommand{\CURPATH}{puzzles/rubik2/failed_SMT}
+
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.75]{SMT/rubik2/failed/190px-Pocket_cube_scrambled.jpg}
+\includegraphics[scale=0.75]{\CURPATH/190px-Pocket_cube_scrambled.jpg}
 \caption{Pocket cube}
 \end{figure}
 
@@ -162,7 +164,7 @@ for TURNS in range(1,12): # 1..11
 \end{lstlisting}
 
 % FIXME URL
-( The full source code: \url{https://github.com/DennisYurichev/yurichev.com/blob/master/blog/rubik/rubik2_z3.py} )
+( The full source code: \url{.../rubik2_z3.py} )
 
 That works:
 
@@ -181,6 +183,4 @@ RCW
 ...but very slow. It takes up to 1 hours to find a path of 8 turns, which is not enough, we need 11.
 
 Nevetheless, I decided to include Z3 solver as a demonstration.
-
-See also: solving pocket cube using SAT solver: \ref{PocketCubeSAT}.
 
