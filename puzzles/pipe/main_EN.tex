@@ -1,5 +1,7 @@
 \subsection{Solving pipe puzzle using Z3 SMT-solver}
 
+\renewcommand{\CURPATH}{puzzles/pipe}
+
 ``Pipe puzzle'' is a popular puzzle (just google ``pipe puzzle'' and look at images).
 
 This is how shuffled puzzle looks like:
@@ -7,7 +9,7 @@ This is how shuffled puzzle looks like:
 \begin{figure}[H]
 \label{fig:pipe_shuffled}
 \centering
-\includegraphics[scale=0.75]{SMT/pipe/shuffled.png}
+\includegraphics[scale=0.75]{\CURPATH/shuffled.png}
 \caption{Shuffled puzzle}
 \end{figure}
 
@@ -16,7 +18,7 @@ This is how shuffled puzzle looks like:
 \begin{figure}[H]
 \label{fig:pipe_solved}
 \centering
-\includegraphics[scale=0.75]{SMT/pipe/solved.png}
+\includegraphics[scale=0.75]{\CURPATH/solved.png}
 \caption{Solved puzzle}
 \end{figure}
 
@@ -30,7 +32,7 @@ Take 8*16 array of cells.
 Each cell may contain some type of block.
 There are joints between cells:
 
-\input{SMT/pipe_gen.tex}
+\input{\CURPATH/pipe_gen.tex}
 
 Blue lines are horizontal joints, red lines are vertical joints.
 We just set each joint to 0/false (absent) or 1/true (present), randomly.
@@ -65,7 +67,7 @@ these cells are transforming into empty cells.
 Hence, at the end, all cells has at least two joints, and the whole plumbing system has no connections with outer
 world---I hope this would make things clearer.
 
-The C source code of generator is here: \url{https://github.com/DennisYurichev/SAT_SMT_article/tree/master/SMT/pipe/generator}.
+The C source code of generator is here: \url{.../pipe/generator}.
 All horizontal joints are stored in the global array \textit{hjoints[]} and vertical in \textit{vjoints[]}.
 
 The C program generates ANSI-colored output like it has been showed above (\ref{fig:pipe_shuffled}, \ref{fig:pipe_solved}) plus
@@ -93,7 +95,7 @@ First of all, we would think about 8*16 array of cells, where each has four bits
 ``R'' (right).
 Each bit represents half of joint.
 
-\input{SMT/pipe_solve.tex}
+\input{\CURPATH/pipe_solve.tex}
 
 Now we define arrays of each of four half-joints + angle information:
 
@@ -189,13 +191,13 @@ for r in range(HEIGHT):
             s.add(T[r][c]==t, B[r][c]==t, L[r][c]==t, R[r][c]==t) # §\pmboxdrawuni{254B}§
 \end{lstlisting}
 
-Full source code is here: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/pipe/solver/solve_pipe_puzzle1.py}.
+Full source code is here: \url{.../solve_pipe_puzzle1.py}.
 
 It produces this result (prints angle for each cell and (pseudo)graphical representation):
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.75]{SMT/pipe/solver/solver.png}
+\includegraphics[scale=0.75]{\CURPATH/solver/solver.png}
 \caption{Solver script output}
 \end{figure}
 
@@ -205,14 +207,14 @@ of all this, we just defined cells, (half-)joints and defined relations between 
 
 Now the next question is, how many solutions are possible?
 Using method described earlier (\ref{SMTEnumerate}), I've altered solver script
-\footnote{\url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/pipe/solver/solve_pipe_puzzle2.py}} and solver
+\footnote{\url{.../solver/solve_pipe_puzzle2.py}} and solver
 said two solutions are possible.
 
 Let's compare these two solutions using gvimdiff:
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.75]{SMT/pipe/solver/diff.png}
+\includegraphics[scale=0.75]{\CURPATH/solver/diff.png}
 \caption{gvimdiff output (pardon my red cursor at left pane at left-top corner)}
 \end{figure}
 

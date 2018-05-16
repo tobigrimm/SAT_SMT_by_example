@@ -1,5 +1,7 @@
 \subsection{Решение головоломки ``трубы'' используя Z3 SMT-солвер}
 
+\renewcommand{\CURPATH}{puzzles/pipe}
+
 Головоломка ``трубы'' это популярная головоломка (просто погуглите ``pipe puzzle'' и посмотрите на картинки).
 
 Вот как выглядит головоломка в разобранном виде:
@@ -7,7 +9,7 @@
 \begin{figure}[H]
 \label{fig:pipe_shuffled}
 \centering
-\includegraphics[scale=0.75]{SMT/pipe/shuffled.png}
+\includegraphics[scale=0.75]{\CURPATH/shuffled.png}
 \caption{Разобранная головоломка}
 \end{figure}
 
@@ -16,7 +18,7 @@
 \begin{figure}[H]
 \label{fig:pipe_solved}
 \centering
-\includegraphics[scale=0.75]{SMT/pipe/solved.png}
+\includegraphics[scale=0.75]{\CURPATH/solved.png}
 \caption{Собранная головоломка}
 \end{figure}
 
@@ -30,7 +32,7 @@
 Каждая ячейка может содержать какой-то тип блока.
 Между ячейками есть стыки:
 
-\input{SMT/pipe_gen.tex}
+\input{\CURPATH/pipe_gen.tex}
 
 Синие линии это горизонтальные стыки, красные линии это вертикальные стыки.
 Мы просто случайно выставляем каждый стык в 0/false (отсутствует) или 1/true (присутствует).
@@ -65,7 +67,7 @@
 Так что, в самом конце, все ячейки имеют минимум 2 стыка, и вся эта сантехническая система не имеет связей с внешним миром ---
 я надеюсь, из-за этого станет немного проще.
 
-Исходник генератора на Си здесь: \url{https://github.com/DennisYurichev/SAT_SMT_article/tree/master/SMT/pipe/generator}.
+Исходник генератора на Си здесь: \url{.../pipe/generator}.
 Все вертикальные стыки хранятся в глобальном массиве \textit{hjoints[]} и вертикальные в \textit{vjoints[]}.
 
 Программа на Си генерирует ANSI-раскрашенный вывод, как это было показано выше
@@ -93,7 +95,7 @@
 ``R'' (right/право).
 Каждый бит представляет собой половину стыка.
 
-\input{SMT/pipe_solve.tex}
+\input{\CURPATH/pipe_solve.tex}
 
 Теперь определяем массив для каждого из четырех полустыков + информация об угле:
 
@@ -189,13 +191,13 @@ for r in range(HEIGHT):
             s.add(T[r][c]==t, B[r][c]==t, L[r][c]==t, R[r][c]==t) # §\pmboxdrawuni{254B}§
 \end{lstlisting}
 
-Полный исходник здесь: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/pipe/solver/solve_pipe_puzzle1.py}.
+Полный исходник здесь: \url{.../solver/solve_pipe_puzzle1.py}.
 
 Получается такой результат (выводит угол для каждой ячейки и (псевдо)графическое представление):
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.75]{SMT/pipe/solver/solver.png}
+\includegraphics[scale=0.75]{\CURPATH/solver/solver.png}
 \caption{Вывод скрипта солвера}
 \end{figure}
 
@@ -205,14 +207,14 @@ for r in range(HEIGHT):
 
 Теперь следующий вопрос это, сколько здесь возможных решений?
 Используя раннее описанный метод (\ref{SMTEnumerate}), я немного изменил скрипт солвера
-\footnote{\url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SMT/pipe/solver/solve_pipe_puzzle2.py}} и солвер
+\footnote{\url{.../solver/solve_pipe_puzzle2.py}} и солвер
 сказал что возможно два решения.
 
 Сравним их используя gvimdiff:
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.75]{SMT/pipe/solver/diff.png}
+\includegraphics[scale=0.75]{\CURPATH/solver/diff.png}
 \caption{Вывод gvimdiff (извините за мой красный курсор в левой части в левом верхнем углу)}
 \end{figure}
 
