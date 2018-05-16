@@ -1,10 +1,12 @@
 \subsection{Enumerating all possible inputs for a specific regular expression}
 
+\renewcommand{\CURPATH}{regexp/SMT}
+
 Regular expression if first converted to \ac{FSM} before matching.
 Hence, many \ac{RE} libraries has two functions: ``compile'' and ``execute''
-(when you match many strings against single RE, no need to recompile it to \ac{FSM} each time).
+(when you match many strings against single \ac{RE}, no need to recompile it to \ac{FSM} each time).
 
-And I've found this website, which can visualize FSM (finite state machine) for a regular expression.
+And I've found this website, which can visualize \ac{FSM} for a regular expression.
 \url{http://hokein.github.io/Automata.js/}.
 This is fun!
 
@@ -12,7 +14,7 @@ This \ac{FSM} (\ac{DFA}) is for the expression \TT{(dark|light)?(red|blue|green)
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.6]{SMT/regexp/1.png}
+\includegraphics[scale=0.6]{\CURPATH/1.png}
 \caption{}
 \end{figure}
 
@@ -32,13 +34,15 @@ For each pair (state, input) it defines new state.
 
 Then we chain transition functions... then we try a chain for all lengths in range of 2..14.
 
-\lstinputlisting{SMT/regexp/re.py}
+\lstinputlisting{\CURPATH/re_MK85.py}
 
 Results:
 
-\lstinputlisting{SMT/regexp/res.txt}
+\lstinputlisting{\CURPATH/res.txt}
 
 As simple as this.
+
+The source code for Z3Py: \url{...re_Z3.py}.
 
 % TODO \gls
 It can be said, what we did is enumeration of all paths between two vertices of a digraph (representing \ac{FSM}).

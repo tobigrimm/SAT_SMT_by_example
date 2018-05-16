@@ -1,10 +1,10 @@
-\subsection{Головоломка зебры}
+\subsection{KLEE}
 
-Снова вернемся к головоломке зебры (\ref{zebra_SMT}).
+\renewcommand{\CURPATH}{puzzles/zebra/KLEE}
 
 Мы просто определяем все переменные и добавляем констрайнты:
 
-\lstinputlisting{KLEE/klee_zebra1.c}
+\lstinputlisting[style=customc]{\CURPATH/klee_zebra1.c}
 
 Я заставил KLEE находить отличные друг от друга значения для цветов, национальностей, сигарет, итд, точно также,
 как я раннее сделал это для Судоку: (\ref{sudoku_SMT}).
@@ -72,7 +72,7 @@ object   24: data: 5
 
 В этот раз можно также использовать \TT{klee\_assume()}:
 
-\lstinputlisting{KLEE/klee_zebra2.c}
+\lstinputlisting[style=customc]{\CURPATH/klee_zebra2.c}
 
 \dots и эта версия работает немного быстрее ($\approx 5$ секунд),
 может быть потому что KLEE знает об этой \textit{intrinsic} и обращается с ним особым образом?

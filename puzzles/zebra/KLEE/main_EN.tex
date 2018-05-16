@@ -1,10 +1,10 @@
-\subsection{Zebra puzzle}
+\subsection{KLEE}
 
-Let's revisit zebra puzzle from (\ref{zebra_SMT}).
+\renewcommand{\CURPATH}{puzzles/zebra/KLEE}
 
 We just define all variables and add constraints:
 
-\lstinputlisting{KLEE/klee_zebra1.c}
+\lstinputlisting[style=customc]{\CURPATH/klee_zebra1.c}
 
 I force KLEE to find distinct values for colors, nationalities, cigarettes, etc, in the same way as I did for Sudoku earlier 
 (\ref{sudoku_SMT}).
@@ -74,7 +74,7 @@ This is indeed correct solution.
 
 \TT{klee\_assume()} also can be used this time:
 
-\lstinputlisting{KLEE/klee_zebra2.c}
+\lstinputlisting[style=customc]{\CURPATH/klee_zebra2.c}
 
 \dots and this version works slightly faster ($\approx 5$ seconds),
 maybe because KLEE is aware of this \textit{intrinsic} and handles it in a special way?

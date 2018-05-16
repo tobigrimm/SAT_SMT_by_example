@@ -1,25 +1,27 @@
 \subsection{Balanced Gray code and Z3 SMT solver}
 \label{Gray_Z3}
 
+\renewcommand{\CURPATH}{gray_code/SMT}
+
 Suppose, you are making a rotary encoder.
 This is a device that can signal its angle in some form, like:
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=1]{SMT/gray/313px-Gray_code_rotary_encoder_13-track_opened.jpg}
+\includegraphics[scale=1]{\CURPATH/313px-Gray_code_rotary_encoder_13-track_opened.jpg}
 \caption{Rotary encoder}
 \end{figure}
 
 ( The image has been taken from Wikipedia: \url{https://en.wikipedia.org/wiki/Gray_code} )
 
 % TODO FIX URL
-Click on \href{https://raw.githubusercontent.com/DennisYurichev/yurichev.com/master/blog/gray/Gray_code_rotary_encoder_13-track_opened.jpg}{bigger image}.
+Click on \href{.../blog/gray/Gray_code_rotary_encoder_13-track_opened.jpg}{bigger image}.
 
 This is a rotary (shaft) encoder: \url{https://en.wikipedia.org/wiki/Rotary_encoder}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.8]{SMT/gray/Rotary_Encoder_track_detail_scaled_crop.jpg}
+\includegraphics[scale=0.8]{\CURPATH/Rotary_Encoder_track_detail_scaled_crop.jpg}
 \caption{Cropped and photoshopped version}
 \end{figure}
 
@@ -27,7 +29,7 @@ This is a rotary (shaft) encoder: \url{https://en.wikipedia.org/wiki/Rotary_enco
 
 % TODO FIX URL
 Click on
-\href{https://raw.githubusercontent.com/DennisYurichev/yurichev.com/master/blog/gray/Rotary_Encoder_track_detail.jpg}{bigger one}.
+\href{.../Rotary_Encoder_track_detail.jpg}{bigger one}.
 
 There are pins and tracks on rotating wheel.
 How would you do this?
@@ -65,25 +67,25 @@ The second: wearing should be even across all tracks (this is balanced Gray code
 
 How we can find a table for all states using Z3:
 
-\lstinputlisting{SMT/gray/gray.py}
+\lstinputlisting{\CURPATH/gray.py}
 
 % TODO FIX URL
-( The source code: \url{https://github.com/DennisYurichev/yurichev.com/blob/master/blog/gray/gray.py} )
+( The source code: \url{...gray.py} )
 
 For 4 bits, 4 changes is enough:
 
-\lstinputlisting{SMT/gray/4.txt}
+\lstinputlisting{\CURPATH/4.txt}
 
 % TODO FIX URL
-8 changes for 5 bits: \url{https://github.com/DennisYurichev/yurichev.com/blob/master/blog/gray/5.txt}.
+8 changes for 5 bits: \url{.../5.txt}.
 12 for 6 bits (or maybe even less): 
-\url{https://github.com/DennisYurichev/yurichev.com/blob/master/blog/gray/6.txt}.
+\url{.../6.txt}.
 
 \subsubsection{Duke Nukem 3D from 1990s}
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=3]{SMT/gray/duke.png}
+\includegraphics[scale=3]{\CURPATH/duke.png}
 \caption{Duke Nukem 3D}
 \end{figure}
 
@@ -134,6 +136,4 @@ E. E. "Doc" Smith, _Second Stage Lensmen_
 
 Obviously, using our solution, you can minimize all movements in this ancient videogame, for 4 switches, that would be 4*4=16 switches.
 With our solution (balanced Gray code), wearing would be even across all 4 switches.
-
-The same problem for MaxSAT: \ref{Gray_MaxSAT}.
 

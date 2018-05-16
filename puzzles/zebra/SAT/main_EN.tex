@@ -1,8 +1,6 @@
 \subsection{Zebra puzzle as a SAT problem}
 \label{Zebra_SAT}
 
-Let's try to solve Zebra puzzle (\ref{zebra_SMT}) in SAT.
-
 I would define each variable as vector of 5 variables, as I did before in Sudoku solver: \ref{Sudoku_SAT}.
 
 I also use \TT{POPCNT1} function, but unlike previous example, I used Wolfram Mathematica to generate it in CNF form:
@@ -274,10 +272,10 @@ add_right_or_left("Kools","Horse") # left or right
 \end{lstlisting}
 
 This is it!
-The full source code: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/zebra/zebra_SAT.py}.
+The full source code: \url{...zebra_SAT.py}.
 
 Resulting CNF instance has 125 boolean variables and 511 clauses: \\
-\url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/SAT/zebra/1.cnf}.
+\url{.../1.cnf}.
 It is a piece of cake for any SAT solver.
 Even my toy-level SAT-solver (\ref{SAT_backtrack}) can solve it in \textasciitilde{}1 second on my ancient Intel Atom netbook.
 
