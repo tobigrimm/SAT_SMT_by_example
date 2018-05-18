@@ -1,0 +1,20 @@
+\subsection{Solving $x^y=19487171$ equation}
+
+Find x,y for $x^y=19487171$.
+The correct result x=11, y=7.
+It's like \url{http://reference.wolfram.com/language/ref/Surd.html}.
+
+The non-standard function \verb|bvmul_no_overflow| is used here. it behaves like bvmul, but high part is forced to be zero.
+This is not like most programming languages and CPUs do division (the result there is usually modulo $2^n$, where $n$ is width of CPU register).
+However, thus it's simpler for me to write this all without adding additional \verb|zero_extend| function.
+
+\lstinputlisting{equations/surd/surd.smt}
+
+\begin{lstlisting}[caption=The solution]
+(model
+        (define-fun x () (_ BitVec 32) (_ bv11 32)) ; 0xb
+        (define-fun y () (_ BitVec 4) (_ bv7 4)) ; 0x7
+        (define-fun out () (_ BitVec 32) (_ bv19487171 32)) ; 0x12959c3
+)
+\end{lstlisting}
+
