@@ -1,8 +1,9 @@
+#!/usr/bin/env python
+
 import sys
 from z3 import *
 
 """
-coordinates:
 ------------------------------
 00 01 02 | 03 04 05 | 06 07 08
 10 11 12 | 13 14 15 | 16 17 18
@@ -21,7 +22,7 @@ coordinates:
 s=Solver()
 
 # using Python list comprehension, construct array of arrays of BitVec instances:
-cells=[[BitVec('cell%d%d' % (r, c), 16) for c in range(9)] for r in range(9)]
+cells=[[Int('cell%d%d' % (r, c)) for c in range(9)] for r in range(9)]
 
 # http://www.norvig.com/sudoku.html
 # http://www.mirror.co.uk/news/weird-news/worlds-hardest-sudoku-can-you-242294
@@ -32,55 +33,57 @@ current_column=0
 current_row=0
 for i in puzzle:
 	if i!='.':
-		s.add(cells[current_row][current_column]==BitVecVal(int(i),16))
+		s.add(cells[current_row][current_column]==int(i))
 	current_column=current_column+1
 	if current_column==9:
 		current_column=0
 		current_row=current_row+1
 
-one=BitVecVal(1,16)
-mask=BitVecVal(0b1111111110,16)
+# this is important, because otherwise, Z3 will report correct solutions with too big and/or negative numbers in cells
+for r in range(9):
+	for c in range(9):
+		s.add(cells[r][c]>=1)
+		s.add(cells[r][c]<=9)
 
 # for all 9 rows
 for r in range(9):
-	s.add(((one<<cells[r][0]) |
-		(one<<cells[r][1]) |
-		(one<<cells[r][2]) |
-		(one<<cells[r][3]) |
-		(one<<cells[r][4]) |
-		(one<<cells[r][5]) |
-		(one<<cells[r][6]) |
-		(one<<cells[r][7]) | 
-		(one<<cells[r][8]))==mask)
+	s.add(Distinct(cells[r][0],
+		cells[r][1],
+		cells[r][2],
+		cells[r][3],
+		cells[r][4],
+		cells[r][5],
+		cells[r][6],
+		cells[r][7],
+		cells[r][8]))
 
 # for all 9 columns
 for c in range(9):
-	s.add(((one<<cells[0][c]) |
-		(one<<cells[1][c]) |
-		(one<<cells[2][c]) |
-		(one<<cells[3][c]) |
-		(one<<cells[4][c]) |
-		(one<<cells[5][c]) |
-		(one<<cells[6][c]) |
-		(one<<cells[7][c]) | 
-		(one<<cells[8][c]))==mask)
+	s.add(Distinct(cells[0][c],
+		cells[1][c],
+		cells[2][c],
+		cells[3][c],
+		cells[4][c],
+		cells[5][c],
+		cells[6][c],
+		cells[7][c],
+		cells[8][c]))
 
 # enumerate all 9 squares
 for r in range(0, 9, 3):
 	for c in range(0, 9, 3):
 		# add constraints for each 3*3 square:
-			s.add(one<<cells[r+0][c+0] |
-				one<<cells[r+0][c+1] |
-				one<<cells[r+0][c+2] | 
-				one<<cells[r+1][c+0] | 
-				one<<cells[r+1][c+1] | 
-				one<<cells[r+1][c+2] | 
-				one<<cells[r+2][c+0] | 
-				one<<cells[r+2][c+1] | 
-				one<<cells[r+2][c+2]==mask)
+			s.add(Distinct(cells[r+0][c+0],
+				cells[r+0][c+1],
+				cells[r+0][c+2], 
+				cells[r+1][c+0], 
+				cells[r+1][c+1], 
+				cells[r+1][c+2], 
+				cells[r+2][c+0], 
+				cells[r+2][c+1], 
+				cells[r+2][c+2]))
 
-#print s.check()
-s.check()
+print s.check()
 #print s.model()
 m=s.model()
 

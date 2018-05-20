@@ -27,11 +27,11 @@ The effect is just the same, but the final value is in base 2 instead of 10.
 
 Now a working example:
 
-\lstinputlisting{puzzles/sudoku/1/sudoku_plus.py}
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/.../sudoku_plus.py} )
+\lstinputlisting{puzzles/sudoku/1/sudoku_plus_Z3.py}
+( \url{https://github.com/DennisYurichev/SAT_SMT_article/.../sudoku_plus_Z3.py} )
 
 \begin{lstlisting}
-% time python sudoku_plus.py
+% time python sudoku_plus_Z3.py
 1 4 5 3 2 7 6 9 8
 8 3 9 6 5 4 1 2 7
 6 7 2 9 1 8 5 4 3
@@ -54,13 +54,13 @@ Even more, we can replace summing operation to logical OR:
 \end{equation}
 
 % FIXME: только часть исходника
-\lstinputlisting{puzzles/sudoku/1/sudoku_or.py}
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/.../sudoku_or.py} )
+\lstinputlisting{puzzles/sudoku/1/sudoku_or_Z3.py}
+( \url{https://github.com/DennisYurichev/SAT_SMT_article/.../sudoku_or_Z3.py} )
 
 Now it works much faster. Z3 handles OR operation over bit vectors better than addition?
 
 \begin{lstlisting}
-% time python sudoku_or.py
+% time python sudoku_or_Z3.py
 1 4 5 3 2 7 6 9 8
 8 3 9 6 5 4 1 2 7
 6 7 2 9 1 8 5 4 3
@@ -91,11 +91,11 @@ and now also other constaint added: each cell value must be in 1..9 range, becau
 and/or negative numbers.
 
 % FIXME: только часть исходника
-\lstinputlisting{puzzles/sudoku/1/sudoku2.py}
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/.../sudoku2.py} )
+\lstinputlisting{puzzles/sudoku/1/sudoku2_Z3.py}
+( \url{https://github.com/DennisYurichev/SAT_SMT_article/.../sudoku2_Z3.py} )
 
 \begin{lstlisting}
-% time python sudoku2.py
+% time python sudoku2_Z3.py
 1 4 5 3 2 7 6 9 8
 8 3 9 6 5 4 1 2 7
 6 7 2 9 1 8 5 4 3

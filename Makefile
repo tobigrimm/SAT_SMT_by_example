@@ -4,6 +4,6 @@ all:
 	rm -f *.bbl
 	xelatex SAT_SMT_by_example-EN
 	xelatex SAT_SMT_by_example-EN
-	xelatex SAT_SMT_by_example-RU
-	xelatex SAT_SMT_by_example-RU
+	#xelatex SAT_SMT_by_example-RU
+	#xelatex SAT_SMT_by_example-RU
 

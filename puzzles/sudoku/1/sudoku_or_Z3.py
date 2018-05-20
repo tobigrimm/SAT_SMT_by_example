@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys
 from z3 import *
 
@@ -43,44 +45,43 @@ mask=BitVecVal(0b1111111110,16)
 
 # for all 9 rows
 for r in range(9):
-	s.add(((one<<cells[r][0]) +
-		(one<<cells[r][1]) +
-		(one<<cells[r][2]) +
-		(one<<cells[r][3]) +
-		(one<<cells[r][4]) +
-		(one<<cells[r][5]) +
-		(one<<cells[r][6]) +
-		(one<<cells[r][7]) + 
+	s.add(((one<<cells[r][0]) |
+		(one<<cells[r][1]) |
+		(one<<cells[r][2]) |
+		(one<<cells[r][3]) |
+		(one<<cells[r][4]) |
+		(one<<cells[r][5]) |
+		(one<<cells[r][6]) |
+		(one<<cells[r][7]) | 
 		(one<<cells[r][8]))==mask)
 
 # for all 9 columns
 for c in range(9):
-	s.add(((one<<cells[0][c]) +
-		(one<<cells[1][c]) +
-		(one<<cells[2][c]) +
-		(one<<cells[3][c]) +
-		(one<<cells[4][c]) +
-		(one<<cells[5][c]) +
-		(one<<cells[6][c]) +
-		(one<<cells[7][c]) + 
+	s.add(((one<<cells[0][c]) |
+		(one<<cells[1][c]) |
+		(one<<cells[2][c]) |
+		(one<<cells[3][c]) |
+		(one<<cells[4][c]) |
+		(one<<cells[5][c]) |
+		(one<<cells[6][c]) |
+		(one<<cells[7][c]) | 
 		(one<<cells[8][c]))==mask)
 
 # enumerate all 9 squares
 for r in range(0, 9, 3):
 	for c in range(0, 9, 3):
 		# add constraints for each 3*3 square:
-			s.add((one<<cells[r+0][c+0]) +
-				(one<<cells[r+0][c+1]) +
-				(one<<cells[r+0][c+2]) + 
-				(one<<cells[r+1][c+0]) + 
-				(one<<cells[r+1][c+1]) + 
-				(one<<cells[r+1][c+2]) + 
-				(one<<cells[r+2][c+0]) + 
-				(one<<cells[r+2][c+1]) + 
-				(one<<cells[r+2][c+2])==mask)
+			s.add(one<<cells[r+0][c+0] |
+				one<<cells[r+0][c+1] |
+				one<<cells[r+0][c+2] | 
+				one<<cells[r+1][c+0] | 
+				one<<cells[r+1][c+1] | 
+				one<<cells[r+1][c+2] | 
+				one<<cells[r+2][c+0] | 
+				one<<cells[r+2][c+1] | 
+				one<<cells[r+2][c+2]==mask)
 
-#print s.check()
-s.check()
+print s.check()
 #print s.model()
 m=s.model()
 

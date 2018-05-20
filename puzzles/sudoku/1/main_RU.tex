@@ -28,11 +28,11 @@
 
 Вот рабочий пример:
 
-\lstinputlisting{puzzles/sudoku/1/sudoku_plus.py}
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/.../sudoku_plus.py} )
+\lstinputlisting{puzzles/sudoku/1/sudoku_plus_Z3.py}
+( \url{https://github.com/DennisYurichev/SAT_SMT_article/.../sudoku_plus_Z3.py} )
 
 \begin{lstlisting}
-% time python sudoku_plus.py
+% time python sudoku_plus_Z3.py
 1 4 5 3 2 7 6 9 8
 8 3 9 6 5 4 1 2 7
 6 7 2 9 1 8 5 4 3
@@ -55,13 +55,13 @@ sys     0m0.068s
 \end{equation}
 
 % FIXME: только часть исходника
-\lstinputlisting{puzzles/sudoku/1/sudoku_or.py}
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/.../sudoku_or.py} )
+\lstinputlisting{puzzles/sudoku/1/sudoku_or_Z3.py}
+( \url{https://github.com/DennisYurichev/SAT_SMT_article/.../sudoku_or_Z3.py} )
 
 Теперь работает намного быстрее. Наверное, Z3 лучше поддерживает операцию ИЛИ над битовыми векторами, чем сложение?
 
 \begin{lstlisting}
-% time python sudoku_or.py
+% time python sudoku_or_Z3.py
 1 4 5 3 2 7 6 9 8
 8 3 9 6 5 4 1 2 7
 6 7 2 9 1 8 5 4 3
@@ -94,11 +94,11 @@ sys     0m0.036s
 (хотя и корректное) решение с очень большими и/или отрицательными числами.
 
 % FIXME: только часть исходника
-\lstinputlisting{puzzles/sudoku/1/sudoku2.py}
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/.../sudoku2.py} )
+\lstinputlisting{puzzles/sudoku/1/sudoku2_Z3.py}
+( \url{https://github.com/DennisYurichev/SAT_SMT_article/.../sudoku2_Z3.py} )
 
 \begin{lstlisting}
-% time python sudoku2.py
+% time python sudoku2_Z3.py
 1 4 5 3 2 7 6 9 8
 8 3 9 6 5 4 1 2 7
 6 7 2 9 1 8 5 4 3
