@@ -261,7 +261,7 @@ In fact, full-adder can be constructed without Mathematica, using logic gates, a
 
 \subsubsection{Glueing all together}
 
-\lstinputlisting{\CURPATH/factor_SAT.py}
+\lstinputlisting[style=custompy]{\CURPATH/factor_SAT.py}
 I just connect our number to output of multiplier and ask SAT solver to find inputs.
 If it's UNSAT, this is prime number.
 Then we factor factors recursively.
@@ -315,8 +315,7 @@ It works way faster than by Z3 solution, but still slow.
 It can factor numbers up to maybe $\textasciitilde{}2^{40}$, while Wolfram Mathematica can factor
 $\textasciitilde{}2^{80}$ easily.
 
-% FIXME URL
-The full source code: \url{.../factor_SAT.py}.
+The full source code: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/equations/factor_SAT/factor_SAT.py}.
 
 \subsubsection{Division using multiplier}
 
@@ -324,10 +323,10 @@ Hard to believe, but why we couldn't define one of factors and ask SAT solver to
 Then it will divide numbers!
 But, unfortunately, this is somewhat impractical, since it will work only if remainder is zero:
 
-\lstinputlisting{\CURPATH/div.py}
+\lstinputlisting[style=custompy]{\CURPATH/div.py}
 
 % FIXME URL
-The full source code: \url{.../div.py}.
+The full source code: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/equations/factor_SAT/div.py}.
 
 It works very fast, but still, slower than conventional ways.
 

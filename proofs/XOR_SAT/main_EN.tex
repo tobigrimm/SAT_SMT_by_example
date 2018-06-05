@@ -5,17 +5,17 @@ Now let's try to prove it using SAT.
 
 We would build an electric circuit for $x \oplus y = -2*(x \& y) + (x + y)$ like that:
 
-% TODO TikZ!
-\begin{lstlisting}
+% TODO TikZ! it looks weird
+\begin{lstlisting}[basicstyle=\small]
 x --- +---+
       |AND| --- +---+     
 y --- +---+     |MUL| --- +---+
              -2 +---+     |ADD| --- +---+
-                      x - +---+     |ADD| --> output1 --- +-------+
-                                y - +---+                 |       |      +----+
-                                                          |  XOR  | ---> | OR | ---> must be 0
-x --- +---+                                               |       |      +----+
-      |XOR| --------------------------------> output2 --- +-------+
+                      x - +---+     |ADD| --> out1 --- +-------+
+                                y - +---+              |       |      +----+
+                                                       |  XOR  | ---> | OR | ---> must be 0
+x --- +---+                                            |       |      +----+
+      |XOR| --------------------------------> out2 --- +-------+
 y --- +---+
 \end{lstlisting}
 
@@ -55,8 +55,7 @@ def chk1():
     print ("minus_2=%x" % SAT_lib.BV_to_number(s.get_BV_from_solution(minus_2)))
 \end{lstlisting}
 
-% FIXME URL
-The full source code: \url{...XOR_SAT.py}.
+The full source code: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/proofs/XOR_SAT/XOR_SAT.py}.
 
 SAT solver returns "unsat", meaning, it couldn't find such a pair.
 In other words, it couldn't find a counterexample.
@@ -65,7 +64,7 @@ So the circuit always outputs 0, for all possible inputs, meaning, outputs of tw
 Modify the circuit, and the program will find such a state, and print it.
 
 That circuit also called "miter".
-According to Google translate, one of meaning of this word is:
+According to Google translate, one meaning of this word is:
 
 \begin{lstlisting}
 a joint made between two pieces of wood or other material at an angle of 90°, such that the line of junction bisects this angle.
@@ -78,16 +77,16 @@ And subtraction is addition, but with one negated operand.
 So, $x \oplus y = (-(x \& y))<<1 + (x + y)$ or
 $x \oplus y = (x \& y)*2 - (x + y)$.
 
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\footnotesize]
 x --- +---+     +---+     +---+
       |AND| --- |NEG| --- |<<1| -+ 
 y --- +---+     +---+     +---+  +- +---+
                                     |ADD| --- +---+
-                                x - +---+     |ADD| --> output1 --- +-------+
-                                          y - +---+                 |       |      +----+
-                                                                    |  XOR  | ---> | OR | ---> must be 0
-x --- +---+                                                         |       |      +----+
-      |XOR| ------------------------------------------> output2 --- +-------+
+                                x - +---+     |ADD| --> out1 --- +-------+
+                                          y - +---+              |       |      +----+
+                                                                 |  XOR  | ---> | OR | ---> must be 0
+x --- +---+                                                      |       |      +----+
+      |XOR| ------------------------------------------> out2 --- +-------+
 y --- +---+
 \end{lstlisting}
 
@@ -137,6 +136,5 @@ def chk2():
     print ("result2=%x" % SAT_lib.BV_to_number(s.get_BV_from_solution(result2)))
 \end{lstlisting}
 
-% FIXME URL
-The source code: \url{...XOR_SAT.py}.
+The source code: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/proofs/XOR_SAT/XOR_SAT.py}.
 

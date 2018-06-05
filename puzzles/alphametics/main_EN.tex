@@ -13,7 +13,7 @@ so the following equation will be true?
 
 So is easy for Z3:
 
-\lstinputlisting{puzzles/alphametics/alpha.py}
+\lstinputlisting[style=custompy]{puzzles/alphametics/alpha.py}
 
 Output:
 
@@ -31,7 +31,7 @@ sat
 
 Another one, also from \ac{TAOCP} volume IV (\url{http://www-cs-faculty.stanford.edu/~uno/fasc2b.ps.gz}):
 
-\lstinputlisting{puzzles/alphametics/alpha2.py}
+\lstinputlisting[style=custompy]{puzzles/alphametics/alpha2.py}
 
 \begin{lstlisting}
 sat
@@ -50,10 +50,9 @@ sat
  VIOLIN, = 354652]
 \end{lstlisting}
 
-% TODO URL
-This puzzle I've found in pySMT examples:
+This puzzle I've found in pySMT examples\footnote{\url{http://pysmt.readthedocs.io/en/latest/getting_started.html}}:
 
-\lstinputlisting{puzzles/alphametics/alpha3.py}
+\lstinputlisting[style=custompy]{puzzles/alphametics/alpha3.py}
 
 \begin{lstlisting}
 sat
@@ -76,7 +75,7 @@ SUPPER
 
 I've added a helper function (list\_to\_expr()) to make things simpler:
 
-\lstinputlisting{puzzles/alphametics/alpha4.py}
+\lstinputlisting[style=custompy]{puzzles/alphametics/alpha4.py}
 
 \begin{lstlisting}
 sat
@@ -127,7 +126,7 @@ sat
 Here is a problem: you can only use 10 letters, but how to select them among words?
 We can try to offload this task to Z3:
 
-\lstinputlisting{puzzles/alphametics/gen.py}
+\lstinputlisting[style=custompy]{puzzles/alphametics/gen.py}
 
 This is the first generated puzzle:
 
@@ -200,6 +199,6 @@ Y 1
 
 \paragraph{The files}
 
-\url{https://github.com/DennisYurichev/...}
+\url{https://github.com/DennisYurichev/SAT_SMT_by_example/tree/master/puzzles/alphametics}.
 
 

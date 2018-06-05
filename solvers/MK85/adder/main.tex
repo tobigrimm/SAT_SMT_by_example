@@ -2,7 +2,7 @@
 
 Let's solve the following equation $a+b=4 \equiv 2^4$ on the 4-bit CPU (hence, modulo $2^4$):
 
-\lstinputlisting{\CURPATH/adder/bvadd_example.smt}
+\lstinputlisting[style=customsmt]{\CURPATH/adder/bvadd_example.smt}
 
 There are 16 possible solutions (easy to check even by hand):
 
@@ -89,7 +89,7 @@ void add_FA(int a, int b, int cin, int s, int cout)
 };
 \end{lstlisting}
 
-( \url{.../MK85.c} )
+( \url{https://github.com/DennisYurichev/MK85/blob/master/MK85.cc} )
 
 |add\_Tseitin*()| functions makes logic gates in CNF form: \url{https://en.wikipedia.org/wiki/Tseytin_transformation}.
 Then I connect logic gates to make full-adder.
@@ -118,7 +118,7 @@ void generate_adder(struct variable* a, struct variable* b, struct variable *car
 };
 \end{lstlisting}
 
-( \url{.../MK85.c} )
+( \url{https://github.com/DennisYurichev/MK85/blob/master/MK85.cc} )
 
 Let's take a look on output CNF file:
 

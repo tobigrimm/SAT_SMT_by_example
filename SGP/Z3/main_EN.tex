@@ -12,7 +12,7 @@ Fifteen young ladies in a school walk out three abreast for seven days in succes
 
 This is naive and straightforward solution:
 
-\lstinputlisting{SGP/Z3/kirkman.py}
+\lstinputlisting[style=custompy]{SGP/Z3/kirkman.py}
 
 \begin{lstlisting}
 sat
@@ -40,12 +40,12 @@ It took $\approx 48$ seconds on my old Intel Xeon E3-1220 3.10GHz.
 
 I've also tried to represent each number (group in which schoolgirl/golfer is) as a single bit:
 
-\lstinputlisting{SGP/Z3/kirkman2.py}
+\lstinputlisting[style=custompy]{SGP/Z3/kirkman2.py}
 
 This is way faster, $\approx 1.5$ seconds on the same CPU.
 
 Unfortunately, sample \ac{SGP} are out of reach. Yet?
 \url{http://www.mathpuzzle.com/MAA/54-Golf%20Tournaments/mathgames_08_14_07.html}.
 
-The files: ...
+The files: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/tree/master/SGP/Z3}.
 

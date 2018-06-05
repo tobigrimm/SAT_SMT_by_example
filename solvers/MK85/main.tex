@@ -2,6 +2,9 @@
 
 \renewcommand{\CURPATH}{solvers/MK85}
 
+Thanks to PicoSAT SAT solver, its performance on small and simple bitvector examples is comparable to Z3.
+In many cases, it's used instead of Z3, whenever you see \texttt{from MK85 import *} in Python file.
+
 % subsubsections:
 \input{\CURPATH/adder/main}
 \input{\CURPATH/optimization/main}

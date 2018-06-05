@@ -18,8 +18,7 @@ This \ac{FSM} (\ac{DFA}) is for the expression \TT{(dark|light)?(red|blue|green)
 \caption{}
 \end{figure}
 
-% FSM.png
-Another version: URL.
+Another version: \url{https://raw.githubusercontent.com/DennisYurichev/SAT_SMT_by_example/master/regexp/SMT/FSM.png}.
 
 Accepting states are in double circles, these are the states where matching process stops.
 
@@ -34,7 +33,7 @@ For each pair (state, input) it defines new state.
 
 Then we chain transition functions... then we try a chain for all lengths in range of 2..14.
 
-\lstinputlisting{\CURPATH/re_MK85.py}
+\lstinputlisting[style=custompy]{\CURPATH/re_MK85.py}
 
 Results:
 
@@ -42,7 +41,7 @@ Results:
 
 As simple as this.
 
-The source code for Z3Py: \url{...re_Z3.py}.
+The source code for Z3Py: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/regexp/SMT/re_Z3.py}.
 
 % TODO \gls
 It can be said, what we did is enumeration of all paths between two vertices of a digraph (representing \ac{FSM}).

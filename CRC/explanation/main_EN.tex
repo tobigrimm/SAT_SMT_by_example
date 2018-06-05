@@ -64,7 +64,7 @@ If the divisor is 0, stop. Remainder is in tmp.
 
 The following piece of code I've copypasted from somewhere:
 
-\begin{lstlisting}
+\begin{lstlisting}[style=customc]
 unsigned int divide(unsigned int dividend, unsigned int divisor)
 {
         unsigned int tmp = dividend;
@@ -104,7 +104,7 @@ unsigned int divide(unsigned int dividend, unsigned int divisor)
 }
 \end{lstlisting}
 
-( \url{https://github.com/DennisYurichev/yurichev.com/...div.c} )
+( \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/CRC/explanation/div.c} )
 
 Let's divide 1234567 by 813 and find remainder:
 
@@ -131,7 +131,7 @@ Also, maybe you work on some kind BigInt values and you've got a function like \
 
 What we can do: tmp value will be shifted at each iteration, while divisor is not:
 
-\begin{lstlisting}
+\begin{lstlisting}[style=customc]
 uint8_t *buf;
 int buf_pos;
 int buf_bit_pos;
@@ -184,7 +184,7 @@ uint32_t remainder_arith(uint32_t dividend, uint32_t divisor)
 }
 \end{lstlisting}
 
-( \url{https://github.com/DennisYurichev/yurichev.com/.../div_both.c} )
+( \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/CRC/explanation/div_both.c} )
 	
 Let's divide 1234567 by 813 and find remainder:
 
@@ -229,7 +229,7 @@ and ignore the rest.
 
 Now we can take the binary division algorithm and change it a little:
 
-\begin{lstlisting}
+\begin{lstlisting}[style=customc]
 uint32_t remainder_GF2(uint32_t dividend, uint32_t divisor)
 {
 	// necessary bit shuffling/negation to make it compatible with other CRC32 implementations.
@@ -275,7 +275,7 @@ uint32_t remainder_GF2(uint32_t dividend, uint32_t divisor)
 }
 \end{lstlisting}
 
-( \url{https://github.com/DennisYurichev/yurichev.com/.../div_both.c} )
+( \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/CRC/explanation/div_both.c} )
 
 And voila, this is the function which computes CRC32 for the input 32-bit value.
 

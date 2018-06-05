@@ -5,11 +5,10 @@ I've found one at \url{http://stackoverflow.com/a/13895198}.
 Unfortunately, it has no bugs, so I've introduced one: a token buffer (\TT{buf[]} at line 31) is smaller than input buffer (\TT{input[]} at line 19).
 
 \lstinputlisting[numbers=left,style=customc]{KLEE/calc.c}
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/KLEE/calc.c} )
+( \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/KLEE/calc.c} )
 
 KLEE found buffer overflow with little effort (65 zero digits + one tabulation symbol):
 
-% FIXME:
 \begin{lstlisting}
 % ktest-tool --write-ints klee-last/test000468.ktest
 ktest file : 'klee-last/test000468.ktest'
@@ -24,7 +23,6 @@ Hard to say, how tabulation symbol (\TT{\textbackslash{}t}) got into input[] arr
 \\
 KLEE also found two expression strings which leads to division error (``0/0'' and ``0\%0''):
 
-% FIXME:
 \begin{lstlisting}
 % ktest-tool --write-ints klee-last/test000326.ktest
 ktest file : 'klee-last/test000326.ktest'

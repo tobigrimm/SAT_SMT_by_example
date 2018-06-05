@@ -5,7 +5,7 @@
 I've always been wondering, if it's possible or not.
 As of simplest linear congruential generator from MSVC's rand(), I could get a state at which rand() will output 8 zeroes modulo 10:
 
-\lstinputlisting{\CURPATH/LCG10.py}
+\lstinputlisting[style=custompy]{\CURPATH/LCG10.py}
 
 \begin{lstlisting}
 sat
@@ -51,7 +51,7 @@ What about other modulos?
 
 I can get 4 consecutive zeroes modulo 100:
 
-\lstinputlisting{\CURPATH/LCG100.py}
+\lstinputlisting[style=custompy]{\CURPATH/LCG100.py}
 
 \begin{lstlisting}
 sat
@@ -63,11 +63,11 @@ sat
 \end{lstlisting}
 
 However, 4 consecutive zeroes modulo 100 is impossible (given these constants at least), this gives ``unsat'':
-\url{https://github.com/DennisYurichev/yurichev.com/...LCG100_v1.py}.
+\url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/equations/LCG/LCG100_v1.py}.
 
 ... and 3 consecutive zeroes modulo 1000:
 
-\lstinputlisting{\CURPATH/LCG1000.py}
+\lstinputlisting[style=custompy]{\CURPATH/LCG1000.py}
 
 \begin{lstlisting}
 sat
@@ -80,7 +80,7 @@ sat
 What if we could use rand()'s output without division? Which is in 0..0x7fff range (i.e., 15 bits)?
 As it can be checked quickly, 2 zeroes at output is possible:
 
-\lstinputlisting{\CURPATH/LCG.py}
+\lstinputlisting[style=custompy]{\CURPATH/LCG.py}
 
 \begin{lstlisting}
 sat
@@ -93,7 +93,7 @@ Given the fact that it's highly popular to initialize LCG PRNG with UNIX time (i
 
 For example, can we get a moment in time from now (5-Dec-2017) till 12-Dec-2017 (that is one week from now), when, if initialized by UNIX time, rand() will output as many similar numbers (modulo 10), as possible?
 
-\lstinputlisting{\CURPATH/LCG10_time.py}
+\lstinputlisting[style=custompy]{\CURPATH/LCG10_time.py}
 
 Yes:
 
@@ -114,7 +114,7 @@ Don't know if it useful or not, but you've got the idea.
 
 \subsubsection{etc:}
 
-The files: \url{https://github.com/DennisYurichev/yurichev.com/...}
+The files: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/tree/master/equations/LCG}.
 
-Further work: check glibc's rand(), Mersenne Twister, etc. Simple 32-bit LCG as described can be checked using simple brute-force, I think.
+Further work: check glibc's \TT{rand()}, Mersenne Twister, etc. Simple 32-bit LCG as described can be checked using simple brute-force, I think.
 

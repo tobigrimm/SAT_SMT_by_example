@@ -7,7 +7,7 @@ Let's back to the method we previously used (\ref{symbolic_exec}) to construct e
 
 We can try to build expression for the output of XXTEA encryption algorithm:
 
-\lstinputlisting{crypto/xxtea.py}
+\lstinputlisting[style=custompy]{crypto/xxtea.py}
 
 A key is choosen according to input data, and, obviously, we can't know it during symbolic execution, so we leave expression like \TT{k[...]}.
 
@@ -92,7 +92,7 @@ Applying them all in specific order will make resulting expression irreducible.
 
 When I prepared this article, I tried to make an example of such amateur hash function:
 
-\lstinputlisting{crypto/1.c}
+\lstinputlisting[style=customc]{crypto/1.c}
 
 KLEE can break it with little effort.
 Functions of such complexity is common in shareware, which checks license keys, etc.
@@ -100,11 +100,11 @@ Functions of such complexity is common in shareware, which checks license keys, 
 Here is how we can make its work harder by making rotations dependent of inputs,
 and this makes number of possible inputs much, much bigger:
 
-\lstinputlisting{crypto/2.c}
+\lstinputlisting[style=customc]{crypto/2.c}
 
 Addition (or \href{https://yurichev.com/blog/modulo/}{modular addition}, as cryptographers say) can make thing even harder:
 
-\lstinputlisting{crypto/3.c}
+\lstinputlisting[style=customc]{crypto/3.c}
 
 As en exercise, you can try to make a block cipher which KLEE wouldn't break.
 This is quite sobering experience.

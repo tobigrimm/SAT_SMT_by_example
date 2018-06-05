@@ -73,7 +73,7 @@ Now I'll use Z3 SMT-solver for topological sort, which is overkill, but quite sp
 is to add constraint for each edge (or ``connection'') in graph, if ``a -> b'', then ``a'' must be less then ``b'', where
 each variable reflects ordering.
 
-\lstinputlisting{\CURPATH/tsort_MK85.py}
+\lstinputlisting[style=custompy]{\CURPATH/tsort_MK85.py}
 
 Almost the same result, but also correct:
 
@@ -82,7 +82,7 @@ True
 [5, 7, 1, 3, 0, 4, 6, 2]
 \end{lstlisting}
 
-The solution using Z3: FIXME URL
+The solution using Z3: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/other/tsort/tsort_Z3.py}.
 
 Yet another demonstration of topological sort: ``less than'' relation would indicate, 
 who is whose boss, and who is whose ``yes man''.

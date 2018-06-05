@@ -13,9 +13,9 @@ The result must be:
 
 As it turns out, though overkill, this can be solved using MK85 with little effort:
 
-\lstinputlisting{\CURPATH/spreadsheet_MK85.py}
+\lstinputlisting[style=custompy]{\CURPATH/spreadsheet_MK85.py}
 
-( \url{...spreadsheet/spreadsheet_MK85.py} )
+( \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/equations/spreadsheet/spreadsheet_MK85.py} )
 
 All we do is just creating pack of variables for each cell, named A0, B1, etc, of integer type.
 All of them are stored in \textit{cells[]} dictionary.
@@ -34,9 +34,9 @@ Nevertheless, it serves our purposes well, because this is a simplest way to pas
 
 The source code almost the same:
 
-\lstinputlisting{\CURPATH/spreadsheet_Z3_1.py}
+\lstinputlisting[style=custompy]{\CURPATH/spreadsheet_Z3_1.py}
 
-( \url{...spreadsheet/spreadsheet_Z3_1.py} )
+( \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/equations/spreadsheet/spreadsheet_Z3_1.py} )
 
 \subsubsection{Unsat core}
 
@@ -64,7 +64,7 @@ else:
     print s.unsat_core()
 \end{lstlisting}
 
-( \url{.../spreadsheet_Z3_2.py} )
+( \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/equations/spreadsheet/spreadsheet_Z3_2.py} )
 
 We should explicitly turn on unsat core support and use \textit{assert\_and\_track()} instead of \textit{add()} method,
 because this feature slows down the whole process, and is turned off by default.
@@ -109,5 +109,5 @@ which seems to be processed by Z3 in couple of seconds.
 
 \subsubsection{The files}
 
-The files, including Mathematica notebook: \url{.../spreadsheet}.
+The files, including Mathematica notebook: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/tree/master/equations/spreadsheet}.
 

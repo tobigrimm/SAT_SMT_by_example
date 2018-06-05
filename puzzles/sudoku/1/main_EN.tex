@@ -27,8 +27,8 @@ The effect is just the same, but the final value is in base 2 instead of 10.
 
 Now a working example:
 
-\lstinputlisting{puzzles/sudoku/1/sudoku_plus_Z3.py}
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/.../sudoku_plus_Z3.py} )
+\lstinputlisting[style=custompy]{puzzles/sudoku/1/sudoku_plus_Z3.py}
+( \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/puzzles/sudoku/1/sudoku_plus_Z3.py} )
 
 \begin{lstlisting}
 % time python sudoku_plus_Z3.py
@@ -54,8 +54,8 @@ Even more, we can replace summing operation to logical OR:
 \end{equation}
 
 % FIXME: только часть исходника
-\lstinputlisting{puzzles/sudoku/1/sudoku_or_Z3.py}
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/.../sudoku_or_Z3.py} )
+\lstinputlisting[style=custompy]{puzzles/sudoku/1/sudoku_or_Z3.py}
+( \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/puzzles/sudoku/1/sudoku_or_Z3.py} )
 
 Now it works much faster. Z3 handles OR operation over bit vectors better than addition?
 
@@ -91,8 +91,8 @@ and now also other constaint added: each cell value must be in 1..9 range, becau
 and/or negative numbers.
 
 % FIXME: только часть исходника
-\lstinputlisting{puzzles/sudoku/1/sudoku2_Z3.py}
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/.../sudoku2_Z3.py} )
+\lstinputlisting[style=custompy]{puzzles/sudoku/1/sudoku2_Z3.py}
+( \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/puzzles/sudoku/1/sudoku2_Z3.py} )
 
 \begin{lstlisting}
 % time python sudoku2_Z3.py

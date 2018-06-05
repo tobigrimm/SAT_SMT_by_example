@@ -17,7 +17,7 @@ There is a smallest network (only 25 comparators) for 9-channel sorting network:
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.75]{\CURPATH/network9.png}
-\caption{Smallest}
+\caption{Smallest possible}
 \end{figure}
 
 This is combinational circuit, each connection is a comparator+swapper, it swaps if one of input values is bigger and passes output to the next level.
@@ -32,9 +32,9 @@ I don't know (yet) how they proved it, but it's interesting, that it's extremely
 We just construct network out of comparators/swappers and asking Z3 to find counterexample, for which the output of the network will not be sorted.
 And it can't, meaning, output's state is always sorted, no matter what values are plugged into inputs.
 
-\lstinputlisting{\CURPATH/test9.py}
+\lstinputlisting[style=custompy]{\CURPATH/test9.py}
 
-( The full source code: \url{URL/test9.py}. )
+( The full source code: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/proofs/sorting_network/test9.py}. )
 
 There is also smaller 4-channel network I copypasted from Wikipedia:
 
@@ -49,7 +49,7 @@ l=line(l, " ++ ")
 ...
 \end{lstlisting}
 
-( The full source code: \url{URL/test4.py}. )
+( The full source code: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/proofs/sorting_network/test4.py}. )
 
 It also proved to be correct, but it's interesting, what Z3Py expression we've got at each of 4 outputs:
 

@@ -70,7 +70,7 @@ Let's check it.
 
 I wrote a Python function to convert Mathematica's output into \ac{CNF} file which can be feeded to SAT solver:
 
-\lstinputlisting{\CURPATH/tst.py}
+\lstinputlisting[style=custompy]{\CURPATH/tst.py}
 
 It replaces a/b/c/... variables to the variable names passed (1/2/3...), reworks syntax, etc.
 Here is a result:
@@ -180,12 +180,12 @@ If an input \ac{CNF} is \TT{UNSAT}, it returns 20:
 
 We use here the information from the previous solving of Minesweeper: \ref{minesweeper_SMT}.
 
-\lstinputlisting{\CURPATH/minesweeper_SAT.py}
+\lstinputlisting[style=custompy]{\CURPATH/minesweeper_SAT.py}
 
-( \url{.../minesweeper_SAT.py} ) \\
+( \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/equations/minesweeper_SAT/minesweeper_SAT.py} ) \\
 \\
 The output \ac{CNF} file can be large, up to $\approx 2000$ clauses, or more, here is an example:
-\url{.../sample.cnf}.
+\url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/equations/minesweeper_SAT/sample.cnf}.
 
 Anyway, it works just like my previous Z3Py script:
 
@@ -202,5 +202,5 @@ row=8, col=9, unsat!
 Perhaps, Z3Py version could be optimized much better?
 
 The files, including Wolfram Mathematica notebook: 
-\url{...minesweeper_SAT}.
+\url{https://github.com/DennisYurichev/SAT_SMT_by_example/tree/master/equations/minesweeper_SAT}.
 

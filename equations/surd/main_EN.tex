@@ -8,7 +8,7 @@ The non-standard function \verb|bvmul_no_overflow| is used here. it behaves like
 This is not like most programming languages and CPUs do division (the result there is usually modulo $2^n$, where $n$ is width of CPU register).
 However, thus it's simpler for me to write this all without adding additional \verb|zero_extend| function.
 
-\lstinputlisting{equations/surd/surd.smt}
+\lstinputlisting[style=customsmt]{equations/surd/surd.smt}
 
 \begin{lstlisting}[caption=The solution]
 (model

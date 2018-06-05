@@ -8,7 +8,7 @@ Can we make all paths as short as possible?
 
 I've rewritten the puzzle solver using my own SAT library 
 and now I use \href{http://sat.inesc-id.pt/open-wbo/}{Open-WBO MaxSAT solver},
-see the source code, which is almost the same: \url{...numberlink_WBO.py}.
+see the source code, which is almost the same: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/puzzles/numberlink/MaxSAT/numberlink_WBO.py}.
 
 But now we ``maximize'' number of empty cells:
 
@@ -33,5 +33,5 @@ What if we comment the \TT{s.fix\_soft\_always\_true(cell\_is\_empty[r][c], 1)} 
 
 Lines 2 and 3 ``roaming'' chaotically, but the solution is correct, under given constraints.
 
-The files: \url{...}.
+The files: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/tree/master/puzzles/numberlink/MaxSAT}.
 

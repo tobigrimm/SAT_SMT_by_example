@@ -15,7 +15,7 @@ X=X^Y
 How it works?
 It would be better to construct an expression at each step of execution.
 
-\lstinputlisting{symbolic/1_XOR/xor_swap.py}
+\lstinputlisting[style=custompy]{symbolic/1_XOR/xor_swap.py}
 
 It works, because Python is dynamicaly typed \ac{PL}, so the function doesn't care what to operate on,
 numerical values, or on objects of Expr() class.
@@ -62,7 +62,7 @@ Again, we can build equivalent function which can take both numerical variables 
 We also extend Expr() class to support many arithmetical and boolean operations.
 Also, Expr() methods would take both Expr() objects on input and integer values.
 
-\lstinputlisting{symbolic/2_assembly/1.py}
+\lstinputlisting[style=custompy]{symbolic/2_assembly/1.py}
 
 I run it:
 
@@ -80,11 +80,11 @@ of plain strings: \ref{toy_decompiler}.
 
 I've found one of the smallest possible FFT implementations on \href{https://www.reddit.com/r/Python/comments/1la4jp/understanding_the_fft_algorithm_with_python/}{reddit}:
 
-\lstinputlisting{symbolic/3_FFT/FFT.py}
+\lstinputlisting[style=custompy]{symbolic/3_FFT/FFT.py}
 
 Just interesting, what value has each element on output?
 
-\lstinputlisting{symbolic/3_FFT/FFT_symb.py}
+\lstinputlisting[style=custompy]{symbolic/3_FFT/FFT_symb.py}
 
 FFT() function left almost intact, the only thing I added: complex value is converted into string and then
 Expr() object is constructed.
@@ -129,7 +129,7 @@ From the \ac{CRC} theory (good and concise introduction:
 
 We will track each bit rather than byte or word, which is highly inefficient, but serves our purpose better:
 
-\lstinputlisting{symbolic/4_CRC/1.py}
+\lstinputlisting[style=custompy]{symbolic/4_CRC/1.py}
 
 Here are expressions for each CRC32 bit for 1-byte buffer:
 
@@ -183,7 +183,7 @@ odd number of times (1, 3, 5, etc).
         sys.stdout.write ("\n")
 \end{lstlisting}
 
-( \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/symbolic/4_CRC/2.py} )
+( \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/symbolic/4_CRC/2.py} )
 
 Now this how each bit of 1-byte input buffer affects each bit of the final CRC32 state:
 
@@ -199,7 +199,7 @@ This is popular \ac{PRNG} from OpenWatcom \ac{CRT} library: \url{https://github.
 
 What expression it generates on each step?
 
-\lstinputlisting{symbolic/5_LCG/LCG.py}
+\lstinputlisting[style=custompy]{symbolic/5_LCG/LCG.py}
 
 \lstinputlisting{symbolic/5_LCG/1.txt}
 
@@ -216,7 +216,7 @@ The problem in fact is solving a system of equations:
 
 As it turns out, Z3 can solve this system correctly using only two equations:
 
-\lstinputlisting{symbolic/5_LCG/Z3_solve.py}
+\lstinputlisting[style=custompy]{symbolic/5_LCG/Z3_solve.py}
 
 \begin{lstlisting}
 [x = 11223344]
@@ -244,7 +244,7 @@ What input value should be?
 
 First, let's build expression of $wday$ variable:
 
-\lstinputlisting{symbolic/6_TGIF/TGIF.py}
+\lstinputlisting[style=custompy]{symbolic/6_TGIF/TGIF.py}
 
 \begin{lstlisting}
 (((input/86400)+4)%7)
@@ -254,7 +254,7 @@ In order to execute the block, we should solve this equation: $((\frac{input}{86
 
 So far, this is easy task for Z3:
 
-\lstinputlisting{symbolic/6_TGIF/Z3_solve.py}
+\lstinputlisting[style=custompy]{symbolic/6_TGIF/Z3_solve.py}
 
 \begin{lstlisting}
 [x = 86438]
@@ -331,7 +331,7 @@ if wday==5:
 
 To get the second "print" executed, we must satisfy two constraints:
 
-\lstinputlisting{symbolic/6_TGIF/Z3_solve2.py}
+\lstinputlisting[style=custompy]{symbolic/6_TGIF/Z3_solve2.py}
 
 Easy task for Z3 as well:
 
@@ -351,7 +351,7 @@ If division by zero is unwrapped by sanitizing check, and exception isn't caught
 Let's calculate simple expression $\frac{x}{2y + 4z - 12}$.
 We can add a warning into \TT{\_\_div\_\_} method:
 
-\lstinputlisting{symbolic/7_div/1.py}
+\lstinputlisting[style=custompy]{symbolic/7_div/1.py}
 
 \dots so it will report about dangerous states and conditions:
 
@@ -374,7 +374,7 @@ These values for $y$ and $z$ can also be called ``inputs of death''.
 How merge sort works?
 I have copypasted Python code from rosettacode.com almost intact:
 
-\lstinputlisting{symbolic/8_sorting/1.py}
+\lstinputlisting[style=custompy]{symbolic/8_sorting/1.py}
 
 But here is a function which compares elements.
 Obviously, it wouldn't work correctly without it.
@@ -401,5 +401,5 @@ just feed all the instructions to it and it will track contents of each register
 For the sake of demonstration, I made things as simple as possible.
 But reality is always harsh and inconvenient, so all this shouldn't be taken as a silver bullet.
 
-The files used in this part: \url{https://github.com/DennisYurichev/SAT_SMT_article/tree/master/symbolic}.
+The files used in this part: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/tree/master/symbolic}.
 

@@ -10,7 +10,6 @@ Here is a piece of code I've copypasted from some ancient version of Minix OS
 
 Let's try it:
 
-% FIXME:
 \begin{lstlisting}
 % clang -emit-llvm -c -g klee_time1.c
 ...
@@ -31,7 +30,6 @@ KLEE: done: generated tests = 2
 Wow, assert() at line 83 has been triggered, why?
 Let's see a value of UNIX time which triggers it:
 
-% FIXME:
 \begin{lstlisting}
 % ls klee-last | grep err
 test000001.exec.err
@@ -48,7 +46,6 @@ object    0: data: 978278400
 
 Let's decode this value using UNIX date utility:
 
-% FIXME:
 \begin{lstlisting}
 % date -u --date='@978278400'
 Sun Dec 31 16:00:00 UTC 2000
@@ -60,7 +57,6 @@ So I've introduced a bug during rewritting this function, and KLEE found it!
 
 Just interesting, what would be if I'll replace switch() to array of strings, like it usually happens in concise C/C++ code?
 
-% FIXME:
 \begin{lstlisting}
 	...
 
@@ -91,7 +87,6 @@ const char *_months[] =
 
 KLEE detects attempt to read beyond array boundaries:
 
-% FIXME:
 \begin{lstlisting}
 % klee klee_time2.bc
 KLEE: output directory is "/home/klee/klee-out-108"
@@ -108,7 +103,6 @@ KLEE: done: generated tests = 2
 
 This is the same UNIX time value we've already seen:
 
-% FIXME:
 \begin{lstlisting}
 % ls klee-last | grep err
 test000001.exec.err
@@ -131,7 +125,6 @@ like 2022-February-2?
 
 \lstinputlisting[numbers=left]{KLEE/klee_time3.c}
 
-% FIXME:
 \begin{lstlisting}
 % clang -emit-llvm -c -g klee_time3.c
 ...
@@ -167,7 +160,6 @@ We didn't ask it to set hours/minutes/seconds to zeroes.
 
 Let's add constraints to hours/minutes/seconds as well:
 
-% FIXME:
 \begin{lstlisting}
 	...
 
@@ -179,7 +171,6 @@ Let's add constraints to hours/minutes/seconds as well:
 
 Let's run it and check \dots
 
-% FIXME:
 \begin{lstlisting}
 % ktest-tool --write-ints klee-last/test000597.ktest
 ktest file : 'klee-last/test000597.ktest'

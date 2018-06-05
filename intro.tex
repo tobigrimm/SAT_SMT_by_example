@@ -1,19 +1,25 @@
-\section{Disclaimer}
+\section{Introduction}
+
+\subsection{Disclaimer}
 
 The author of these lines is no expert in SAT/SMT, by any means.
 This is not a book, rather a student's notes.
 Take if with grain of salt...
 
-\section{Latest versions}
+\subsection{Latest versions}
 
 Latest version is always available at \url{http://yurichev.com/writings/SAT_SMT_by_example.pdf}.
 
 Russian version has been dropped -- it's too hard for me to maintain two versions. Sorry.
 
-% TODO URL
-New parts are appearing here from time to time, see: \url{https://github.com/DennisYurichev/SAT_SMT_article/blob/master/ChangeLog}.
+New parts are appearing here from time to time, see: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/ChangeLog}.
 
-\section{Thanks}
+\subsection{The source code}
+
+Some people find it hard to copy\&paste source code from this PDF.
+Everything is available on GitHub: \url{https://github.com/DennisYurichev/SAT_SMT_by_example}.
+
+\subsection{Thanks}
 
 Armin Biere\footnote{\url{http://fmv.jku.at/biere/}} has patiently answered to my boring questions.
 
@@ -21,14 +27,13 @@ Leonardo Mendonça de Moura\footnote{\url{https://www.microsoft.com/en-us/resear
 Nikolaj Bjørner\footnote{\url{https://www.microsoft.com/en-us/research/people/nbjorner/}}
 and Mate Soos\footnote{\url{https://www.msoos.org/}} have also helped.
 
-Masahiro Sakai\footnote{\url{https://twitter.com/masahiro_sakai}} has helped with numberlink puzzle.
-% TODO \ref
+Masahiro Sakai\footnote{\url{https://twitter.com/masahiro_sakai}} has helped with numberlink puzzle: \ref{numberlink}.
 
 Alex ``clayrat'' Gryzlov and @mztropics on twitter found couple of bugs.
 
 Xenia Galinskaya -- for carefully measured periods of forced distraction from the work.
 
-\section{Praise}
+\subsection{Praise}
 
 ``An excellent source of well-worked through and motivating examples of using Z3's python interface.''
 \footnote{\url{https://github.com/Z3Prover/z3/wiki}}
@@ -37,7 +42,7 @@ Xenia Galinskaya -- for carefully measured periods of forced distraction from th
 ``Impressive collection of fun examples!''
 (Pascal Fontaine\footnote{\url{https://members.loria.fr/PFontaine/}}, one of veriT solver's authors.)
 
-\section{Introduction}
+\subsection{Introduction}
 
 \ac{SAT}/\ac{SMT} solvers can be viewed as solvers of huge systems of equations.
 The difference is that \ac{SMT} solvers takes systems in arbitrary format,
@@ -45,7 +50,7 @@ while \ac{SAT} solvers are limited to boolean equations in \ac{CNF} form.
 
 A lot of real world problems can be represented as problems of solving system of equations.
 
-\section{Is it a hype? Yet another fad?}
+\subsection{Is it a hype? Yet another fad?}
 
 Some people say, this is just another hype.
 No, \ac{SAT} is old enough and fundamental to \ac{CS}.

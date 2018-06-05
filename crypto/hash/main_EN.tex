@@ -71,7 +71,7 @@ Still, without any special cryptographic knowledge, we may try to break this alg
 
 Here is the Python source code:
 
-\lstinputlisting[numbers=left]{crypto/hash/1.py}
+\lstinputlisting[numbers=left,style=custompy]{crypto/hash/1.py}
 
 This is going to be our first solver.
 
@@ -111,7 +111,7 @@ But, as we noticed before, the function we work with is not bijective, so there 
 The Z3 is not capable of producing more than one result, but let's hack our example slightly, 
 by adding line 19, which implies ``look for any other results than this'':
 
-\lstinputlisting[numbers=left]{crypto/hash/2.py}
+\lstinputlisting[numbers=left,style=custompy]{crypto/hash/2.py}
 
 Indeed, it finds another correct result:
 
@@ -133,7 +133,7 @@ This can be automated.
 Each found result can be added as a constraint and then the next result will be searched for.
 Here is a slightly more sophisticated example:
 
-\lstinputlisting[numbers=left]{crypto/hash/3.py}
+\lstinputlisting[numbers=left,style=custompy]{crypto/hash/3.py}
 
 We got:
 
@@ -167,7 +167,7 @@ which the lower 32-bit parts are equal to each other?
 
 Let's remove the \textit{outp} constraint and add another, at line 17:
 
-\lstinputlisting[numbers=left]{crypto/hash/4.py}
+\lstinputlisting[numbers=left,style=custompy]{crypto/hash/4.py}
 
 It is indeed so:
 
@@ -186,7 +186,7 @@ outp=0xC9D3C17A12C00535
 
 Let's be more sadistic and add another constraint: last 16 bits must be \TT{0x1234}:
 
-\lstinputlisting[numbers=left]{crypto/hash/5.py}
+\lstinputlisting[numbers=left,style=custompy]{crypto/hash/5.py}
 
 Oh yes, this possible as well:
 
