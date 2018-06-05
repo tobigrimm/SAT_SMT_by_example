@@ -1,0 +1,27 @@
+\subsection{Hilbert's 10th problem, Fermat’s last theorem and SMT solvers}
+
+\renewcommand{\CURPATH}{other/Hilbert_10}
+
+Hilbert's 10th problem states that you cannot devise an algorithm which can solve any diophantine equation over integers.
+However, it's important to understand, that this is possible over fixed-size bitvectors.
+
+Fermat's last theorem states that there are no integer solution(s) for $a^n + b^n = c^n$, for $n>=3$.
+
+Let's prove it for n=3 and for a in 0..255 range:
+
+\lstinputlisting[style=custompy]{\CURPATH/fermat.py}
+
+Z3 gives "unsat", meaning, it couldn't find any a/b/c.
+However, this is possible to check even using brute-force search.
+
+If to replace "BitVecs" by "Ints", Z3 would give "unknown":
+
+\lstinputlisting[style=custompy]{\CURPATH/fermat2.py}
+
+In short: anything is decidable (you can build an algorithm which can solve equation or not) under fixed-size bitvectors.
+Given enough computational power, you can solve such equations for big bit-vectors.
+But this is not possible for integers or bit-vectors of any size.
+
+Another interesting reading about this by Leonardo de Moura:
+\url{https://stackoverflow.com/questions/13898175/how-does-z3-handle-non-linear-integer-arithmetic}.
+

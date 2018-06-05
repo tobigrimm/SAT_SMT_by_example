@@ -1,0 +1,50 @@
+\section{Basics}
+
+\subsection{One-hot encoding}
+
+Throughout this book, we'll often use so-called ``one-hot encoding''.
+In short, this is:
+
+\begin{center}
+\begin{longtable}{ | l | l | }                                                                    
+\hline
+Decimal & One-hot \\
+\hline
+0	& 00000001 \\
+1	& 00000010 \\
+2	& 00000100 \\
+3	& 00001000 \\
+4	& 00010000 \\
+5	& 00100000 \\
+6	& 01000000 \\
+7	& 10000000 \\
+\hline
+\end{longtable}
+\end{center}
+
+Or in reversed form:
+
+\begin{center}
+\begin{longtable}{ | l | l | }                                                                    
+\hline
+Decimal & One-hot \\
+\hline
+0	& 10000000 \\
+1	& 01000000 \\
+2	& 00100000 \\
+3	& 00010000 \\
+4	& 00001000 \\
+5	& 00000100 \\
+6	& 00000010 \\
+7	& 00000001 \\
+\hline
+\end{longtable}
+\end{center}
+
+It has several advantages and disadvantages as well.
+See also: \url{https://en.wikipedia.org/wiki/One-hot}.
+
+% subsections
+\input{basics/SMT}
+\input{basics/SAT/main}
+

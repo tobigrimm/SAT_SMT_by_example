@@ -1,0 +1,90 @@
+\subsection{Ménage problem}
+
+\begin{lstlisting}
+In combinatorial mathematics, the ménage problem or problème des ménages[1] asks for the number of different ways in which it is possible to seat a set of male-female couples at a dining table so that men and women alternate and nobody sits next to his or her partner. This problem was formulated in 1891 by Édouard Lucas and independently, a few years earlier, by Peter Guthrie Tait in connection with knot theory.[2] For a number of couples equal to 3, 4, 5, ...  the number of seating arrangements is
+
+    12, 96, 3120, 115200, 5836320, 382072320, 31488549120, ... (sequence A059375 in the OEIS). 
+\end{lstlisting}
+
+( \href{https://en.wikipedia.org/wiki/M%C3%A9nage_problem}{Wikipedia}. )
+
+We can count it using Z3, but also get actual men/women allocations:
+
+\lstinputlisting{other/menage/menage.py}
+
+( \url{URL} )
+
+For 3 couples:
+
+\begin{lstlisting}
+  men 0 2 1
+women  1 0 2
+
+  men 1 2 0
+women  0 1 2
+
+  men 0 1 2
+women  2 0 1
+
+  men 2 1 0
+women  0 2 1
+
+  men 2 0 1
+women  1 2 0
+
+  men 1 0 2
+women  2 1 0
+
+results total= 6
+however, according to https://oeis.org/A059375 : 12
+\end{lstlisting}
+
+We are getting ``half'' of results because men and women can be then swapped (their sex swapped (or reassigned))
+and you've got another 6 results.
+6+6=12 in total.
+This is kind of symmetry.
+
+For 4 couples:
+
+\begin{lstlisting}
+
+...
+
+  men 3 0 2 1
+women  1 3 0 2
+
+  men 3 0 1 2
+women  2 3 0 1
+
+  men 1 0 2 3
+women  3 1 0 2
+
+  men 2 0 1 3
+women  3 2 0 1
+
+results total= 48
+however, according to https://oeis.org/A059375 : 96
+\end{lstlisting}
+
+For 5 couples:
+
+\begin{lstlisting}
+
+...
+
+  men 0 4 1 2 3
+women  1 3 0 4 2
+
+  men 0 3 1 2 4
+women  1 4 0 3 2
+
+  men 0 3 1 2 4
+women  1 0 4 3 2
+
+  men 4 3 1 0 2
+women  0 2 4 1 3
+
+results total= 1560
+however, according to https://oeis.org/A059375 : 3120
+\end{lstlisting}
+
