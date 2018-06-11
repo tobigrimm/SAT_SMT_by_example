@@ -30,14 +30,14 @@ but I'm highly pessimistic, cryptoalgorithms constructed in such a way to not ha
 In order to crack it, you can use these expressions as system of equation and try to solve it using SMT-solver.
 This is called ``algebraic attack''.
 
-In other words, theoretically, you can build system of equation like this: $MD5(x)=12341234...$,
+In other words, theoretically, you can build a system of equation like this: $MD5(x)=12341234...$,
 but expressions are so huge so it's impossible to solve them.
 Yes, cryptographers are fully aware of this and one of the goals of the successful cipher is
 to make expressions as big as possible, using resonable time and size of algorithm.
 
 Nevertheless, you can find numerous papers about breaking these cryptosystems with reduced number of rounds:
 when expression isn't \textit{exploded} yet, sometimes it's possible.
-This cannot be applied in practice, but such experience has some interesting theoretical results.
+This cannot be applied in practice, but such an experience has some interesting theoretical uses.
 
 \subsubsection{Attempts to break ``serious'' crypto}
 
@@ -71,7 +71,7 @@ Amateur cryptography is often can be broken using SMT solver, or even KLEE.
 
 Amateur cryptography is usually based not on theory, but on visual complexity:
 if its creator getting results which are seems chaotic enough, often, one stops to improve it further.
-This is security not even on obscurity, but on chaotic mess.
+This is security based not even on obscurity, but on a chaotic mess.
 This is also sometimes called ``The Fallacy of Complex Manipulation''
 (see \href{https://tools.ietf.org/html/rfc4086}{RFC4086}).
 

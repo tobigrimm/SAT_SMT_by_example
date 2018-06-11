@@ -13,6 +13,7 @@ At least what percentage of the population visited both?
 \end{framed}
 
 The problem is supposed to be solved using finite sets counting...
+But I'm slothful student and would try Z3.
 
 \begin{lstlisting}[style=custompy]
 from z3 import *
@@ -69,7 +70,7 @@ both  : ..*******. (7)
 
 In other words, ``stars'' are allocated in such a way, so that the sum of ``stars'' in \TT{b[]} would be minimal/maximal.
 
-Observing this, we can deduce general formula:
+Observing this, we can deduce the general formula:
 
 Maximal both = min(park1, park2)
 

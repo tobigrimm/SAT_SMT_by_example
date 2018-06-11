@@ -52,12 +52,12 @@ sat
 )
 \end{lstlisting}
 
-Now let's have fun and see how my solver tackles this example.
+Now let's have fun and see how my toy SMT solver tackles this example.
 What internal variables it creates?
 
 \lstinputlisting{puzzles/MC/dbg1.txt}
 
-What is in resulting CNF file to be fed into the external minisat SAT-solver?
+What is in resulting CNF file to be fed into the external picosat SAT-solver?
 
 \lstinputlisting{puzzles/MC/tmp.cnf}
 
@@ -71,7 +71,7 @@ Let's filter comments:
 Now you can juxtapose list of internal variables and comments in CNF file.
 For example, equality gate is generated as NOT(XOR(a,b)).
 
-create\_assert() function fixes a bool variable to always be True.
+create\_assert() function fixes a bool variable to be always True.
 
 Other (internal) variables are added by SMT solver as ``joints'' to connect logic gates with each other.
 

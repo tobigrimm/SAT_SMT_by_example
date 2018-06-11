@@ -1,4 +1,4 @@
-\subsubsection{Numberlink (AKA Flow Free) puzzle as a MaxSAT problem + toy PCB router}
+\subsubsection{Numberlink (AKA Flow Free) puzzle as a MaxSAT problem + toy \ac{PCB} router}
 
 % TODO \ref{}
 Let's revisit my solution for Numberlink (AKA Flow Free) puzzle written for Z3Py.
@@ -21,7 +21,7 @@ But now we ``maximize'' number of empty cells:
 \end{figure}
 
 This is a solution with shortest possible paths. Others are possible, but their sum wouldn't be shorter.
-This is like toy PCB routing.
+This is like toy \ac{PCB} routing.
 
 What if we comment the \TT{s.fix\_soft\_always\_true(cell\_is\_empty[r][c], 1)} line and set \TT{maxsat=True}?
 

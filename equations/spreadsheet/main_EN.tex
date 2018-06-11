@@ -28,7 +28,7 @@ Then the string is evaluated using Python \textit{eval()} method,
 which is highly dangerous
 \footnote{\url{http://stackoverflow.com/questions/1832940/is-using-eval-in-python-a-bad-practice}}:
 imagine if end-user could add a string to cell other than expression?
-Nevertheless, it serves our purposes well, because this is a simplest way to pass a string with expression into Z3.
+Nevertheless, it serves our purposes well, because this is a simplest way to pass a string with expression into MK85.
 
 \subsubsection{Z3}
 
@@ -66,7 +66,7 @@ else:
 
 ( \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/equations/spreadsheet/spreadsheet_Z3_2.py} )
 
-We should explicitly turn on unsat core support and use \textit{assert\_and\_track()} instead of \textit{add()} method,
+We must explicitly turn on unsat core support and use \textit{assert\_and\_track()} instead of \textit{add()} method,
 because this feature slows down the whole process, and is turned off by default.
 That works:
 
