@@ -18,7 +18,7 @@ def CRC(_input, poly):
     states=[[BitVec('state_%d_%d_%d' % (no_call, i, bit), width) for bit in range(8+1)] for i in range(len(_input)+1)]
     no_call=no_call+1
     # initial state is always 0:
-    s.add(Or(states[0][8]==0))
+    s.add(states[0][8]==0)
 
     for i in range(len(_input)):
         s.add(states[i+1][0] == states[i][8] ^ _input[i])
