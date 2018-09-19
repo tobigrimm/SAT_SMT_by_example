@@ -26,6 +26,7 @@ Yes, 2 is correct answer, 6/3=2.
 
 Let's divide 3, 6 and 9 by 3, by multiplying by 11 (m).
 
+\iffalse
 % FIXME: texify
 \begin{lstlisting}[basicstyle=\tiny]
            |123456789abcdef0|123456789abcdef0|123456789abcdef0|123456789abcdef0|123456789abcdef0|123456789abcdef0|123456789abcdef0|
@@ -33,6 +34,15 @@ Let's divide 3, 6 and 9 by 3, by multiplying by 11 (m).
 3/3 3m=33  |****************|****************|*               |                |                |                |                |
 6/3 6m=66  |****************|****************|****************|****************|**              |                |                |
 9/3 9m=99  |****************|****************|****************|****************|****************|****************|***             |
+\end{lstlisting}
+\fi
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+           |123456789abcdef0|12 ... f0|123456789abcdef0|12 ... f0|123456789abcdef0|12 ... f0|123456789abcdef0|
+    m=11   |***********     |   ...   |                |   ...   |                |   ...   |                |
+3/3 3m=33  |****************|** ... **|*               |   ...   |                |   ...   |                |
+6/3 6m=66  |****************|** ... **|****************|** ... **|**              |   ...   |                |
+9/3 9m=99  |****************|** ... **|****************|** ... **|****************|** ... **|***             |
 \end{lstlisting}
 
 A "protruding" asterisk(s) (*) in the last non-empty chunk is what will be left in 4-bit register.
