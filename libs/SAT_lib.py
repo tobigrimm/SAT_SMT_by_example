@@ -228,6 +228,10 @@ class SAT_lib:
 
     def fix_soft_always_true(self, var, weight):
         self.fix_soft(var, True, weight)
+
+    def fix_soft_always_true_all_bits_in_BV(self, BV, weight):
+        for b in BV:
+            self.fix_soft_always_true(b, weight)
     
     def fix(self, var, b):
         if b==True or b==1:
@@ -260,6 +264,7 @@ class SAT_lib:
             return 1
         if "-"+var in self.solution:
             return 0
+        print "get_var_from_solution(): incorrect var number: ", var
         raise AssertionError # incorrect var number
     
     def get_BV_from_solution(self, BV):
@@ -460,15 +465,11 @@ class SAT_lib:
         return [self.const_false]+x[:-1]
 
     def create_MUX(self, ins, sels):
-        #for _in in ins:
-        #    print ("_in:", _in)
-        #print (2**len(sels), len(ins))
         assert 2**len(sels)==len(ins)
         x=self.create_var()
-        for sel in range(len(ins)): # 32 for 5-bit selector
+        for sel in range(len(ins)): # for example, 32 for 5-bit selector
             tmp=[self.neg_if((sel>>i)&1==1, sels[i]) for i in range(len(sels))] # 5 for 5-bit selector
    
-            #print (ins[sel]) 
             self.add_clause([self.neg(ins[sel])] + tmp + [x])
             self.add_clause([ins[sel]] + tmp + [self.neg(x)])
         return x

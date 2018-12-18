@@ -98,7 +98,7 @@ Glueing all this together:
 \end{lstlisting}
 
 Now the puzzle.
-\verb|a>>b| must be equal to |0x12345678|, while several bits in $a$ must be reset, like \verb|(a&0xf1110100)==0|.  Find a, b:
+\verb|a>>b| must be equal to \verb|0x12345678|, while several bits in $a$ must be reset, like \verb|(a&0xf1110100)==0|.  Find a, b:
 
 \begin{lstlisting}
 	(declare-fun a () (_ BitVec 32))
