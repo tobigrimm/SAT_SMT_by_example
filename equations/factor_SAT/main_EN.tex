@@ -1,6 +1,24 @@
 \subsection{Integer factorization using SAT solver}
 \label{factor_SAT}
 
+Instead of epigraph:
+
+\begin{framed}
+\begin{quotation}
+It's somewhat mind-boggling to realize that numbers can be factored without
+using any number theory! No greatest common divisors, no applications of
+Fermat's theorems, etc., are anywhere in sight. We're providing no hints to
+the solver except for a bunch of Boolean formulas that operate almost blindly
+at the bit level. Yet factors are found.
+
+Of course we can't expect this method to compete with the sophisticated factorization algorithms
+of Section 4.5.4. But the problem of factoring does 
+demonstrate the great versatility of clauses. And its clauses can be combined with other
+constraints that go well beyond any of the problems we've studied before.
+\end{quotation}
+\end{framed}
+( Donald Knuth, The Art of Computer Programming, section 7.2.2.2, page 10 )
+
 \renewcommand{\CURPATH}{equations/factor_SAT}
 
 See also: integer factorization using Z3 SMT solver (\ref{factor_Z3}).

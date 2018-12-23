@@ -43,14 +43,15 @@ class SAT_lib:
         # just list of lines to be written to CNF-file:
         self.CNF=[]
         self.clauses_total=0
-        self.HARD_CLAUSE=10000
+        #self.HARD_CLAUSE=10000
+	self.HARD_CLAUSE=50000000
 
         self.maxsat=maxsat
 
         #self.SAT_SOLVER="minisat"
 
-        self.remove_CNF_file=True
-        #self.remove_CNF_file=False
+        #self.remove_CNF_file=True
+        self.remove_CNF_file=False
 
         self.verbosity=0
 

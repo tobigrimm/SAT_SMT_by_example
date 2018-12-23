@@ -109,7 +109,8 @@ sat
  state7 = 1158878744]
 \end{lstlisting}
 
-If \TT{srand(time(NULL))} will be executed at \TT{Tue Dec  5 21:06:50 EET 2017} (this precise second, UNIX time=1512500810), a next 6 \TT{rand() \% 10} lines will output six numbers of 3 in a row.
+If \TT{srand(time(NULL))} will be executed at \TT{Tue Dec  5 21:06:50 EET 2017} (this precise second, UNIX time=1512500810),
+a next 6 \TT{rand() \% 10} lines will output six numbers of 3 in a row.
 Don't know if it useful or not, but you've got the idea.
 
 \subsubsection{etc:}
@@ -118,3 +119,32 @@ The files: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/tree/master
 
 Further work: check glibc's \TT{rand()}, Mersenne Twister, etc. Simple 32-bit LCG as described can be checked using simple brute-force, I think.
 
+\subsubsection{Fun story}
+
+The software checked protection key (dongle) randomly, from time to time.
+This code snippet is from a real one:
+
+\begin{lstlisting}[style=customc]
+void init_all()
+{
+	...
+
+	srand(time(NULL));
+
+	...
+};
+
+...
+
+void check_protection_thread()
+{
+	// get in 0..9 range
+	int t=(int)((double)rand()/3276);
+	if (t== 5)
+	{
+		check protection
+	}
+};
+\end{lstlisting}
+
+Perhaps, we can find the most optimal UNIX time to start the software, so the protection will not be checked as long as possible...
