@@ -1,0 +1,9 @@
+going to run open-wbo
+sat
+
+1
+2
+7
+14
+42
+46
