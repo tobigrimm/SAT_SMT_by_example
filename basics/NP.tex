@@ -1,0 +1,86 @@
+\subsection{Yet another explanation of NP-problems}
+
+Various algorithms works "slow" or "fast" depending on the size of the input.
+
+\subsubsection{Constant time, O(1)}
+
+Time isn't dependent on size of input.
+This is like \verb|string.size()| in C++ STL, given the fact that the implementation stores current string's size somewhere.
+Good: \verb|.size()| method is fast, O(1), but during any modification of the string, a method(s) must update "size" field.
+
+\subsubsection{Linear time, O(n)}
+
+Time is dependent on size of input, linearly.
+(Linear functions are functions which looks as lines on graph plot.)
+This is search algorithms on linked lists, strings.
+\verb|strlen()| is C.
+
+\subsubsection{Hash tables and binary trees}
+
+These are used in associative arrays implementations.
+Using binary trees (\verb|std::map|, \verb|std::set| in C++ STL) is somewhat wasteful: you need too much memory, for each tree node.
+Also, search speed is a binary logarithm of the size of tree: $O(log(n))$ (because depth of binary tree is $log_2(size\_of\_tree))$.
+Good: keys are stored in sorted order, and you can retrieve them sorted while enumeration, by depth-first search of the binary tree.
+
+Hash tables (\verb|std::unordered_map| and \verb|std::unordered_set| in C++ STL), on contrary, have constant access/insertion/deletion time
+($O(1)$), and uses much less memory.
+This is because all key/value pairs are stored in a (big) table, and a hashed key is an index inside the table.
+Hash function should be good to make keys which are close to each other (100,101,102...) distributed uniformly across the table.
+However, you can't retrieve all keys from hash table in sorted form.
+It's a good idea to use hash tables instead of binary trees, if you don't need keys sorted.
+
+\subsubsection{EXPTIME}
+
+Time is dependent exponentially on size of input, $O(2^{p(n)})$ or just $O(2^n)$.
+This is bruteforce.
+When you try to break some cryptoalgorithm by bruteforcing and trying all possible inputs.
+For 8 bits of input, there are $2^8=256$ possible values, etc.
+Bruteforce can crack any cryptoalgorithm and solve almost any problem, but this is not very interesting, because it's extremely slow.
+
+\subsubsection{NP-problems}
+
+Finding correct inputs for CNF formula is an NP-problem, but you can also find them using simple bruteforce.
+In fact, SAT-solvers also do bruteforce, but the resulting search tree is extremely big.
+And to make search faster, SAT-solvers prune search tree as early as possible, but in unpredictable ways.
+This makes execution time of SAT-solvers also unpredictable.
+In fact, this is a problem, to predict how much time it will take to find a solution for CNF formula.
+No SAT/SMT solvers can say you \ac{ETA} of their work.
+
+NP problems has no O-notation, meaning, there is no link between size (and contents) of input and execution time.
+
+In contrast to other problems listed here (constant, linear, logarithmical, exponential), you can predict time of work by observing
+input values.
+You can predict, how long it will take to sort items by looking at a list of items to be sorted.
+This is a problem for NP-problems: you can't predict it.
+
+Probably, you could devise faster algorithm to solve NP-problems, maybe working 1000 times faster, but still, it will work unpredictably.
+
+Also, both SAT and SMT solvers are very capricious to input data.
+This is a rare case, when shotgun debugging
+\footnote{\url{http://www.catb.org/jargon/html/S/shotgun-debugging.html} \url{https://en.wikipedia.org/wiki/Shotgun_debugging}}
+is justified!
+
+\subsubsection{P=NP?}
+
+One of the famous problem asking, if it's possible to solve NP-problems fast.
+
+In other words, a scientist (or anyone else) who will find a way to solve NP-problems in predictable time (but faster than bruteforce/EXPTIME),
+will make a significant or revolutionary step in computer science.
+
+In popular opinion, this will crack all cryptoalgorithms we currently use.
+In fact, this is not true.
+Some scientists, like Donald Knuth, believe, that there may be a way to solve NP-problems in polynomial time, but still too
+slow to be practical.
+
+However, majority of scientists believe the humankind is not ready for such problems.
+
+\subsubsection{What are SAT/SMT solvers}
+
+To my taste, these are like APIs to NP-problems.
+Maybe not the best, but good enough.
+(Other APIs are, at least, CSPLIB, Prolog programming language...)
+
+Because all NP-problems can be reduced (or converted) to SAT problems, or represented as SAT problems.
+
+This is what I do in this book: I'm solving many well-known NP-problems using SAT/SMT solvers.
+

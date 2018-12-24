@@ -1,0 +1,19 @@
+\subsubsection{Z3 specific}
+
+The output is not guaranteed to be random.
+You can randomize it by:
+
+\begin{lstlisting}
+import time
+
+...
+
+s=Solver()
+set_param("smt.random_seed", int(time.time()))
+\end{lstlisting}
+
+Or conversely, you may want to reproduce its result each time the same:
+
+\begin{lstlisting}
+set_param("smt.random_seed", 1234)
+\end{lstlisting}
