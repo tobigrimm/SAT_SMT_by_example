@@ -69,7 +69,7 @@ And if the equation will be unsatisfiable, that would imply that a bomb cannot b
 
 \subsubsection{The code}
 
-\lstinputlisting[style=custompy]{\CURPATH/minesweeper_solver.py}
+\lstinputlisting[style=custompy]{\CURPATH/1.py}
 
 The code is almost self-explanatory.
 We need border for the same reason, why Conway's "Game of Life" implementations also has border (to make calculation
@@ -78,7 +78,14 @@ Whenever we know that the cell is free of bomb, we put zero there.
 Whenever we know number of neighbours, we add a constraint, again, just like in "Game of Life": number of neighbours must be equal to the number we have seen in the Minesweeper.
 Then we place bomb somewhere and check.
 
-Let's run:
+Based on map in the example, my script first tries to put a bomb at row=1 col=3 (first "?").
+And this system of equations being generated:
+
+\lstinputlisting{\CURPATH/r1_c3_expr.txt}
+
+My script tries to solve the equation with no luck (unsat). That means, no bomb can be at that cell.
+
+Now let's run it for all cells:
 
 \begin{lstlisting}
 row=1 col=3, unsat!
@@ -184,4 +191,24 @@ Voila!
 \end{figure}
 
 Some discussion on HN: \url{https://news.ycombinator.com/item?id=13797375}.
+
+\subsubsection{More theory}
+
+In Numb3rs TV series, Dr.Charlie Eppes tried to solve "Minesweeper game":
+\url{https://en.wikipedia.org/wiki/Uncertainty_Principle_(Numbers)},
+\url{http://pi.math.cornell.edu/~numb3rs/luthy/num104.html}.
+
+What he is tried to do, is to find faster/better way to solve this game, by finding better methods to solve NP-problems in general.
+
+Solving Minesweeper is NP-complete:
+\url{http://simon.bailey.at/random/kaye.minesweeper.pdf},
+\url{http://web.mat.bham.ac.uk/R.W.Kaye/minesw/ASE2003.pdf},
+\url{http://math.oregonstate.edu/~math_reu/proceedings/REU_Proceedings/Proceedings2003/2003MK.pdf}.
+
+Our way to solve it is also called "Minesweeper Consistency Problem"
+\footnote{\url{https://www.claymath.org/sites/default/files/minesweeper.pdf}}.
+We did it using system of integer equation.
+And solving system of integer equation is NP-complete as well.
+
+Find better way to solve Minesweeper, and you probably will be able to solve other NP-problems!
 

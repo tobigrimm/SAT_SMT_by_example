@@ -23,7 +23,7 @@ def chk_bomb(row, col):
 
     s=Solver()
 
-    cells=[[Int('cell_r=%d_c=%d' % (r,c)) for c in range(WIDTH+2)] for r in range(HEIGHT+2)]
+    cells=[[Int('r%d_c%d' % (r,c)) for c in range(WIDTH+2)] for r in range(HEIGHT+2)]
 
     # make border
     for c in range(WIDTH+2):
@@ -40,13 +40,15 @@ def chk_bomb(row, col):
             if t in "012345678":
                 s.add(cells[r][c]==0)
                 # we need empty border so the following expression would be able to work for all possible cases:
-                s.add(cells[r-1][c-1] + cells[r-1][c] + cells[r-1][c+1] + cells[r][c-1] + cells[r][c+1] + cells[r+1][c-1] + cells[r+1][c] + cells[r+1][c+1]==int(t))
+                expr=cells[r-1][c-1] + cells[r-1][c] + cells[r-1][c+1] + cells[r][c-1] + cells[r][c+1] + cells[r+1][c-1] + cells[r+1][c] + cells[r+1][c+1]==int(t)
+                if False:
+                    print expr
+                s.add(expr)
 
     # place bomb:
     s.add(cells[row][col]==1)
 
-    result=str(s.check())
-    if result=="unsat":
+    if s.check()==unsat:
         print "row=%d col=%d, unsat!" % (row, col)
 
 # enumerate all hidden cells:
