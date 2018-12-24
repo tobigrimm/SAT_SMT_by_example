@@ -70,13 +70,12 @@ From \ac{EE} courses we can remember about a simple if-then-else (ITE) gate, it 
 Depending on "selector" input it "connects" output with "true" or "false" input.
 Using tree of ITE gates we first can build 32-to-1 MUX, then wide 32*3-to-3 MUX.
 
-% FIXME URL
 I once have written small utility to search for shortest possible CNF formula for a specific function,
 in a bruteforce manner (\url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/puzzles/rubik2/SAT/XOR_CNF_bf.c}).
 It was inspired by "aha! hacker assistant" by Henry Warren.
 So here is a function:
 
-\begin{lstlisting}
+\begin{lstlisting}[style=customc]
 bool func(bool v[VARIABLES])
 {
 
@@ -120,7 +119,7 @@ It assures that the "output" will always be equal to one of inputs depending on 
 
 Now we can build a tree of \ac{ITE} gates:
 
-\begin{lstlisting}
+\begin{lstlisting}[style=custompy]
 def create_ITE(s,f,t):
     x=create_var()
 
@@ -188,45 +187,8 @@ Then the possible output and the bit, indicating, if the output bit equals to on
 
 Then I load this table to Mathematica and make CNF expression out of truth table:
 
-% FIXME:
-\begin{lstlisting}[basicstyle=\small]
-arr=Import["/home/dennis/P/Rubik/TT","Table"]
-{{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0},
-{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1},
-{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0},
-{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
-{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1}, ⋯2097135⋯ ,
-{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0},{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1},
-{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0},
-{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1},{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0},
-{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1},
-{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0},{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}}
-
-
-TT=(Most[#]->Last[#])&/@arr
-{{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}->1,{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1}->0,
-{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0}->0,
-{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1}->1,{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0}->1,
-{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1}->0,
-{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0}->0,{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1}->1,
-{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0}->1, ⋯2097135⋯ ,
-{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0}->0,{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1}->1,
-{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0}->0,
-{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1}->1,{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0}->0,
-{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1}->1,
-{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0}->0,{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}->1}
-
-
-BooleanConvert[BooleanFunction[TT,{s3,s2,s1,s0, i15,i14,i13,i12,i11,i10,i9,i8,i7,i6,i5,i4,i3, i2, i1, i0,x}],"CNF"]
-(!i0||s0||s1||s2||s3||x)&&(i0||s0||s1||s2||s3||!x)&&(!i1||!s0||s1||s2||s3||x)&&(i1||!s0||s1||s2||s3||!x)&&(!i10||s0||!s1||s2||!s3||x)&&
-(i10||s0||!s1||s2||!s3||!x)&&(!i11||!s0||!s1||s2||!s3||x)&&(i11||!s0||!s1||s2||!s3||!x)&&(!i12||s0||s1||!s2||!s3||x)&&(i12||s0||s1||!s2||!s3||!x)&&
-(!i13||!s0||s1||!s2||!s3||x)&&(i13||!s0||s1||!s2||!s3||!x)&&(!i14||s0||!s1||!s2||!s3||x)&&(i14||s0||!s1||!s2||!s3||!x)&&
-(!i15||!s0||!s1||!s2||!s3||x)&&(i15||!s0||!s1||!s2||!s3||!x)&&(!i2||s0||!s1||s2||s3||x)&&(i2||s0||!s1||s2||s3||!x)&&(!i3||!s0||!s1||s2||s3||x)&&
-(i3||!s0||!s1||s2||s3||!x)&&(!i4||s0||s1||!s2||s3||x)&&(i4||s0||s1||!s2||s3||!x)&&(!i5||!s0||s1||!s2||s3||x)&&(i5||!s0||s1||!s2||s3||!x)&&
-(!i6||s0||!s1||!s2||s3||x)&&(i6||s0||!s1||!s2||s3||!x)&&(!i7||!s0||!s1||!s2||s3||x)&&(i7||!s0||!s1||!s2||s3||!x)&&(!i8||s0||s1||s2||!s3||x)&&
-(i8||s0||s1||s2||!s3||!x)&&(!i9||!s0||s1||s2||!s3||x)&&(i9||!s0||s1||s2||!s3||!x)
-\end{lstlisting}
+\lstinputlisting{\CURPATH/math.txt}
+%\lstinputlisting[basicstyle=\small]{\CURPATH/math.txt}
 
 Look closer to CNF expression:
 
@@ -255,7 +217,7 @@ Anyway, I used the latter idea to make MUX.
 
 The following function makes pack of MUXes for each state, based on what I've got from Mathematica:
 
-\begin{lstlisting}
+\begin{lstlisting}[style=custompy]
     def create_MUX(self, ins, sels):
         assert 2**len(sels)==len(ins)
         x=self.create_var()
@@ -278,7 +240,7 @@ The following function makes pack of MUXes for each state, based on what I've go
 
 Now the function that glues all together:
 
-\begin{lstlisting}
+\begin{lstlisting}[style=custompy]
 # src=list of 18 facelets
 def add_r(dst, src):
     global facelets, selectors, s
