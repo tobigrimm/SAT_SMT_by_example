@@ -1,0 +1,19 @@
+1. Download Wikipedia dump: http://dumps.wikimedia.org/backup-index.html (current versions only)
+
+2. python WP_get_links.py dump1.xml > tmp.txt
+   python WP_get_links.py dump2.xml >> tmp.txt
+   ...
+   python WP_get_links.py dump_last.xml >> tmp.txt
+
+3. cat tmp.txt | grep "LINK | " > links
+
+4. cat tmp.txt | grep "REDIRECT | " > redirects
+
+5. python WP_links_to_graph.py redirects links tmp.pickle
+
+6. python WP_process_graph.py tmp.pickle > cliques.txt
+
+
+Step 5 may require at least ~32GB of RAM for English Wikipedia as of summer 2015.
+Step 6 may require at least ~12GB of RAM for the same.
+
