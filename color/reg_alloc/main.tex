@@ -1,0 +1,55 @@
+\subsection{Register allocation using graph coloring}
+
+\renewcommand{\CURPATH}{color/reg_alloc}
+
+This is an implementation of nuth-Morris-Pratt algorithm, it searches for a substring in a string.
+(Copypasted from \url{http://cprogramming.com/snippets/source-code/knuthmorrispratt-kmp-string-search-algorithm}.)
+
+\lstinputlisting[style=customc]{\CURPATH/1.c}
+
+... as you can see, I simplified it a bit, there are no more calls to malloc/free and T[] array is now global.
+
+Then I compiled it using GCC 7.3 x64 and reworked assembly listing a little, now there are no registers, but rather vXX variables, each one is assigned only once,
+in a \ac{SSA} manner. No variable assigned more than once. This is AT\&T syntax.
+
+%FIXME:
+%\lstinputlisting[style=customasm]{\CURPATH/KMP_template.s}
+\lstinputlisting[basicstyle=\footnotesize]{\CURPATH/KMP_template.s}
+
+Dangling "noodles" you see at right are "live ranges" of each vXX variable. "D" means "defined", "U" - "used" or "used and then defined again".
+Whenever live range is started, we need to allocate variable (in a register or a local stack).
+When it's ending, we do not need to keep it somewhere in storage (in a register or a local stack).
+
+As you can see, the function has two parts: preparation and processing.
+You can clearly see how live ranges are divided by two groups, except of first 4 variables, which are function arguments.
+
+You see, there are 16 variables. But we want to use as small number of registers, as possible.
+If several live ranges are present at some address or point of time, these variables cannot be allocated in the same register.
+
+This is how we can assign a register to each live range using Z3 SMT-solver:
+
+\lstinputlisting[style=custompy]{\CURPATH/solver.py}
+
+What we've got for 12, 11 and 10 registers:
+
+\lstinputlisting{\CURPATH/solver.txt}
+
+It's not possible to assign 9 or less registers. 10 is a minimum.
+
+Now all I do is replacing vXX variables to registers the SMT-solver offered:
+
+\lstinputlisting[basicstyle=\footnotesize]{\CURPATH/KMP.s}
+
+That works and it's almost the same as GCC does.
+
+The problem of register allocation as a graph coloring problem: each live range is a vertex.
+It a live range must coexist with another live range, put an edge between vertices, that means, vertices cannot share same color.
+Color reflecting register number.
+
+Almost all compilers (except simplest) do this in code generator. They use simpler algorithms, though, instead of such a heavy machinery as SAT/SMT solvers.
+
+See also: \url{https://en.wikipedia.org/wiki/Register_allocation}, \url{https://en.wikipedia.org/wiki/Live_variable_analysis}.
+
+Since graph coloring can have many solutions, you can probably hide some information
+in "coloring": \url{https://yurichev.com/blog/lehmer/}.
+

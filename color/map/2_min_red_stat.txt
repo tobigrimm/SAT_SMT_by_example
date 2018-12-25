@@ -1,0 +1,4 @@
+      3 red
+     17 green
+     10 blue
+     15 yellow
