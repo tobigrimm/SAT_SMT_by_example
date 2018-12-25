@@ -1,4 +1,4 @@
-\subsection{Tiling puzzle and Z3 SMT solver}
+\subsection{Tiling puzzle (SMT)}
 \label{tiling_Z3}
 
 \renewcommand{\CURPATH}{other/tiling}
@@ -8,9 +8,9 @@ This is classic problem: given 12 polyomino titles, cover mutilated chessboard w
 The problem is covered at least in \href{https://arxiv.org/pdf/cs/0011047.pdf}{Donald E. Knuth - Dancing Links},
 and this Z3 solution has been inspired by it.
 
-Another thing I've added: graph coloring. You see, my script gives correct solutions, but somewhat unpleasant visually.
+Another thing I've added: graph coloring (\ref{GraphColoring}). You see, my script gives correct solutions, but somewhat unpleasant visually.
 So I used colored pseudographics. There are 12 tiles, it's not a problem to assign 12 colors to them.
-But there is another heavily used SAT problem: graph coloring.
+But there is another popular SAT problem: graph coloring.
 
 Given a graph, assign a color to each vertex/node, so that colors wouldn't be equal in adjacent nodes.
 The problem can be solved easily in SMT: assign variable to each vertex.
@@ -50,7 +50,4 @@ Now the classic: 12 pentominos and "mutilated" chess board, several solutions:
 The source code: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/other/tiling/tiling.py}.
 
 Further reading: \url{https://en.wikipedia.org/wiki/Exact_cover#Pentomino_tiling}.
-
-Four-color theorem has an interesting story, it has been finally proved in 2005 by Coq proof assistant:
-\url{https://en.wikipedia.org/wiki/Four_color_theorem}.
 
