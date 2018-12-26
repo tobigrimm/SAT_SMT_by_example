@@ -1,4 +1,4 @@
-\subsection{Recalculating micro-spreadsheet using Z3Py}
+\section{Recalculating micro-spreadsheet using Z3Py}
 \label{spreadsheet}
 
 \renewcommand{\CURPATH}{equations/spreadsheet}
@@ -31,7 +31,7 @@ which is highly dangerous
 imagine if end-user could add a string to cell other than expression?
 Nevertheless, it serves our purposes well, because this is a simplest way to pass a string with expression into MK85.
 
-\subsubsection{Z3}
+\subsection{Z3}
 
 The source code almost the same:
 
@@ -39,7 +39,7 @@ The source code almost the same:
 
 ( \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/equations/spreadsheet/spreadsheet_Z3_1.py} )
 
-\subsubsection{Unsat core}
+\subsection{Unsat core}
 
 Now the problem: what if there is circular dependency? Like:
 
@@ -80,7 +80,7 @@ unsat
 Perhaps, these variables could be removed from the 2D array, marked as \textit{unresolved}
 and the whole spreadsheet could be recalculated again.
 
-\subsubsection{Stress test}
+\subsection{Stress test}
 
 How to generate large random spreadsheet?
 What we can do.
@@ -108,7 +108,7 @@ Here is an output from \textit{Grid[]}:
 Using this script, I can generate random spreadsheet of $26 \cdot 500=13000$ cells,
 which seems to be processed by Z3 in couple of seconds.
 
-\subsubsection{The files}
+\subsection{The files}
 
 The files, including Mathematica notebook: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/tree/master/equations/spreadsheet}.
 

@@ -1,4 +1,4 @@
-\subsection{Clique in graph theory}
+\section{Clique in graph theory}
 
 \renewcommand{\CURPATH}{MaxSMT/clique}
 
@@ -11,7 +11,7 @@ Computer network is graph indeed, but it's closer to "sparse graph", because for
 "Clique" in everyday speech (especially in political news) denotes a tight-knit group of people inside of some community.
 In graph theory, "clique" is a subgraph (part of graph) each vertices ("nodes" or "members") of which are connected with each other.
 
-\subsubsection{Social graph: simple example}
+\subsection{Social graph: simple example}
 
 "Social graph" is a graph representing social links.
 Here is example I made in Wolfram Mathematica:
@@ -48,7 +48,7 @@ HighlightGraph[community, clique]
 \frame{\includegraphics[scale=0.7]{\CURPATH/graph2.png}}
 \end{figure}
 
-\subsubsection{Social graph: IRC network}
+\subsection{Social graph: IRC network}
 
 Internet Relay Chat (IRC) is popular among open-source developers.
 One of the most popular IRC networks is Freenode.
@@ -106,7 +106,7 @@ It's possible to produce more human-like results using
 The source code of my scripts here: \url{\GitHubTreeMasterURL/\CURPATH/files/IRC}.
 I used the excellent \href{https://networkx.github.io/}{networkx graph library}.
 
-\subsubsection{Attempt to find communities in IRC social graph}
+\subsection{Attempt to find communities in IRC social graph}
 
 Wolfram Mathematica can try to find communities within social graph.
 Here I will import information about all IRC interactions from the start of 2013 till the summer of 2015.
@@ -171,12 +171,12 @@ extinct in 2014-2015 (people got older, lost their interest in Ubuntu Linux, etc
 
 Summary: perhaps, on our next experiment we should filter out IRC data by years and time zones.
 
-\subsubsection{Social graph: social networks}
+\subsection{Social graph: social networks}
 
 Perhaps, social networking websites like Facebook and Twitter in the "people you may know" tab shows you users of most populous (by your current friends) cliques.
 It may be much more complex in reality, but nevertheless, this is simplest possible way to offer you new social contacts.
 
-\subsubsection{Links graph: Wikipedia}
+\subsection{Links graph: Wikipedia}
 
 Wikipedia has a lot of internal links, ~463,000,000 in English Wikipedia as of summer 2015, if not to count user/talk/media pages, etc.
 It's possible to build a graph where Wikipedia article is a vertice (or node) and a link from one article to another is edge.
@@ -214,7 +214,7 @@ Each Wikipedia article within any of these cliques has links to each article in 
 Full lists of first 1000 largest cliques in English, Russian and Ukrainian Wikipedias plus source code of my scripts is here:
 \url{\GitHubTreeMasterURL/\CURPATH/files/wikipedia}.
 
-\subsubsection{Social graph: LiveJournal spammers}
+\subsection{Social graph: LiveJournal spammers}
 
 LiveJournal is popular blogging platform in Russian-speaking Internet, which, as any other platform, flooded by spammers.
 I once tried, for experiment, to find a way to make distinction between them and human users.
@@ -232,7 +232,7 @@ Well, spammers could lower this number, so each fake user would have 100-200 mut
 cliques were too perfect: each node connected to each other with very low
 amount of "external" links, leading to other spammer's cliques and human users.
 
-\subsubsection{Links graph: link farms}
+\subsection{Links graph: link farms}
 
 Talking about spammers, there was (or maybe still used today?) also a Black Hat SEO method to build 
 "link farms":

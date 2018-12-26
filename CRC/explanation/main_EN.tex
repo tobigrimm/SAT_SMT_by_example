@@ -1,12 +1,12 @@
-\subsection{Yet another explanation of \ac{CRC}}
+\section{Yet another explanation of \ac{CRC}}
 
-\subsubsection{What is wrong with checksum?}
+\subsection{What is wrong with checksum?}
 
 If you just sum up values of several bytes, two bit flips (increment one bit and decrement another bit) can
 give the same checksum.
 No good.
 
-\subsubsection{Division by prime}
+\subsection{Division by prime}
 
 You can represent a file of buffer as a (big) number, then to divide it by prime.
 The remainder is then very sensitive to bit flips.
@@ -40,7 +40,7 @@ Go figure out which bits must be also flipped to preserve specific remainder.
 You can build such a divisor in hardware, but it would require at least one adder or subtractor, you will have
 a carry-ripple problem in simple case, or you would have to create more complicated circuit.
 
-\subsubsection{(Binary) long divison}
+\subsection{(Binary) long divison}
 
 Binary long division is in fact simpler then the paper-n-pencil algorithm taught in schools.
 
@@ -124,7 +124,7 @@ tmp/remainder=433
 1518
 \end{lstlisting}
 
-\subsubsection{(Binary) long division, version 2}
+\subsection{(Binary) long division, version 2}
 
 Now let's say, you only need to compute a remainder, and throw away a quotient.
 Also, maybe you work on some kind BigInt values and you've got a function like \TT{get\_next\_bit()} and that's it.
@@ -190,7 +190,7 @@ Let's divide 1234567 by 813 and find remainder:
 
 \lstinputlisting{CRC/explanation/log.txt}
 
-\subsubsection{Shortest possible introduction into GF(2)}
+\subsection{Shortest possible introduction into GF(2)}
 
 There is a difference between digit and number.
 Digit is a symbol, number is a group of digits.
@@ -225,7 +225,7 @@ This is present in many tutorials, so I'll omit this here.
 Also, by convention, whenever you compare two numbers in GF(2), you only compare two most significant bits,
 and ignore the rest.
 
-\subsubsection{CRC32}
+\subsection{CRC32}
 
 Now we can take the binary division algorithm and change it a little:
 
@@ -304,7 +304,7 @@ My goal was to write two functions, as similar to each other as possible, to dem
 So the CRC value is in fact remainder of division of input date by CRC polynomial in GF(2) environment.
 As simple as that.
 
-\subsubsection{Rationale}
+\subsection{Rationale}
 
 Why would anyone use such an unusual mathematics?
 The answer is: many GF(2) operations can be done using bit shifts and XOR, which are very cheap operations.
@@ -332,7 +332,7 @@ And the task is not to compute remainder according to rules of arithmetics, but 
 Compare this to a division circuit with at least one binary adder/subtractor, which will have carry-ripple problem.
 On the other hand, addition over GF(2) has no carries, hence, this problem absent.
 
-\subsubsection{Further reading}
+\subsection{Further reading}
 
 These documents I've found interesting/helpful:
 

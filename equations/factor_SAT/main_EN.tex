@@ -1,4 +1,4 @@
-\subsection{Integer factorization using SAT solver}
+\section{Integer factorization using SAT solver}
 \label{factor_SAT}
 
 In place of epigraph:
@@ -28,7 +28,7 @@ If this situation is impossible, the desired number is prime.
 
 First we should build multiplier out of adders.
 
-\subsubsection{Binary adder in SAT}
+\subsection{Binary adder in SAT}
 
 Simple binary adder usually constists of full-adders and one half-adder.
 These are basic elements of adders.
@@ -197,7 +197,7 @@ And the adder:
         return my_utils.rvr(sums), carry
 \end{lstlisting}
 
-\subsubsection{Binary multiplier in SAT}
+\subsection{Binary multiplier in SAT}
 
 Remember school-level long division?
 This multiplier works in a same way, but for binary digits.
@@ -277,7 +277,7 @@ This is quite popular way of encoding gates in CNF form, by adding additional va
 \url{https://en.wikipedia.org/wiki/Tseytin_transformation}.
 In fact, full-adder can be constructed without Mathematica, using logic gates, and encoded by Tseitin transformation.
 
-\subsubsection{Glueing all together}
+\subsection{Glueing all together}
 
 \lstinputlisting[style=custompy]{\CURPATH/factor_SAT.py}
 I just connect our number to output of multiplier and ask SAT solver to find inputs.
@@ -335,7 +335,7 @@ $\textasciitilde{}2^{80}$ easily.
 
 The full source code: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/equations/factor_SAT/factor_SAT.py}.
 
-\subsubsection{Division using multiplier}
+\subsection{Division using multiplier}
 
 Hard to believe, but why we couldn't define one of factors and ask SAT solver to find another factor?
 Then it will divide numbers!
@@ -348,13 +348,13 @@ The full source code: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/
 
 It works very fast, but still, slower than conventional ways.
 
-\subsubsection{Breaking \ac{RSA}}
+\subsection{Breaking \ac{RSA}}
 
 It's not a problem to build multiplier with 4096 bit inputs and 8192 output, but it will not work in practice.
 Still, you can break toy-level demonstrational RSA problems with key less than $2^{40}$ or something like that
 (or larger, using Wolfram Mathematica).
 
-\subsubsection{Further reading}
+\subsection{Further reading}
 
 % better titles
 \href{https://yurichev.com/mirrors/SAT_factor/Encoding%20Basic%20Arithmetic%20Operations%20for%20SAT-Solvers.pdf}{1},

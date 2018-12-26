@@ -1,7 +1,7 @@
-\subsection{Symbolic execution}
+\section{Symbolic execution}
 \label{symbolic_exec}
 
-\subsubsection{Swapping two values using XOR}
+\subsection{Swapping two values using XOR}
 
 There is a well-known (but counterintuitive) algorithm for swapping two values in two variables
 using XOR operation without use of any additional memory/register:
@@ -31,7 +31,7 @@ You can remove double variables in your mind (since XORing by a value twice will
 At new\_X we can drop two X-es and two Y-es, and single Y will left.
 At new\_Y we can drop two Y-es, and single X will left.
 
-\subsubsection{Change endianness}
+\subsection{Change endianness}
 
 What does this code do?
 
@@ -76,7 +76,7 @@ In fact, this is a function which change endianness in 32-bit word.
 By the way, my Toy Decompiler can do this job as well, but operates on \ac{AST} instead
 of plain strings: \ref{toy_decompiler}.
 
-\subsubsection{Fast Fourier transform}
+\subsection{Fast Fourier transform}
 
 I've found one of the smallest possible FFT implementations on \href{https://www.reddit.com/r/Python/comments/1la4jp/understanding_the_fft_algorithm_with_python/}{reddit}:
 
@@ -119,7 +119,7 @@ Also, we can reduce subexpressions like $x \cdot 1$ to just $x$.
 
 \lstinputlisting{symbolic/3_FFT/res2.txt}
 
-\subsubsection{Cyclic redundancy check}
+\subsection{Cyclic redundancy check}
 
 I've always been wondering, which input bit affects which bit in the final CRC32 value.
 
@@ -193,7 +193,7 @@ This is 8*8=64 bits of 8-byte input buffer:
 
 \lstinputlisting{symbolic/4_CRC/8byte_tbl.txt}
 
-\subsubsection{Linear congruential generator}
+\subsection{Linear congruential generator}
 
 This is popular \ac{PRNG} from OpenWatcom \ac{CRT} library: \url{https://github.com/open-watcom/open-watcom-v2/blob/d468b609ba6ca61eeddad80dd2485e3256fc5261/bld/clib/math/c/rand.c}.
 
@@ -224,7 +224,7 @@ As it turns out, Z3 can solve this system correctly using only two equations:
 
 (Though, it takes $\approx 20$ seconds on my ancient Intel Atom netbook.)
 
-\subsubsection{Path constraint}
+\subsection{Path constraint}
 
 How to get weekday from UNIX timestamp?
 
@@ -344,7 +344,7 @@ Fri Nov 13 03:00:00 MSK 1970
 
 This is an UNIX date for which both constructs are satisfied: 13th November 1970, Friday.
 
-\subsubsection{Division by zero}
+\subsection{Division by zero}
 
 If division by zero is unwrapped by sanitizing check, and exception isn't caught, it can crash process.
 
@@ -369,7 +369,7 @@ Out[]= {{y -> 0, z -> 3}}
 
 These values for $y$ and $z$ can also be called ``inputs of death''.
 
-\subsubsection{Merge sort}
+\subsection{Merge sort}
 
 How merge sort works?
 I have copypasted Python code from rosettacode.com almost intact:
@@ -387,7 +387,7 @@ Result:
 
 \lstinputlisting{symbolic/8_sorting/result.txt}
 
-\subsubsection{Extending Expr class}
+\subsection{Extending Expr class}
 
 This is somewhat senseless, nevertheless, it's easy task to extend my Expr class to support \ac{AST} instead of
 plain strings.
@@ -396,7 +396,7 @@ Maybe someone will want to do this as an exercise.
 By the way, the toy decompiler can be used as simple symbolic engine as well,
 just feed all the instructions to it and it will track contents of each register.
 
-\subsubsection{Conclusion}
+\subsection{Conclusion}
 
 For the sake of demonstration, I made things as simple as possible.
 But reality is always harsh and inconvenient, so all this shouldn't be taken as a silver bullet.

@@ -1,4 +1,4 @@
-\subsection{Eight queens problem (SAT)}
+\section{Eight queens problem (SAT)}
 \label{EightQueens}
 
 \renewcommand{\CURPATH}{puzzles/8queens}
@@ -20,7 +20,7 @@ For example:
 
 Let's try to figure out how to solve it.
 
-\subsubsection{make\_one\_hot}
+\subsection{make\_one\_hot}
 \label{POPCNTOne}
 
 One important function we will (often) use is \TT{make\_one\_hot}.
@@ -94,7 +94,7 @@ s SOLUTIONS 5
 
 5 possible solutions indeed.
 
-\subsubsection{Eight queens}
+\subsection{Eight queens}
 
 Now let's get back to eight queens.
 
@@ -161,14 +161,14 @@ Nevertheless, it's lighting fast (as other SAT solvers) in finding first solutio
 The SAT instance is also small enough to be easily solved by my simplest possible backtracking SAT solver:
 \ref{SAT_backtrack}.
 
-\subsubsection{Counting all solutions}
+\subsection{Counting all solutions}
 
 We get a solution, negate it and add as a new constraint.
 In plain English language this sounds ``find a solution, which is also can't be equal to the recently found/added''.
 We add them consequently and the process is slowing---just because a problem (\textit{instance}) is growing and SAT solver
 experience hard times in find yet another solution.
 
-\subsubsection{Skipping symmetrical solutions}
+\subsection{Skipping symmetrical solutions}
 
 We can also add rotated and reflected (horizontally) solution, so to skip symmetrical solutions.
 By doing so, we're getting 12 solutions for 8*8 board, 46 for 9*9 board, etc.

@@ -1,7 +1,7 @@
-﻿\section{Toy decompiler}
+﻿\chapter{Toy decompiler}
 \label{toy_decompiler}
 
-\subsection{Introduction}
+\section{Introduction}
 
 A modern-day compiler is a product of hundreds of developer/year.
 At the same time, toy compiler can be an exercise for a student for a week (or even weekend).
@@ -12,7 +12,7 @@ while toy decompiler like this one, can be easy to understand and remake.
 The following decompiler written in Python, supports only short basic blocks, with no jumps.
 Memory is also not supported.
 
-\subsection{Data structure}
+\section{Data structure}
 
 Our toy decompiler will use just one single data structure, representing expression tree.
 
@@ -100,7 +100,7 @@ The temperature conversion expression we just saw will be represented as:
 In fact, this is \ac{AST} in its simplest form.
 \ac{AST}s are used heavily in compilers.
 
-\subsection{Simple examples}
+\section{Simple examples}
 
 Let's start with simplest example:
 
@@ -331,7 +331,7 @@ Now this is \TT{align2grain()} function\footnote{Taken from \url{https://docs.or
 
 \lstinputlisting{toy_decompiler/align2grain.txt}
 
-\subsection{Dealing with compiler optimizations}
+\section{Dealing with compiler optimizations}
 
 The following piece of code \dots
 
@@ -704,7 +704,7 @@ going to reduce (arg1 & 0xfffffffffffffff0)
 result=(arg1 & 0xfffffffffffffff0)
 \end{lstlisting}
 
-\subsubsection{Division using multiplication}
+\subsection{Division using multiplication}
 
 Division is often replaced by multiplication for performance reasons.
 
@@ -818,7 +818,7 @@ this algorithm is rather used to solve the equation. You can solve it using any 
 Also, needless to mention, the equation is unsolvable for some divisors, because this is diophantine equation
 (i.e., equation allowing result to be only integer), since we work on integer CPU registers, after all.
 
-\subsection{Obfuscation/deobfuscation}
+\section{Obfuscation/deobfuscation}
 
 Despite simplicity of our decompiler, we can see how to deobfuscate (or optimize) using several simple tricks.
 
@@ -1118,12 +1118,12 @@ f:
 
 GCC has its own rewriting rules, some of which are, probably, close to what we use here.
 
-\subsection{Tests}
+\section{Tests}
 
 Despite simplicity of the decompiler, it's still error-prone.
 We need to be sure that original expression and reduced one are equivalent to each other.
 
-\subsubsection{Evaluating expressions}
+\subsection{Evaluating expressions}
 
 First of all, we would just evaluate (or \textit{run}, or \textit{execute})
 expression with random values as arguments, and then compare results.
@@ -1195,7 +1195,7 @@ Mentioned above \textit{aha!} superoptimizer tries at least these values as argu
 
 Still, you cannot be sure.
 
-\subsubsection{Using Z3 SMT-solver for testing}
+\subsection{Using Z3 SMT-solver for testing}
 
 So here we will try Z3 SMT-solver.
 SMT-solver can \textit{prove} that two expressions are equivalent to each other.
@@ -1316,7 +1316,7 @@ As Z3 developers mentioned, such expressions are hard for Z3 so far:
 
 Still, division by multiplication can be tested using previously described brute-force check.
 
-\subsection{My other implementations of toy decompiler}
+\section{My other implementations of toy decompiler}
 
 When I made attempt to write it in C++, of course, node in expression was represented using class.
 There is also implementation in pure C\footnote{\url{\GitHubTreeMasterURL/toy_decompiler/files/C}}, node is represented using structure.
@@ -1362,7 +1362,7 @@ symbols used in Racket version\footnote{Racket is Scheme (which is, in turn, LIS
 This may be seen as inefficient, nevertheless, thanks to strings interning, only address of strings are compared in
 Python version, not strings as a whole. So strings in Python can be seen as possible replacement for LISP symbols.
 
-\subsubsection{Even simpler toy decompiler}
+\subsection{Even simpler toy decompiler}
 
 Knowledge of LISP makes you understand all these things naturally, without significant effort.
 But when I had no knowledge of it, but still tried to make a simple toy decompiler, I made it using usual text strings
@@ -1404,7 +1404,7 @@ of 1st group and sum, like this: \TT{(" + X + "*" + (int(n) + int(m)) + ")}.
 
 It was naïve, clumsy, it was source of great embarrassment, but it worked correctly.
 
-\subsection{Difference between toy decompiler and commercial-grade one}
+\section{Difference between toy decompiler and commercial-grade one}
 
 Perhaps, someone, who currently reading this text, may rush into extending my source code.
 As an exercise, I would say, that the first step could be support of partial registers: i.e., AL, AX, EAX.
@@ -1428,7 +1428,7 @@ is present in binary files.
 Again, decompilers of \ac{JVM} and .NET files are simpler here.
 \end{itemize}
 
-\subsection{Further reading}
+\section{Further reading}
 
 There are several interesting open-source attempts to build decompiler.
 Both source code and theses are interesting study.
@@ -1457,7 +1457,7 @@ Here is well-known micro-interpreter of LISP by Peter Norvig, also written in Py
 \url{https://web.archive.org/web/20161116133448/http://www.norvig.com/lispy.html},
 \url{https://web.archive.org/web/20160305172301/http://norvig.com/lispy2.html}.
 
-\subsection{The files}
+\section{The files}
 
 Python version and tests: \url{\GitHubTreeMasterURL/toy_decompiler/files}.
 

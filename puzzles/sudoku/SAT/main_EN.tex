@@ -1,4 +1,4 @@
-\subsubsection{Sudoku in SAT}
+\subsection{Sudoku in SAT}
 \label{Sudoku_SAT}
 
 One might think that we can encode each 1..9 number in binary form: 5 bits or variables would be enough.
@@ -62,7 +62,7 @@ Same solution as earlier: \ref{sudoku_SMT}.
 Picosat tells this SAT instance has only one solution.
 Indeed, as they say, true Sudoku puzzle can have only one solution.
 
-\paragraph{Getting rid of one POPCNT1 function call}
+\subsubsection{Getting rid of one POPCNT1 function call}
 \label{OR_in_POPCNT1}
 
 To make 9 unique 1..9 numbers we can use \TT{POPCNT1} function to make each row in matrix be unique and

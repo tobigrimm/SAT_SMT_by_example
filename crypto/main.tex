@@ -1,7 +1,7 @@
-\section{(Amateur) cryptography}
+\chapter{(Amateur) cryptography}
 \label{crypto}
 
-\subsection{\textit{Serious} cryptography}
+\section{\textit{Serious} cryptography}
 
 Let's back to the method we previously used (\ref{symbolic_exec}) to construct expressions using running Python function.
 
@@ -39,7 +39,7 @@ Nevertheless, you can find numerous papers about breaking these cryptosystems wi
 when expression isn't \textit{exploded} yet, sometimes it's possible.
 This cannot be applied in practice, but such an experience has some interesting theoretical uses.
 
-\subsubsection{Attempts to break ``serious'' crypto}
+\subsection{Attempts to break ``serious'' crypto}
 
 CryptoMiniSat itself exist to support XOR operation, which is ubiquitous in cryptography.
 
@@ -63,7 +63,7 @@ CryptoMiniSat itself exist to support XOR operation, which is ubiquitous in cryp
 \item Attepmt to break Speck cipher: \url{https://github.com/TechSecCTF/z3_splash_class}.
 \end{itemize}
 
-\subsection{Amateur cryptography}
+\section{Amateur cryptography}
 
 This is what you can find in serial numbers, license keys, executable file packers, \ac{CTF}, malware, etc.
 Sometimes even ransomware (but rarely nowadays, in 2017).
@@ -122,7 +122,7 @@ you can find that \ac{EDA} tools can optimize many things during synthesis
 Even if you try to implement \ac{DES} algorithm \textit{in bare metal} with a fixed key,
 Altera Quartus can optimize first round of it and make it smaller than others.
 
-\subsubsection{Bugs}
+\subsection{Bugs}
 
 Another prominent feature of amateur cryptography is bugs.
 Bugs here often left uncaught because output of encrypting function visually looked ``good enough'' or ``obfuscated enough'',
@@ -137,7 +137,7 @@ It was encryption routine used in license key validation.
 Hard to believe someone did this on purpose.
 Most likely, it was just an unnoticed bug.
 
-\subsubsection{XOR ciphers}
+\subsection{XOR ciphers}
 
 Simplest possible amateur cryptography is just application of XOR operation using some kind of table.
 Maybe even simpler. This is a real algorithm I once saw:
@@ -152,7 +152,7 @@ This is not even encryption, rather concealing or hiding.
 Some other examples of simple XOR-cipher cryptoanalysis are present in the ``Reverse Engineering for Beginners''
 \footnote{\url{http://beginners.re}} book.
 
-\subsubsection{Other features}
+\subsection{Other features}
 
 \textbf{Tables} There are often table(s) with pseudorandom data, which is/are used chaotically.
 
@@ -163,7 +163,7 @@ This is close to \ac{MAC} in real cryptography.
 
 \textbf{Entropy level} Maybe (much) lower, despite the fact that data looks random.
 
-\subsubsection{Examples}
+\subsection{Examples}
 
 \begin{itemize}
 
@@ -195,7 +195,7 @@ misused cryptographical algorithms as well.
 \input{crypto/hash/main_EN}
 \input{crypto/XOR/main_EN}
 
-\subsection{Swapping encryption and decryption procedures}
+\section{Swapping encryption and decryption procedures}
 
 By the way, this is important property of symmetric cryptography: encryption and decryption procedures can be swapped
 without loss of security:

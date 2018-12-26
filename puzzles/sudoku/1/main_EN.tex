@@ -1,7 +1,7 @@
-\subsubsection{Simple sudoku in SMT}
+\subsection{Simple sudoku in SMT}
 \label{sudoku_SMT}
 
-\paragraph{The first idea}
+\subsubsection{The first idea}
 
 The only thing we must decide is that how to determine in one expression, if the input 9 variables has all 9 unique numbers?
 They are not ordered or sorted, after all.
@@ -80,7 +80,7 @@ The puzzle I used as example is dubbed as one of the hardest known
 \footnote{\url{http://www.mirror.co.uk/news/weird-news/worlds-hardest-sudoku-can-you-242294}} (well, for humans).
 It took $\approx 1.4$ seconds on my Intel Core i3-3110M 2.4GHz notebook to solve it.
 
-\paragraph{The second idea}
+\subsubsection{The second idea}
 
 My first approach is far from effective, I did what first came to my mind and worked.
 Another approach is to use \TT{distinct} command from SMT-LIB, which tells Z3 that some variables must be distinct (or unique).
@@ -113,22 +113,22 @@ sys     0m0.036s
 
 That's much faster.
 
-\paragraph{Conclusion}
+\subsubsection{Conclusion}
 
 \ac{SMT}-solvers are so helpful, is that our Sudoku solver has nothing else, we have just defined relationships between variables (cells).
 
-\paragraph{Homework}
+\subsubsection{Homework}
 
 As it seems, true Sudoku puzzle is the one which has only one solution.
 The piece of code I've included here shows only the first one.
 Using the method described earlier (\ref{SMTEnumerate}, also called ``model counting''), 
 try to find more solutions, or prove that the solution you have just found is the only one possible.
 
-\paragraph{Further reading}
+\subsubsection{Further reading}
 
 \url{http://www.norvig.com/sudoku.html}
 
-\paragraph{Sudoku as a \ac{SAT} problem}
+\subsubsection{Sudoku as a \ac{SAT} problem}
 
 It's also possible to represend Sudoku puzzle as a huge \ac{CNF} equation and use \ac{SAT}-solver to find solution, but it's just trickier.
 

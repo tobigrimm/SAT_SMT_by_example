@@ -1,4 +1,4 @@
-\subsection{Cracking Minesweeper with SMT solver}
+\section{Cracking Minesweeper with SMT solver}
 \label{minesweeper_SMT}
 
 \renewcommand{\CURPATH}{equations/minesweeper_SMT}
@@ -14,7 +14,7 @@ Here is a clicked somewhere and I see revealed empty cells and cells with known 
 
 What we have here, actually? Hidden cells, empty cells (where bombs are not present), and empty cells with numbers, which shows how many bombs are placed nearby.
 
-\subsubsection{The method}
+\subsection{The method}
 
 Here is what we can do: we will try to place a bomb to all possible hidden cells and ask Z3 SMT solver, if it can disprove the very fact that the bomb can be placed there.
 
@@ -67,7 +67,7 @@ But this information is not interesting to us, since we want to find cells we ca
 And we will try another one.
 And if the equation will be unsatisfiable, that would imply that a bomb cannot be there and we can click on it.
 
-\subsubsection{The code}
+\subsection{The code}
 
 \lstinputlisting[style=custompy]{\CURPATH/1.py}
 
@@ -192,7 +192,7 @@ Voila!
 
 Some discussion on HN: \url{https://news.ycombinator.com/item?id=13797375}.
 
-\subsubsection{More theory}
+\subsection{More theory}
 
 In Numb3rs TV series, Dr.Charlie Eppes tried to solve "Minesweeper game":
 \url{https://en.wikipedia.org/wiki/Uncertainty_Principle_(Numbers)},

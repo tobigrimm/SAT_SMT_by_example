@@ -1,4 +1,4 @@
-\subsection{Can rand() generate 10 consecutive zeroes?}
+\section{Can rand() generate 10 consecutive zeroes?}
 
 \renewcommand{\CURPATH}{equations/LCG}
 
@@ -87,7 +87,7 @@ sat
 [state2 = 20057, state1 = 3385131726, state3 = 22456]
 \end{lstlisting}
 
-\subsubsection{UNIX time and srand(time(NULL))}
+\subsection{UNIX time and srand(time(NULL))}
 
 Given the fact that it's highly popular to initialize LCG PRNG with UNIX time (i.e., \TT{srand(time(NULL))}), you can probably calculate a moment in time so that LCG PRNG will be initialized as you want to.
 
@@ -113,13 +113,13 @@ If \TT{srand(time(NULL))} will be executed at \TT{Tue Dec  5 21:06:50 EET 2017} 
 a next 6 \TT{rand() \% 10} lines will output six numbers of 3 in a row.
 Don't know if it useful or not, but you've got the idea.
 
-\subsubsection{etc:}
+\subsection{etc:}
 
 The files: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/tree/master/equations/LCG}.
 
 Further work: check glibc's \TT{rand()}, Mersenne Twister, etc. Simple 32-bit LCG as described can be checked using simple brute-force, I think.
 
-\subsubsection{Fun story}
+\subsection{Fun story}
 
 The software checked protection key (dongle) randomly, from time to time.
 This code snippet is from a real one:
@@ -149,7 +149,7 @@ void check_protection_thread()
 
 Perhaps, we can find the most optimal UNIX time to start the software, so the protection will not be checked as long as possible...
 
-\subsubsection{Further reading}
+\subsection{Further reading}
 
 Breaking JavaScript's \ac{PRNG} (XorShift128+):
 \url{https://blog.securityevaluators.com/hacking-the-javascript-lottery-80cc437e3b7f}.

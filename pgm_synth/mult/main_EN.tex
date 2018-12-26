@@ -1,4 +1,4 @@
-\subsection{Synthesis of simple program using Z3 SMT-solver}
+\section{Synthesis of simple program using Z3 SMT-solver}
 \label{synth_mult}
 
 Sometimes, multiplication operation can be replaced with a several operations of shifting/addition/subtraction.
@@ -232,7 +232,7 @@ r6=SHL r5, 4
 r7=ADD r1, r6
 \end{lstlisting}
 
-\subsubsection{Few notes}
+\subsection{Few notes}
 
 I've removed SHR instruction support, simply because the code multiplying by a constant makes no use of it.
 Even more: it's not a problem to add support of constants as second operand for all instructions,
@@ -243,7 +243,7 @@ Of course, for another job you'll need to add support of constants and other ope
 But at the same time, it will work slower and slower.
 So I had to keep \ac{ISA} of this toy \ac{CPU} as compact as possible.
 
-\subsubsection{The code}
+\subsection{The code}
 
 \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/pgm_synth/mult}.
 

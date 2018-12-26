@@ -1,8 +1,8 @@
-\subsection{Conway's ``Game of Life''}
+\section{Conway's ``Game of Life''}
 
 \renewcommand{\CURPATH}{CA/GoL}
 
-\subsubsection{Reversing back the state of ``Game of Life''}
+\subsection{Reversing back the state of ``Game of Life''}
 
 How could we reverse back a known state of GoL?
 This can be solved by brute-force, but this is extremely slow and inefficient.
@@ -459,7 +459,7 @@ And it slows down during execution, because number of clauses is increasing (bec
 
 All solutions are also exported to RLE files, which can be opened by Golly\footnote{\url{http://golly.sourceforge.net/}}.
 
-\subsubsection{Finding ``still lives''}
+\subsection{Finding ``still lives''}
 
 ``Still life'' in terms of GoL is a state which doesn't change at all.
 
@@ -925,11 +925,11 @@ Let's try more dense, one mandatory \textit{true} cell per each 4-cell chunk:
 This is most dense. Unfortunaly, it's impossible to construct ``still life'' with one mandatory 
 \textit{true} cell per each 2-cell chunk.
 
-\subsubsection{The source code}
+\subsection{The source code}
 
 Source code and Wolfram Mathematica notebook: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/tree/master/CA/GoL}.
 
-\subsubsection{Further reading}
+\subsection{Further reading}
 
 Marijn Heule is known to be working on applying SAT solvers to GoL:
 \url{http://conwaylife.com/wiki/Marijn_Heule}.

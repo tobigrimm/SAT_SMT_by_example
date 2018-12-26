@@ -1,4 +1,4 @@
-\subsection{Case study: simple hash function}
+\section{Case study: simple hash function}
 
 (This piece of text was initially added to my ``Reverse Engineering for Beginners'' book (\url{beginners.re}) at March 2014)
 \footnote{This example was also used by Murphy Berzish in his lecture about \ac{SAT} and \ac{SMT}:
@@ -7,7 +7,7 @@
 
 Here is one-way hash function, that converted a 64-bit value to another and we need to try to reverse its flow back.
 
-\subsubsection{Manual decompiling}
+\subsection{Manual decompiling}
 
 Here its assembly language listing in IDA:
 
@@ -65,7 +65,7 @@ it has collisions, or, speaking more simply, many inputs may be possible for one
 
 Brute-force is not solution because values are 64-bit ones, that's beyond reality.
 
-\subsubsection{Now let's use the Z3}
+\subsection{Now let's use the Z3}
 
 Still, without any special cryptographic knowledge, we may try to break this algorithm using Z3.
 

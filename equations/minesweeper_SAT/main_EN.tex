@@ -1,9 +1,9 @@
-\subsection{Cracking Minesweeper with SAT solver}
+\section{Cracking Minesweeper with SAT solver}
 \label{minesweeper_SAT}
 
 \renewcommand{\CURPATH}{equations/minesweeper_SAT}
 
-\subsubsection{Simple \textit{population count} function}
+\subsection{Simple \textit{population count} function}
 
 First of all, somehow we need to count neighbour bombs.
 The counting function is similar to \textit{population count} function.
@@ -148,7 +148,7 @@ at least one bit must be present among 8 variables.
 
 And yes, you can ask Mathematica for finding \ac{CNF} expressions for any other truth table.
 
-\subsubsection{Minesweeper}
+\subsection{Minesweeper}
 
 Now we can use Mathematica to generate all \textit{population count} functions for 0..8 neighbours.
 

@@ -1,4 +1,4 @@
-﻿\subsection{Rockey dongle: finding unknown algorithm using only input/output pairs}
+﻿\section{Rockey dongle: finding unknown algorithm using only input/output pairs}
 
 (This text was first published in August 2012 in my blog: \url{http://blog.yurichev.com/node/71}.)
 
@@ -349,7 +349,7 @@ Some 6-step algorithms are not possible to find, for example: \\
 \TT{A=A\^{}B, A=A*9, A=A\^{}C, A=A*19, A=A\^{}D, A=A\&B}.
 Solver was working too long (up to several hours), so I didn't even know is it possible to find it anyway.
 
-\subsubsection{Conclusion}
+\subsection{Conclusion}
 
 This is in fact an exercise in program synthesis.
 
@@ -357,19 +357,19 @@ Some short algorithms for tiny \ac{CPU}s are really possible to find using so sm
 Of course it's still not possible to reveal some complex algorithm,
 but this method definitely should not be ignored.
 
-\subsubsection{The files}
+\subsection{The files}
 
 Rockey 4 dongle programmer and reader, Rockey 4 manual, Z3Py script for finding algorithms, input/output pairs:
 \url{https://github.com/DennisYurichev/SAT_SMT_by_example/tree/master/pgm_synth/rockey}.
 
-\subsubsection{Further work}
+\subsection{Further work}
 
 Perhaps, constructing LISP-like S-expression can be better than a program for toy-level CPU.
 
 It's also possible to start with smaller constants and then proceed to bigger.
 This is somewhat similar to increasing password length in password brute-force cracking.
 
-\subsubsection{Exercise}
+\subsection{Exercise}
 
 \url{https://challenges.re/25/}.
 

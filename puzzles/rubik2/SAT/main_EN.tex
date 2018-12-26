@@ -1,4 +1,4 @@
-\subsection{Pocket Rubik's Cube (2*2*2) and SAT solver}
+\section{Pocket Rubik's Cube (2*2*2) and SAT solver}
 \label{PocketCubeSAT}.
 
 \renewcommand{\CURPATH}{puzzles/rubik2/SAT}
@@ -334,12 +334,12 @@ I couldn't find a pure "11-turn state" which is "unsat" for 10-turn, it seems, t
 According to \href{https://en.wikipedia.org/wiki/Pocket_Cube}{wikipedia}, there are just 0.072\% of these states.
 Like "20-turn states" for 3*3*3 cube, which are also rare.
 
-\subsubsection{Several solutions}
+\subsection{Several solutions}
 
 According to picosat (--all option to get all possible solutions), the 4-turn example we just saw has 2 solutions.
 Indeed, two consequent turns UCW and DCW can be interchanged, they do not conflict with each other.
 
-\subsubsection{Other (failed) ideas}
+\subsection{Other (failed) ideas}
 
 Pocket cube (2*2*2) has no central facelets, so to solve it, you don't need to stick each color to each face.
 Rather, you can define a constraint so that a colors on each face must be equal to each other.
@@ -349,7 +349,7 @@ Also, to prevent "annihilating" turns, we can set a constraint so that each stat
 states, i.e., states cannot repeat.
 This also slows down my both solvers.
 
-\subsubsection{3*3*3 cube}
+\subsection{3*3*3 cube}
 
 3*3*3 cube requires much more turns (20), so I couldn't solve it with my methods.
 I have success to solve maybe 10 or 11 turns.
@@ -365,7 +365,7 @@ Here is mine I used, you can see that corners are correctly solved:
 \caption{Solved Rubik's cube as a pocket cube}
 \end{figure}
 
-\subsubsection{Some discussion}
+\subsection{Some discussion}
 
 \url{https://news.ycombinator.com/item?id=15214439},\\
 \url{https://www.reddit.com/r/compsci/comments/6zb34i/solving_pocket_rubiks_cube_222_using_z3_and_sat/},\\

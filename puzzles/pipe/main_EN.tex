@@ -1,4 +1,4 @@
-\subsection{Solving pipe puzzle using Z3 SMT-solver}
+\section{Solving pipe puzzle using Z3 SMT-solver}
 
 \renewcommand{\CURPATH}{puzzles/pipe}
 
@@ -24,7 +24,7 @@ This is how shuffled puzzle looks like:
 
 Let's try to find a way to solve it.
 
-\subsubsection{Generation}
+\subsection{Generation}
 
 First, we need to generate it.
 Here is my quick idea on it.
@@ -86,7 +86,7 @@ an array of types, with no angle information about each cell:
 ]
 \end{lstlisting}
 
-\subsubsection{Solving}
+\subsection{Solving}
 
 First of all, we would think about 8*16 array of cells, where each has four bits:
 ``T'' (top),

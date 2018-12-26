@@ -1,6 +1,6 @@
-\subsection{Yet another explanation of modulo inverse using SMT-solvers}
+\section{Yet another explanation of modulo inverse using SMT-solvers}
 
-\subsubsection{Introduction}
+\subsection{Introduction}
 
 Let's imagine, we work on 4-bit CPU, it has 4-bit registers, each can hold a value in 0..15 range.
 
@@ -77,7 +77,7 @@ Let's "divide" 8 by 3. 8*11=88=0x58. 5/2=2, this is correct answer again.
 Now this is the formula we can use on our 4-bit CPU to divide numbers by 3: "x*3 >> 4 / 2" or "x*3 >> 5".
 This is the same as almost all modern compilers do instead of integer division, but they do this for 32-bit and 64-bit registers.
 
-\subsubsection{Back to SMT-solver}
+\subsection{Back to SMT-solver}
 
 By which constant we must multiply a random number, so that the result would be as if we divided them by 3?
 

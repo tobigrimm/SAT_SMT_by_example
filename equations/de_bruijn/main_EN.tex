@@ -1,7 +1,7 @@
-\subsection{De Bruijn sequences; leading/trailing zero bits counting}
+\section{De Bruijn sequences; leading/trailing zero bits counting}
 \label{DeBruijn}
 
-\subsubsection{Introduction}
+\subsection{Introduction}
 
 Let's imagine there is a very simplified code lock accepting 2 digits, but it has no "enter" key, it just checks 2 last entered digits.
 Our task is to brute force each 2-digit combination.
@@ -38,7 +38,7 @@ This is so because De Bruijn sequences are cyclic.
 
 There is also visual demonstration: \url{http://demonstrations.wolfram.com/DeBruijnSequences/}.
 
-\subsubsection{Trailing zero bits counting}
+\subsection{Trailing zero bits counting}
 
 In \href{https://en.wikipedia.org/wiki/De_Bruijn_sequence}{the Wikipedia article about De Bruijn sequences} we can find:
 
@@ -270,7 +270,7 @@ int main()
 };
 \end{lstlisting}
 
-\subsubsection{Leading zero bits counting}
+\subsection{Leading zero bits counting}
 
 This is almost the same task, but most significant bit must be isolated instead of lowest.
 This is typical algorithm for 32-bit integer values:
@@ -321,14 +321,14 @@ This is about 0.294% of all 32-bit numbers.)
 The code is tricky after all, and the moral of the exercise is that practicing reverse engineer sometimes may just observe input/outputs to understand
 code's behaviour instead of diving into it.
 
-\subsubsection{Performance}
+\subsection{Performance}
 
 The algorithms considered are probably fastest known, they has no conditional jumps, which is very good for CPUs starting at RISCs.
 Newer CPUs has LZCNT and TZCNT instructions, even 80386 had BSF/BSR instructions which can be used for this: 
 \url{https://en.wikipedia.org/wiki/Find_first_set}.
 Nevertheless, these algorithms can be still used on cheaper RISC CPUs without specialized instructions.
 
-\subsubsection{Applications}
+\subsection{Applications}
 
 Number of leading zero bits is binary logarithm of value. My article about logarithms including binary:
 \url{https://yurichev.com/writings/log_intro.pdf}.
@@ -338,7 +338,7 @@ These algorithms are also extensively used in chess engines programming, where e
 
 There are more: \url{https://en.wikipedia.org/wiki/Find_first_set\#Applications}.
 
-\subsubsection{Generation of De Bruijn sequences}
+\subsection{Generation of De Bruijn sequences}
 
 De Bruijn graph is a graph where all values are represented as vertices (or nodes) and each edge (or link) connects two nodes which can be "overlapped".
 Then we need to visit each edge only once, this is called \textit{eulerian path}.
@@ -347,7 +347,7 @@ traveller must visit each bridge only once.
 
 There are also simpler algorithms exist: \url{https://en.wikipedia.org/wiki/De_Bruijn_sequence\#Algorithm}.
 
-\subsubsection{Other articles}
+\subsection{Other articles}
 
 At least these are worth reading:
 \url{http://supertech.csail.mit.edu/papers/debruijn.pdf},

@@ -1,8 +1,8 @@
-\subsection{CRC (Cyclic redundancy check)}
+\section{CRC (Cyclic redundancy check)}
 
 \renewcommand{\CURPATH}{CRC/KLEE}
 
-\subsubsection{Buffer alteration case \#1}
+\subsection{Buffer alteration case \#1}
 
 Sometimes, you need to alter a piece of data which is \textit{protected} by some kind of checksum or \ac{CRC}, and you can't change checksum or CRC value, but can alter piece of data so that checksum will remain the same.
 
@@ -55,7 +55,7 @@ And KLEE + \ac{SMT} solver needs 64 bits at some place it can alter to make fina
 
 I tried to reduce length of the \textit{middle block} to 13 characters: no luck for KLEE then, it has no space enough.
 
-\subsubsection{Buffer alteration case \#2}
+\subsection{Buffer alteration case \#2}
 
 I went sadistic: what if the buffer must contain the CRC64 value which, after calculation of CRC64, will result in the same value?
 Fascinatedly, KLEE can solve this.
@@ -120,7 +120,7 @@ object    0: data: b'Hello, world!.. T+]\xb9A\x08\x0fq ... and goodbye\xb6\x8f\x
 Again, it's faster than brute-force way to find it.
 If to decrease last spare 6-byte buffer to 4 bytes or less, KLEE works so long so I've stopped it.
 
-\subsubsection{Recovering input data for given CRC32 value of it}
+\subsection{Recovering input data for given CRC32 value of it}
 
 I've always wanted to do so, but everyone knows this is impossible for input buffers larger than 4 bytes.
 As my experiments show, it's still possible for tiny input buffers of data, which is constrained in some way.
@@ -159,7 +159,7 @@ In other words, the final CRC32 value holds enough bits to recover $\approx 28.2
 The input buffer can be even bigger, if each byte of it will be in even tighter
 constraints (decimal digits, binary digits, etc).
 
-\subsubsection{In comparison with other hashing algorithms}
+\subsection{In comparison with other hashing algorithms}
 
 Things are that easy for some other hashing algorithms like \textit{Fletcher checksum},
 but not for cryptographically secure ones (like MD5, SHA1, etc), they are protected from such simple cryptoanalysis.

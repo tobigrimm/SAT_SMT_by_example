@@ -1,4 +1,4 @@
-\subsection{Solving pocket Rubik’s cube (2*2*2) using Z3}
+\section{Solving pocket Rubik’s cube (2*2*2) using Z3}
 \label{PocketCubeSMT}
 
 \renewcommand{\CURPATH}{puzzles/rubik2/failed_SMT}
@@ -13,7 +13,7 @@
 
 Solving Rubik's cube is not a problem, finding shortest solution is.
 
-\subsubsection{Intro}
+\subsection{Intro}
 
 First, a bit of terminology.
 There are 6 colors we have: white, green, blue, orange, red, yellow.
@@ -59,7 +59,7 @@ This means, \href{http://mathworld.wolfram.com/GraphDiameter.html}{graph has a d
 For 3*3*3 cube one need 20 turns (\url{http://www.cube20.org/}).
 See also: \url{https://en.wikipedia.org/wiki/Rubik%27s_Cube_group}.
 
-\subsubsection{Z3}
+\subsection{Z3}
 
 There are 6 sides and 4 facelets on each, hence, 6*4=24 variables we need to define a state.
 

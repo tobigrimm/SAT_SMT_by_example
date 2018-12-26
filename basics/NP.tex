@@ -1,21 +1,21 @@
-\subsection{Yet another explanation of NP-problems}
+\section{Yet another explanation of NP-problems}
 
 Various algorithms works "slow" or "fast" depending on the size of the input.
 
-\subsubsection{Constant time, O(1)}
+\subsection{Constant time, O(1)}
 
 Time isn't dependent on size of input.
 This is like \verb|string.size()| in C++ STL, given the fact that the implementation stores current string's size somewhere.
 Good: \verb|.size()| method is fast, O(1), but during any modification of the string, a method(s) must update "size" field.
 
-\subsubsection{Linear time, O(n)}
+\subsection{Linear time, O(n)}
 
 Time is dependent on size of input, linearly.
 (Linear functions are functions which looks as lines on graph plot.)
 This is search algorithms on linked lists, strings.
 \verb|strlen()| is C.
 
-\subsubsection{Hash tables and binary trees}
+\subsection{Hash tables and binary trees}
 
 These are used in associative arrays implementations.
 Using binary trees (\verb|std::map|, \verb|std::set| in C++ STL) is somewhat wasteful: you need too much memory, for each tree node.
@@ -29,7 +29,7 @@ Hash function should be good to make keys which are close to each other (100,101
 However, you can't retrieve all keys from hash table in sorted form.
 It's a good idea to use hash tables instead of binary trees, if you don't need keys sorted.
 
-\subsubsection{EXPTIME}
+\subsection{EXPTIME}
 
 Time is dependent exponentially on size of input, $O(2^{p(n)})$ or just $O(2^n)$.
 This is bruteforce.
@@ -37,7 +37,7 @@ When you try to break some cryptoalgorithm by bruteforcing and trying all possib
 For 8 bits of input, there are $2^8=256$ possible values, etc.
 Bruteforce can crack any cryptoalgorithm and solve almost any problem, but this is not very interesting, because it's extremely slow.
 
-\subsubsection{NP-problems}
+\subsection{NP-problems}
 
 Finding correct inputs for CNF formula is an NP-problem, but you can also find them using simple bruteforce.
 In fact, SAT-solvers also do bruteforce, but the resulting search tree is extremely big.
@@ -60,7 +60,7 @@ This is a rare case, when shotgun debugging
 \footnote{\url{http://www.catb.org/jargon/html/S/shotgun-debugging.html} \url{https://en.wikipedia.org/wiki/Shotgun_debugging}}
 is justified!
 
-\subsubsection{P=NP?}
+\subsection{P=NP?}
 
 One of the famous problem asking, if it's possible to solve NP-problems fast.
 
@@ -74,7 +74,7 @@ slow to be practical.
 
 However, majority of scientists believe the humankind is not ready for such problems.
 
-\subsubsection{What are SAT/SMT solvers}
+\subsection{What are SAT/SMT solvers}
 
 To my taste, these are like APIs to NP-problems.
 Maybe not the best, but good enough.

@@ -1,4 +1,4 @@
-\subsection{Simple logic synthesis using Z3 and Apollo Guidance Computer}
+\section{Simple logic synthesis using Z3 and Apollo Guidance Computer}
 
 What a smallest possible logic circuit is possible for a given truth table?
 
@@ -19,7 +19,7 @@ All the rest is processed in bitsliced manner.
 Given that, the resulting program will work on 4/8/16-bit CPU and will generate defined OUTPUTS for defined INPUTS.
 Or, this program can be treated just like a logic circuit.
 
-\subsubsection{AND gate}
+\subsection{AND gate}
 
 How to build 2-input AND gate using only OR's and NOT's?
 
@@ -56,7 +56,7 @@ r3=NOR3 r2, r0, r0       0010
 r4=NOR3 r3, r2, r2       1000
 \end{lstlisting}
 
-\subsubsection{XOR gate}
+\subsection{XOR gate}
 
 How to build 2-input XOR using only OR's and NOT's?
 
@@ -110,7 +110,7 @@ r5=NOR3 r2, r4, r2       1000
 r6=NOR3 r3, r5, r3       0110
 \end{lstlisting}
 
-\subsubsection{Full-adder}
+\subsection{Full-adder}
 
 According to Wikipedia, \href{https://en.wikipedia.org/wiki/Adder_(electronics)}{full-adder}
 can be constructed using two XOR gates, two AND gates and one OR gate.
@@ -154,7 +154,7 @@ r9=NOR3 r3, r5, r4       11101000
 r10=NOR3 r8, r7, r6      10010110
 \end{lstlisting}
 
-\subsubsection{POPCNT}
+\subsection{POPCNT}
 
 Smallest circuit to count bits in 3-bit input, producing 2-bit output:
 
@@ -194,7 +194,7 @@ r9=NOR3 r3, r5, r4       11101000
 r10=NOR3 r8, r7, r6      10010110
 \end{lstlisting}
 
-\subsubsection{Circuit for a central "g" segment of 7-segment display}
+\subsection{Circuit for a central "g" segment of 7-segment display}
 
 \begin{figure}[H]
 \centering

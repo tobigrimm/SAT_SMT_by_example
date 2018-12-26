@@ -1,4 +1,4 @@
-\subsection{Using Z3 theorem prover to prove equivalence of some weird alternative to XOR operation}
+\section{Using Z3 theorem prover to prove equivalence of some weird alternative to XOR operation}
 \label{weird_XOR}
 
 (The test was first published in my blog at April 2015: \url{http://blog.yurichev.com/node/86}).
@@ -88,7 +88,7 @@ print s.check()
 
 Now it says ``unsat'', so the formula given by \textit{Aha!} works for 64-bit code as well.
 
-\subsubsection{In SMT-LIB form}
+\subsection{In SMT-LIB form}
 
 Now we can rephrase our expression to more suitable form: $(x + y - ((x \& y)<<1))$.
 It also works well in Z3Py:
@@ -124,7 +124,7 @@ Here is how to define it in SMT-LIB way:
 (check-sat)
 \end{lstlisting}
 
-\subsubsection{Using universal quantifier}
+\subsection{Using universal quantifier}
 
 Z3 supports universal quantifier \TT{exists}, which is true
 if at least one set of variables satistfied underlying condition:
@@ -178,7 +178,7 @@ Mathematically speaking: $\forall n\!\in\!\mathbb{N}\; (x \oplus y = (x + y - ((
 \footnote{
 $\forall$ means \textit{equation must be true for all possible values}, which are choosen from natural numbers ($\mathbb{N}$).}
 
-\subsubsection{How the expression works}
+\subsection{How the expression works}
 
 First of all, binary addition can be viewed as binary XORing with carrying (\ref{adder}).
 Here is an example: let's add 2 (10b) and 2 (10b).

@@ -1,4 +1,4 @@
-\subsection{\ac{SAT}-solvers}
+\section{\ac{SAT}-solvers}
 
 \renewcommand{\CURPATH}{basics/SAT}
 
@@ -8,7 +8,7 @@ The latter can be much more efficient, but it's hard to program in it.
 SAT is abbreviation of ``Boolean satisfiability problem''.
 The problem is to find such a set of variables, which, if plugged into boolean expression, will result in ``true''.
 
-\subsubsection{CNF form}
+\subsection{CNF form}
 
 \ac{CNF}\footnote{\url{https://en.wikipedia.org/wiki/Conjunctive_normal_form}} is a \textit{normal form}.
 
@@ -37,7 +37,7 @@ $\neg$ is negation (NOT).
 
 % TODO A/B is the first clause, C/D is second
 
-\subsubsection{Example: 2-bit adder}
+\subsection{Example: 2-bit adder}
 \label{adder}
 
 \ac{SAT}-solver is merely a solver of huge boolean equations in CNF form.
@@ -87,7 +87,7 @@ Nevertheless, let's proceed to \ac{CNF} form. Using Mathematica again, let's con
 Looks more complex. The reason of such verbosity is that \ac{CNF} form doesn't allow XOR operations.
 % FIXME: TeX form of the expression!
 
-\paragraph{MiniSat}
+\subsubsection{MiniSat}
 
 For starters, we can try MiniSat\footnote{\url{http://minisat.se/MiniSat.html}}.
 The standard way to encode \ac{CNF} expression for MiniSat is to enumerate all OR parts at each line.
@@ -211,7 +211,7 @@ Now MiniSat just says ``UNSATISFIABLE'' without any additional information in th
 
 Our example is tiny, but MiniSat can work with huge \ac{CNF} expressions.
 
-\paragraph{CryptoMiniSat}
+\subsubsection{CryptoMiniSat}
 
 XOR operation is absent in \ac{CNF} form, but crucial in cryptographical algorithms.
 Simplest possible way to represent single XOR operation in \ac{CNF} form is:
@@ -282,7 +282,7 @@ v 1 2 -3 -4 0
 
 \dots the same as reported by MiniSat.
 
-\subsubsection{Picosat}
+\subsection{Picosat}
 
 At least Picosat can enumerate all possible solutions without crutches I just shown:
 
