@@ -62,6 +62,77 @@ Same solution as earlier: \ref{sudoku_SMT}.
 Picosat tells this SAT instance has only one solution.
 Indeed, as they say, true Sudoku puzzle can have only one solution.
 
+\subsubsection{Measuring puzzle's hardness using MiniSat}
+
+Various puzzles printed in newspapers are divided by "hardness" or number of clues.
+Let's see, how we can measure "hardness".
+SAT solver's clock time is not an options, because this is too easy problem for them.
+However, MiniSat can give other statistics:
+
+35 clues, "Easy" level from \url{https://www.websudoku.com/?level=1}.
+
+\verb|"8.4.3.1.772.54.9....1.7.....39.....5.7.469.1.1.....79.....2.4....5.93.719.3.8.5.6"|
+
+\begin{lstlisting}
+restarts              : 1
+conflicts             : 0              (0 /sec)
+decisions             : 1              (0.00 % random) (99 /sec)
+propagations          : 729            (72221 /sec)
+conflict literals     : 0              (-nan % deleted)
+\end{lstlisting}
+
+29 clues, "Medium" level from \url{https://www.websudoku.com/?level=2}.
+
+\verb|"2......56.4..2.7.1.6.9..2......6..1...35784...9..3......4..7.6.3.9.5..2.17......4"|
+
+\begin{lstlisting}
+restarts              : 1
+conflicts             : 0              (0 /sec)
+decisions             : 1              (0.00 % random) (117 /sec)
+propagations          : 729            (84945 /sec)
+conflict literals     : 0              (-nan % deleted)
+\end{lstlisting}
+
+26 clues, "Hard" level from \url{https://www.websudoku.com/?level=3}.
+
+\verb|"..62..48.3..8....7.4..5........451.....9.2.....963........1..2.2....8..6.75..98.."|
+
+\begin{lstlisting}
+restarts              : 1
+conflicts             : 0              (0 /sec)
+decisions             : 1              (0.00 % random) (120 /sec)
+propagations          : 729            (87431 /sec)
+conflict literals     : 0              (-nan % deleted)
+\end{lstlisting}
+
+26 clues, "Evil" level from \url{https://www.websudoku.com/?level=4}.
+
+\verb|".......2..23..6..479.5.....3..6.45.....2.9.....73.5..6.....2.318..7..46..1......."|
+
+\begin{lstlisting}
+restarts              : 1
+conflicts             : 1              (275 /sec)
+decisions             : 2              (0.00 % random) (550 /sec)
+propagations          : 810            (222711 /sec)
+conflict literals     : 1              (0.00 % deleted)
+\end{lstlisting}
+
+23 clues, from
+\url{http://www.norvig.com/sudoku.html},
+\url{http://www.mirror.co.uk/news/weird-news/worlds-hardest-sudoku-can-you-242294}.
+
+\verb|"..53.....8......2..7..1.5..4....53...1..7...6..32...8..6.5....9..4....3......97.."|
+
+\begin{lstlisting}
+restarts              : 1
+conflicts             : 22             (2281 /sec)
+decisions             : 30             (0.00 % random) (3110 /sec)
+propagations          : 2516           (260861 /sec)
+conflict literals     : 156            (21.61 % deleted)
+\end{lstlisting}
+
+These are "conflicts", "decisions", "propagations", "conflict literals".
+
 \subsubsection{Getting rid of one POPCNT1 function call}
 \label{OR_in_POPCNT1}
 

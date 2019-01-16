@@ -5,7 +5,7 @@
 \item Yices\footnote{\url{http://yices.csl.sri.com/}}, created by Bruno Dutertre et al.
 
 \item Z3\footnote{\url{https://github.com/Z3Prover/z3}},
-created by Leonardo de Moura, Nikolaj Bjorner, Christoph M. Wintersteiger.
+developed by Leonardo de Moura, Nikolaj Bjorner, Christoph M. Wintersteiger, Lev Nachmanson.
 
 Many examples here uses Python 3.x API for Z3.
 Here is how to install it in Ubuntu:
@@ -28,19 +28,23 @@ make
 sudo make install
 \end{lstlisting}
 
+(Unofficial) bindings:
+Haskell\footnote{\url{http://hackage.haskell.org/package/z3}},
+Racket\footnote{\url{https://github.com/philnguyen/z3-rkt}}.
+
 \item STP\footnote{\url{https://github.com/stp/stp}}, used in KLEE.
 
 \item CVC3/CVC4\footnote{\url{http://cvc4.stanford.edu/}}.
 
-\item Boolector\footnote{\url{http://fmv.jku.at/boolector/}}, created by Aina Niemetz, Mathias Preiner and Armin Biere.
+\item Boolector\footnote{\url{http://fmv.jku.at/boolector/}}, developed by Aina Niemetz, Mathias Preiner and Armin Biere.
 Known to be fastest bitvector solver.
 
 \item Alt-Ergo\footnote{\url{https://alt-ergo.ocamlpro.com/}}, used in Frama-C.
 
-\item MathSAT\footnote{\url{http://mathsat.fbk.eu/}}. Created by Alberto Griggio, Alessandro Cimatti and Roberto Sebastiani.
+\item MathSAT\footnote{\url{http://mathsat.fbk.eu/}}. Developed by Alberto Griggio, Alessandro Cimatti and Roberto Sebastiani.
 
 \item veriT\footnote{\url{http://www.verit-solver.org/}}.
-Created by David Déharbe, Pascal Fontaine, Haniel Barbosa.
+Developed by David Déharbe, Pascal Fontaine, Haniel Barbosa.
 Lacks bitvectors.
 
 \item toysolver\footnote{\url{https://github.com/msakai/toysolver}} by Masahiro Sakai, written in Haskell.
@@ -58,7 +62,11 @@ Something else:
 
 \item PySMT: unified Python interface to many SMT solvers: \url{https://pysmt.readthedocs.io/en/latest/}
 
-\item JavaSMT - Unified Java API for SMT solvers: \url{https://github.com/sosy-lab/java-smt}
+\item JavaSMT -- Unified Java API for SMT solvers: \url{https://github.com/sosy-lab/java-smt}
+
+\item jSMTLIB -- Another Java API for SMT solvers: \url{http://smtlib.github.io/jSMTLIB/}
+
+\item SBV: SMT Based Verification in Haskell: \url{http://leventerkok.github.io/sbv/}
 
 \end{itemize}
 

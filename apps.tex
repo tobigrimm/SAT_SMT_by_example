@@ -33,3 +33,24 @@ used in Frama-C\footnote{\url{http://why3.lri.fr/}}.
 a language for cryptoalgorithms specification and prooving it's correctness. Uses Z3.
 
 \end{itemize}
+
+\section{Verify compiler's optimization}
+
+Your compiler optimized something out, but you're unsure if your optimization rules are correct, because there are lots of them.
+You can prove the original expression and optimized are equal to each other.
+
+This is what I did for my toy decompiler: \ref{ToyDecompilerTestingZ3}.
+
+Alive project:
+
+Nuno P. Lopes, David Menendez, Santosh Nagarakatte, John Regehr -- Practical Verification of Peephole Optimizations with Alive
+\footnote{\url{http://web.ist.utl.pt/nuno.lopes/pubs/alive-cacm18.pdf}}.
+
+Another paper: Provably Correct Peephole Optimizations with Alive
+\footnote{\url{http://www.cs.utah.edu/~regehr/papers/pldi15.pdf}}.
+
+At github: \url{https://github.com/nunoplopes/alive}.
+
+Nuno Lopes -- Verifying Optimizations using SMT Solvers
+\footnote{\url{https://llvm.org/devmtg/2013-11/slides/Lopes-SMT.pdf}}.
+
