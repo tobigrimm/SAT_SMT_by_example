@@ -1,0 +1,301 @@
+\section{Integer overflow}
+
+This is a classic bug:
+
+\begin{lstlisting}[style=customc]
+void allocate_data_for_some_chunks(int num)
+{
+#define MAX_CHUNKS 10
+
+	if (num>MAX_CHUNKS)
+		// throw error
+
+	void* chunks=malloc(num*sizeof(CHUNK));
+
+	...
+};
+\end{lstlisting}
+
+Seems innocent? However, if a (remote) attacker can put negative value into num, no exception is to be throwed, and malloc() will crash
+on too big input value, because malloc() takes unsigned size\_t on input.
+Unsigned int should be used instead of int for "num", but many programmers use int as a generic type for everything.
+
+\subsection{Signed addition}
+
+First, let's start with addition.
+a+b also seems innocent, but it is producing incorrect result if a+b doesn't fit into 32/64-bit register.
+
+This is what we will do: evaluate an expression on two ALUs: 32-bit one and 64-bit one:
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+                                          +------------+
+a ---+----------------------------------> |            |
+     |                                    | 32-bit ALU | -- [sign extend to 64-bit] --> |\
+b -- | -+-------------------------------> |            |                                | \
+     |  |                                 +------------+                                |  \
+     |  |                                                                               |cmp| -> true
+     |  |                                 +------------+                                |  /
+     +- | -- [sign extend to 64 bits] --> |            |                                | /
+        |                                 | 64-bit ALU | -----------------------------> |/
+        +--- [sign extend to 64 bits] --> |            |
+                                          +------------+
+\end{lstlisting}
+
+In other words, you want your expression to be evaluated on both ALUs correctly, for all possible inputs, right?
+Like if the result of 32-bit ALU is always fit into 32-bit register.
+
+And now we can ask Z3 SMT solver to find such an a/b inputs, for which the final comparison will fail.
+
+Needless to say, the default operations (+, -, comparisons, etc) in Z3's Python API are signed, you can see this 
+\href{https://github.com/Z3Prover/z3/blob/master/src/api/python/z3/z3.py}{here}.
+
+Also, we can find lower bound, or minimal possible inputs, using minimize():
+
+\lstinputlisting[style=custompy]{verif/int_over/1.py}
+
+\begin{lstlisting}
+a32=0x1 or 1
+b32=0x7fffffff or 2147483647
+out32=0x80000000 or -2147483648
+out32_extended=0xffffffff80000000 or -2147483648
+a64=0x1 or 1
+b64=0x7fffffff or 2147483647
+out64=0x80000000 or 2147483648
+\end{lstlisting}
+
+Right, 1+0x7fffffff = 0x80000000.
+But 0x80000000 is negative already, because \ac{MSB} is 1.
+However, add this on 64-bit \ac{ALU} and the result will fit in 64-bit register.
+
+How would we fix this problem?
+We can devise a special function with "wrapped" addition:
+
+\begin{lstlisting}[style=customc]
+/* Returns: a + b */
+
+/* Effects: aborts if a + b overflows */
+
+COMPILER_RT_ABI si_int
+__addvsi3(si_int a, si_int b)
+{
+    si_int s = (su_int) a + (su_int) b;
+    if (b >= 0)
+    {
+        if (s < a)
+            compilerrt_abort();
+    }
+    else
+    {
+        if (s >= a)
+            compilerrt_abort();
+    }
+    return s;
+}
+\end{lstlisting}
+
+( \url{https://github.com/llvm-mirror/compiler-rt/blob/master/lib/builtins/addvsi3.c} )
+
+Now I can simulate this function in Z3Py.
+I'm telling it: "find a solution, where this expression will be false":
+
+\begin{lstlisting}
+s.add(Not(If(b32>=0, a32+b32<a32, a32+b32>a32)))
+\end{lstlisting}
+
+And it gives \textit{unsat}, meaning, there is no counterexample, so the expression can be evaluated safely on both \ac{ALU}s.
+
+But is there a bug in my statement?
+Let's check.
+Find inputs for which this piece of LLVM code will call \verb|compilerrt_abort()|:
+
+\begin{lstlisting}
+s.add(If(b32>=0, a32+b32<a32, a32+b32>a32))
+\end{lstlisting}
+
+\begin{lstlisting}
+a32=0x1 or 1
+b32=0x7fffffff or 2147483647
+out32=0x80000000 or -2147483648
+out32_extended=0xffffffff80000000 or -2147483648
+a64=0x1 or 1
+b64=0x7fffffff or 2147483647
+out64=0x80000000 or 2147483648
+\end{lstlisting}
+
+Safe implementations of other operations:
+\url{https://wiki.sei.cmu.edu/confluence/display/java/NUM00-J.+Detect+or+prevent+integer+overflow}.
+A popular library:
+\url{https://github.com/dcleblanc/SafeInt}.
+
+\subsection{Arithmetic mean}
+
+Another classic bug. This is a famous bug in binary search algorithms:
+\href{https://ai.googleblog.com/2006/06/extra-extra-read-all-about-it-nearly.html}{1},
+\href{https://thebittheories.com/the-curious-case-of-binary-search-the-famous-bug-that-remained-undetected-for-20-years-973e89fc212}{2}.
+The bug itself not in binary search algorithm, but in calculating arithmetic mean:
+
+\begin{lstlisting}[style=custompy]
+def func(a,b):
+    return (a+b)/2
+\end{lstlisting}
+
+\begin{lstlisting}
+a32=0x1 or 1
+b32=0x7fffffff or 2147483647
+out32=0xc0000000 or -1073741824
+out32_extended=0xffffffffc0000000 or -1073741824
+a64=0x1 or 1
+b64=0x7fffffff or 2147483647
+out64=0x40000000 or 1073741824
+\end{lstlisting}
+
+We can fix this function using a seemingly esoteric Dietz formula, used to do the same, but without integer overflow:
+
+\begin{lstlisting}[style=custompy]
+def func(a,b):
+    return ((a^b)>>1) + (a&b)
+\end{lstlisting}
+
+( Its internal workings is described in here: \ref{Dietz} )
+
+Z3 gives unsat for this function, it can't find counterexample.
+
+\subsection{Allocate memory for some chunks}
+
+Let's return to the \verb|allocate_data_for_some_chunks()| function at the beginning of this post.
+
+\lstinputlisting[style=custompy]{verif/int_over/2.py}
+
+For which "a" values will fail the expression a*1024?
+This is a smallest "a" input:
+
+\begin{lstlisting}
+a32=0x200000 or 2097152
+out32=0x80000000 or -2147483648
+out32_extended=0xffffffff80000000 or -2147483648
+a64=0x200000 or 2097152
+out64=0x80000000 or 2147483648
+\end{lstlisting}
+
+OK, let's pretend we inserted a \verb|assert (a<100)| before malloc:
+
+\begin{lstlisting}
+s.add(a32<100)
+\end{lstlisting}
+
+\begin{lstlisting}
+a32=0x80000000 or -2147483648
+out32=0x0 or 0
+out32_extended=0x0 or 0
+a64=0xffffffff80000000 or -2147483648
+out64=0xfffffe0000000000 or -2199023255552
+\end{lstlisting}
+
+Still, an attacker can pass a negative a=-2147483648, and malloc() will fail.
+
+Let's pretend, we added a "assert (a>0)" before calling malloc():
+
+\begin{lstlisting}
+s.add(a32>0)
+\end{lstlisting}
+
+Now Z3 can't find any counterexample.
+
+Some people say, you should use functions like reallocarray() to be protected from integer overflows:
+\url{http://lteo.net/blog/2014/10/28/reallocarray-in-openbsd-integer-overflow-detection-for-free/}.
+
+\subsection{abs()}
+
+Also seemingly innocent function:
+
+\begin{lstlisting}[style=custompy]
+def func(a):
+    return If(a<0, -a, a)
+\end{lstlisting}
+
+\begin{lstlisting}
+a32=0x80000000 or -2147483648
+out32=0x80000000 or -2147483648
+out32_extended=0xffffffff80000000 or -2147483648
+a64=0xffffffff80000000 or -2147483648
+out64=0x80000000 or 2147483648
+\end{lstlisting}
+
+This is an artifact of two's complement system.
+This is INT\_MIN, and -INT\_MIN == INT\_MIN.
+It can lead to nasty bugs, and classic one is a naive implementations of itoa() or printf().
+
+Suppose, you print a signed value.
+And you write something like:
+
+\begin{lstlisting}[style=customc]
+if (input<0)
+{
+	input=-input;
+	printf ("-"); // print leading minus
+};
+
+// print digits in (positive) input:
+...
+\end{lstlisting}
+
+If INT\_MIN (0x80000000) is passed, minus sign is printed, but the "input" variable still contain negative value.
+An additional check for INT\_MIN is to be added to fix this.
+
+This is also called "undefined behaviour" in C.
+The problem is that C language itself is old enough to be a witness of "old iron" -- computers which could
+represent signed numbers in other ways than two's complement representation:
+\url{ttps://en.wikipedia.org/wiki/Signed_number_representations}.
+
+For this reason, C standard doesn't guarantee that -1 will be 0xffffffff (all bits set) on 32-bit registers,
+because the standard can't guarantee you will run on a hardware with two's complement representation of signed numbers.
+
+However, almost all hardware you can currently use and buy uses two's complement.
+
+More about the abs() problem:
+
+\begin{lstlisting}
+This can become a security issue. I have seen one instance in the vasprintf implementation of libiberty,
+which is part of gcc, binutils and some other GNU software. vasprintf walks over the format string and 
+tries to estimate how much space it will need to hold the formatted result string. In format strings, 
+there is a construct %.*s or %*s, which means that the actual value should be taken from the stack. 
+The libiberty code did it like this:
+
+          if (*p == '*')
+            {
+              ++p;
+              total_width += abs (va_arg (ap, int));
+            }
+
+This is actually two issues in one. The first issue is that total_width can overflow. The second issue 
+is the one that is interesting in this context: abs can return a negative number, causing the code 
+to allocate not enough space and thus cause a buffer overflow. 
+\end{lstlisting}
+
+( \url{http://www.fefe.de/intof.html} )
+
+\subsection{Games}
+
+A lot of video games are prone to integer overflow.
+Which are exploited actively by gamers.
+As of NetHack:
+\url{https://nethackwiki.com/wiki/Integer_overflow},
+\url{https://nethackwiki.com/wiki/Negative_gold}.
+
+\subsection{Summary}
+
+What we did here, is we checked, if a result of an expression can fit in 32-bit register.
+Probably, you can use a narrower second "ALU", than a 64-bit one.
+
+\subsection{Further work}
+
+If you want to catch overflows on unsigned variables, use unsigned Z3 operations instead of signed, and do zero extend instead of sign extend.
+
+\subsection{Further reading}
+
+\href{https://www.cs.utah.edu/~regehr/papers/tosem15.pdf}{Understanding Integer Overflow in C/C++}.\\
+\\
+\href{https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/z3prefix.pdf}{Modular Bug-finding for Integer Overflows in the Large: Sound, Efficient, Bit-precise Static Analysis}.\\
+\\
+\href{http://fmv.jku.at/c32sat/}{C32SAT}.
+
