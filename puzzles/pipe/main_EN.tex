@@ -62,13 +62,13 @@ There are:
 \end{longtable}
 \end{center}
 
-\textit{Dangling} joints can be preset at a first stage (i.e., cell with only one joint), but they are removed recursively,
+\emph{Dangling} joints can be preset at a first stage (i.e., cell with only one joint), but they are removed recursively,
 these cells are transforming into empty cells.
 Hence, at the end, all cells has at least two joints, and the whole plumbing system has no connections with outer
 world---I hope this would make things clearer.
 
 The C source code of generator is here: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/tree/master/puzzles/pipe/generator}.
-All horizontal joints are stored in the global array \textit{hjoints[]} and vertical in \textit{vjoints[]}.
+All horizontal joints are stored in the global array \emph{hjoints[]} and vertical in \emph{vjoints[]}.
 
 The C program generates ANSI-colored output like it has been showed above (\ref{fig:pipe_shuffled}, \ref{fig:pipe_solved}) plus
 an array of types, with no angle information about each cell:
@@ -222,7 +222,7 @@ Let's compare these two solutions using gvimdiff:
 Perhaps, other puzzles may produce different results.
 
 P.S.
-\textit{Half-joint} is defined as boolean type.
+\emph{Half-joint} is defined as boolean type.
 But in fact, the first version of the solver has been written using integer type for half-joints,
 and 0 was used for False and 1 for True.
 I did it so because I wanted to make source code tidier and narrower without using long words like ``False'' and ``True''.

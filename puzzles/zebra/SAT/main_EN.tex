@@ -23,7 +23,7 @@ In[]:= BooleanConvert[BooleanFunction[tbl1,{a,b,c,d,e}],"CNF"]
 Out[]= (!a||!b)&&(!a||!c)&&(!a||!d)&&(!a||!e)&&(a||b||c||d||e)&&(!b||!c)&&(!b||!d)&&(!b||!e)&&(!c||!d)&&(!c||!e)&&(!d||!e)
 \end{lstlisting}
 
-Also, as I suggested before (\ref{OR_in_POPCNT1}), I used \textit{OR} operation as the second step.
+Also, as I suggested before (\ref{OR_in_POPCNT1}), I used \emph{OR} operation as the second step.
 
 \begin{lstlisting}
 def mathematica_to_CNF (s, d):
@@ -84,7 +84,7 @@ alloc_distinct_variables(["Fox", "Horse", "Snails", "Dog", "Zebra"])
 
 \end{lstlisting}
 
-Now we have 5 boolean variables for each \textit{high-level} variable,
+Now we have 5 boolean variables for each \emph{high-level} variable,
 and each group of variables will always have distinct values.
 
 Now let's reread puzzle description: ``2.The Englishman lives in the red house.''.
@@ -97,7 +97,7 @@ On a lowest CNF level, if we want to say that two variables must be equal to eac
 
 $(var1 \vee \neg var2) \wedge (\neg var1 \vee var2)$
 
-That means, both \textit{var1} and \textit{var2} values must be \textit{False} or \textit{True},
+That means, both \emph{var1} and \emph{var2} values must be \emph{False} or \emph{True},
 but they cannot be different.
 
 \begin{lstlisting}

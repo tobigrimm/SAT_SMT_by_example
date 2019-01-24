@@ -40,7 +40,7 @@ In case of operation, the string followed by another tuples.
 
 Node type and operation type are stored as plain strings---to make debugging output easier to read.
 
-There are \textit{constructors} in our code, in \ac{OOP} sense:
+There are \emph{constructors} in our code, in \ac{OOP} sense:
 
 \begin{lstlisting}
 def create_val_expr (val):
@@ -53,7 +53,7 @@ def create_binary_expr (op, op1, op2):
     return ("EXPR_OP", op, op1, op2)
 \end{lstlisting}
 
-There are also \textit{accessors}:
+There are also \emph{accessors}:
 
 \begin{lstlisting}
 def get_expr_type(e):
@@ -340,8 +340,8 @@ The following piece of code \dots
         add     rax, rax
 \end{lstlisting}
 
-\dots will be transormed into \textit{(arg1 + arg1)} expression.
-It can be reduced to \textit{(arg1 * 2)}.
+\dots will be transormed into \emph{(arg1 + arg1)} expression.
+It can be reduced to \emph{(arg1 * 2)}.
 Our toy decompiler can identify patterns like such and rewrite them.
 
 \begin{lstlisting}
@@ -353,16 +353,16 @@ def reduce_ADD1 (expr):
     return expr # no match
 \end{lstlisting}
 
-This function will just test, if the current node has \textit{EXPR\_OP} type,
+This function will just test, if the current node has \emph{EXPR\_OP} type,
 operation is ``+'' and both children are equal to each other.
 By the way, since our data structure is just tuple of tuples, Python can compare them using plain ``=='' operation.
 If the testing is finished successfully, current node is then replaced with a new expression:
-we take one of children, we construct a node of \textit{EXPR\_VALUE} type with ``2'' number in it,
-and then we construct a node of \textit{EXPR\_OP} type with ``*''.
+we take one of children, we construct a node of \emph{EXPR\_VALUE} type with ``2'' number in it,
+and then we construct a node of \emph{EXPR\_OP} type with ``*''.
 
 \TT{dbg\_print\_reduced\_expr()} serving solely debugging purposes---it just prints the old and the new (reduced) expressions.
 
-Decompiler is then traverse expression tree recursively in \textit{deep-first search} fashion.
+Decompiler is then traverse expression tree recursively in \emph{deep-first search} fashion.
 
 \begin{lstlisting}
 def reduce_step (e):
@@ -438,7 +438,7 @@ result=(((arg1 * 2) * 2) * 2)
 
 This is correct, but too verbose.
 
-We would like to rewrite \textit{(X*n)*m} expression to \textit{X*(n*m)}, where $n$ and $m$ are numbers.
+We would like to rewrite \emph{(X*n)*m} expression to \emph{X*(n*m)}, where $n$ and $m$ are numbers.
 We can do this by adding another function like \TT{reduce\_ADD1()}, but there is much better option:
 we can make matcher for tree.
 You can think about it as regular expression matcher, but over trees.
@@ -532,15 +532,15 @@ def reduce_MUL1 (expr):
 
 We take input expression, and we also construct pattern to be matched.
 Matcher works recursively over both expressions synchronously.
-Pattern is also expression, but can use two additional node types: \textit{EXPR\_WILDCARD} and
-\textit{EXPR\_WILDCARD\_VALUE}. These nodes are supplied with keys (stored as strings).
-When matcher encounters \textit{EXPR\_WILDCARD} in pattern, it just stashes current expression and will return it.
-If matcher encounters \textit{EXPR\_WILDCARD\_VALUE}, it does the same, but only in case the current node
-has \textit{EXPR\_VALUE} type.
+Pattern is also expression, but can use two additional node types: \emph{EXPR\_WILDCARD} and
+\emph{EXPR\_WILDCARD\_VALUE}. These nodes are supplied with keys (stored as strings).
+When matcher encounters \emph{EXPR\_WILDCARD} in pattern, it just stashes current expression and will return it.
+If matcher encounters \emph{EXPR\_WILDCARD\_VALUE}, it does the same, but only in case the current node
+has \emph{EXPR\_VALUE} type.
 
 \TT{bind\_expr()} and \TT{bind\_value()} are functions which create nodes with the types we have seen.
 
-All this means, \TT{reduce\_MUL1()} function will search for the expression in form \textit{(X*A)*B}, where $A$ and $B$
+All this means, \TT{reduce\_MUL1()} function will search for the expression in form \emph{(X*A)*B}, where $A$ and $B$
 are numbers. In other cases, matcher will return input expression untouched, so these reducing function can be chained.
 
 Now when \TT{reduce\_MUL1()} encounters (sub)expression we are interesting in,
@@ -583,7 +583,7 @@ Now a real-world optimization technique---optimizing GCC replaced multiplication
         sub     rax, rdi
 \end{lstlisting}
 
-Without reduction functions, our decompiler will translate this into \textit{((arg1 << 5) - arg1)}.
+Without reduction functions, our decompiler will translate this into \emph{((arg1 << 5) - arg1)}.
 We can replace shifting left by multiplication:
 
 \begin{lstlisting}
@@ -596,7 +596,7 @@ def reduce_SHL1 (expr):
     return dbg_print_reduced_expr ("reduce_SHL1", expr, create_binary_expr ("*", m["X"], create_val_expr (1<<m["Y"])))
 \end{lstlisting}
 
-Now we getting \textit{((arg1 * 32) - arg1)}.
+Now we getting \emph{((arg1 * 32) - arg1)}.
 We can add another reduction function:
 
 \begin{lstlisting}
@@ -645,7 +645,7 @@ is implemented using shifts:
 This code is quite common in ARM thumb code, because it's a headache to encode 32-bit constants using couple of 16-bit
 thumb instructions, while single 16-bit instruction can shift by 4 bits left or right.
 
-Also, the expression \textit{(x>>4)<<4} can be jokingly called as ``twitching operator'':
+Also, the expression \emph{(x>>4)<<4} can be jokingly called as ``twitching operator'':
 I've heard the ``-{}-i++'' expression was called like this in Russian-speaking social networks, it was some kind of meme
 (``operator podergivaniya'').
 
@@ -768,7 +768,7 @@ def reduce_div_by_MUL (expr):
     return dbg_print_reduced_expr ("reduce_div_by_MUL", expr, create_binary_expr ("/", m["X"], create_val_expr (int(divisor))))
 \end{lstlisting}
 
-This works, but we have a problem: this rule takes \textit{(arg1 * 0xcccccccccccccccd) >> 64} expression first and
+This works, but we have a problem: this rule takes \emph{(arg1 * 0xcccccccccccccccd) >> 64} expression first and
 finds divisor to be equal to $1.25$.
 This is correct: result is shifted by 3 bits after (or divided by 8), and $1.25 \cdot 8 = 10$.
 But our toy decompiler doesn't support real numbers.
@@ -813,7 +813,7 @@ Couple of words about better understanding division by multiplication.
 Many people miss ``hidden'' division by $2^{32}$ or $2^{64}$,
 when lower 32-bit part (or 64-bit part) of product is not used (or just dropped).
 Also, there is misconception that modulo inverse is used here. This is close, but not the same thing.
-Extended Euclidean algorithm is usually used to find \textit{magic coefficient}, but in fact,
+Extended Euclidean algorithm is usually used to find \emph{magic coefficient}, but in fact,
 this algorithm is rather used to solve the equation. You can solve it using any other method.
 Also, needless to mention, the equation is unsolvable for some divisors, because this is diophantine equation
 (i.e., equation allowing result to be only integer), since we work on integer CPU registers, after all.
@@ -896,15 +896,15 @@ going to reduce (arg1 ^ 1)
 result=(arg1 ^ 1)
 \end{lstlisting}
 
-I also used \textit{aha!}\footnote{\url{http://www.hackersdelight.org/aha/aha.pdf}} superoptimizer to find weird piece of code which does nothing.
+I also used \emph{aha!}\footnote{\url{http://www.hackersdelight.org/aha/aha.pdf}} superoptimizer to find weird piece of code which does nothing.
 
-\textit{Aha!} is so called superoptimizer, it tries various piece of codes in brute-force manner, in attempt
+\emph{Aha!} is so called superoptimizer, it tries various piece of codes in brute-force manner, in attempt
 to find shortest possible alternative for some mathematical operation.
 While sane compiler developers use superoptimizers for this task, I tried it in opposite way, to find oddest
 pieces of code for some simple operations, including \ac{NOP} operation.
 In past, I've used it to find weird alternative to XOR operation (\ref{weird_XOR}).
 
-So here is what \textit{aha!} can find for \ac{NOP}:
+So here is what \emph{aha!} can find for \ac{NOP}:
 
 \begin{lstlisting}
 ; do nothing (as found by aha)
@@ -999,7 +999,7 @@ going to reduce arg1
 result=arg1
 \end{lstlisting}
 
-I also forced \textit{aha!} to find piece of code which adds 2 with no addition/subtraction operations allowed:
+I also forced \emph{aha!} to find piece of code which adds 2 with no addition/subtraction operations allowed:
 
 \begin{lstlisting}
 ; arg1+2, without add/sub allowed, as found by aha:
@@ -1125,7 +1125,7 @@ We need to be sure that original expression and reduced one are equivalent to ea
 
 \subsection{Evaluating expressions}
 
-First of all, we would just evaluate (or \textit{run}, or \textit{execute})
+First of all, we would just evaluate (or \emph{run}, or \emph{execute})
 expression with random values as arguments, and then compare results.
 
 Evaluator do arithmetical operations when possible, recursively.
@@ -1177,19 +1177,19 @@ def do_selftest(old, new):
             exit(0)
 \end{lstlisting}
 
-In fact, this is very close to what LISP \textit{EVAL} function does, or even LISP interpreter.
+In fact, this is very close to what LISP \emph{EVAL} function does, or even LISP interpreter.
 However, not all symbols are set.
 If the expression is using initial values from RAX or RBX
 (to which symbols ``initial\_RAX'' and ``initial\_RBX'' are assigned,
 decompiler will stop with exception, because no random values assigned to these registers,
-and these symbols are absent in \textit{symbols} dictionary.
+and these symbols are absent in \emph{symbols} dictionary.
 
 Using this test, I've suddenly found a bug here (despite simplicity of all these reduction rules).
 Well, no-one protected from eye strain.
 Nevertheless, the test has a serious problem: some bugs can be revealed only if one of arguments is $0$, or $1$, or $-1$.
 Maybe there are even more special cases exists.
 
-Mentioned above \textit{aha!} superoptimizer tries at least these values as arguments while testing:
+Mentioned above \emph{aha!} superoptimizer tries at least these values as arguments while testing:
 1, 0, -1, 0x80000000, 0x7FFFFFFF, 0x80000001, 0x7FFFFFFE, 0x01234567, 0x89ABCDEF, -2, 2, -3, 3,
 -64, 64, -5, -31415.
 
@@ -1199,9 +1199,9 @@ Still, you cannot be sure.
 \label{ToyDecompilerTestingZ3}
 
 So here we will try Z3 SMT-solver.
-SMT-solver can \textit{prove} that two expressions are equivalent to each other.
+SMT-solver can \emph{prove} that two expressions are equivalent to each other.
 
-For example, with the help of \textit{aha!}, I've found another weird piece of code, which does nothing:
+For example, with the help of \emph{aha!}, I've found another weird piece of code, which does nothing:
 
 \begin{lstlisting}
 ; do nothing (obfuscation)
@@ -1227,7 +1227,7 @@ For example, with the help of \textit{aha!}, I've found another weird piece of c
         sub rax, rcx
 \end{lstlisting}
 
-Using toy decompiler, I've found that this piece is reduced to \textit{arg1} expression:
+Using toy decompiler, I've found that this piece is reduced to \emph{arg1} expression:
 
 \begin{lstlisting}
 working out tests/t5_obf.s
@@ -1258,16 +1258,16 @@ And this is SMT-LIB-file for Z3:
 (check-sat)
 \end{lstlisting}
 
-In plain English terms, what we asking it to be sure, that \textit{forall} four 64-bit arguments, two expressions
-are equivalent (second is just \textit{arg1}).
+In plain English terms, what we asking it to be sure, that \emph{forall} four 64-bit arguments, two expressions
+are equivalent (second is just \emph{arg1}).
 
 The syntax maybe hard to understand, but in fact, this is very close to LISP, and arithmetical operations
-are named ``bvsub'', ``bvadd'', etc, because ``bv'' stands for \textit{bit vector}.
+are named ``bvsub'', ``bvadd'', etc, because ``bv'' stands for \emph{bit vector}.
 
 While running, Z3 shows ``sat'', meaning ``satisfiable''.
 In other words, Z3 couldn't find counterexample for this expression.
 
-In fact, I can rewrite this expression in the following form: \textit{expr1 != expr2}, and we would ask
+In fact, I can rewrite this expression in the following form: \emph{expr1 != expr2}, and we would ask
 Z3 to find at least one set of input arguments, for which expressions are not equal to each other:
 
 \begin{lstlisting}
@@ -1308,7 +1308,7 @@ First of all, I extended it so boths results will have size of 128 bit instead o
 (get-model)
 \end{lstlisting}
 
-(\textit{bv17} is just 64-bit number 17, etc. ``bv'' stands for ``bit vector'', as opposed to integer value.)
+(\emph{bv17} is just 64-bit number 17, etc. ``bv'' stands for ``bit vector'', as opposed to integer value.)
 
 Z3 works too long without any answer, and I had to interrupt it.
 
@@ -1351,15 +1351,15 @@ Here are two pieces of code from LLVM source code with couple of reducing rules:
 ( \href{https://github.com/numba/llvm-mirror/blob/master/lib/Transforms/InstCombine/InstCombineAndOrXor.cpp}{lib/Transforms/InstCombine/InstCombineAndOrXor.cpp} )
 
 As you can see, my matcher tries to mimic LLVM.
-What I call \textit{reduction} is called \textit{folding} in LLVM.
+What I call \emph{reduction} is called \emph{folding} in LLVM.
 Both terms are popular.
 
 I have also a blog post about LLVM obfuscator, in which LLVM matcher is mentioned: \url{https://yurichev.com/blog/llvm/}.
 
 Python version of toy decompiler uses strings in place where enumerate data type is used in C version
-(like \textit{OP\_AND}, \textit{OP\_MUL}, etc) and
+(like \emph{OP\_AND}, \emph{OP\_MUL}, etc) and
 symbols used in Racket version\footnote{Racket is Scheme (which is, in turn, LISP dialect) dialect.
-\url{\GitHubTreeMasterURL/toy_decompiler/files/Racket}} (like \textit{'OP\_DIV}, etc).
+\url{\GitHubTreeMasterURL/toy_decompiler/files/Racket}} (like \emph{'OP\_DIV}, etc).
 This may be seen as inefficient, nevertheless, thanks to strings interning, only address of strings are compared in
 Python version, not strings as a whole. So strings in Python can be seen as possible replacement for LISP symbols.
 
@@ -1435,19 +1435,19 @@ There are several interesting open-source attempts to build decompiler.
 Both source code and theses are interesting study.
 
 \begin{itemize}
-	\item \textit{decomp} by Jim Reuter\footnote{
+	\item \emph{decomp} by Jim Reuter\footnote{
 			\url{http://www.program-transformation.org/Transform/DecompReadMe},
 			\url{http://www.program-transformation.org/Transform/DecompDecompiler}}.
 
-	\item \textit{DCC} by Cristina Cifuentes\footnote{
+	\item \emph{DCC} by Cristina Cifuentes\footnote{
 			\url{http://www.program-transformation.org/Transform/DccDecompiler},
 			thesis: \url{https://yurichev.com/mirrors/DCC_decompilation_thesis.pdf}}.
 
-		It is interesting that this decompiler supports only one type (\textit{int}).
-		Maybe this is a reason why DCC decompiler produces source code with \textit{.B} extension?
+		It is interesting that this decompiler supports only one type (\emph{int}).
+		Maybe this is a reason why DCC decompiler produces source code with \emph{.B} extension?
 		Read more about B typeless language (C predecessor): \url{https://yurichev.com/blog/typeless/}.
 
-	\item \textit{Boomerang} by Mike Van Emmerik, Trent Waddington et al\footnote{
+	\item \emph{Boomerang} by Mike Van Emmerik, Trent Waddington et al\footnote{
 			\url{http://boomerang.sourceforge.net/},
 			\url{http://www.program-transformation.org/Transform/MikeVanEmmerik},
 			thesis: \url{https://yurichev.com/mirrors/vanEmmerik_ssa.pdf}}.

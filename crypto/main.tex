@@ -1,7 +1,7 @@
 \chapter{(Amateur) cryptography}
 \label{crypto}
 
-\section{\textit{Serious} cryptography}
+\section{\emph{Serious} cryptography}
 
 Let's back to the method we previously used (\ref{symbolic_exec}) to construct expressions using running Python function.
 
@@ -20,7 +20,7 @@ And this is just for 1 round.
 For 2 rounds, size of all 4 expression is $\approx 970KB$.
 For 3 rounds, this is $\approx 115MB$.
 For 4 rounds, I have not enough RAM on my computer.
-Expressions \textit{exploding} exponentially.
+Expressions \emph{exploding} exponentially.
 And there are 19 rounds.
 You can weigh it.
 
@@ -36,7 +36,7 @@ Yes, cryptographers are fully aware of this and one of the goals of the successf
 to make expressions as big as possible, using resonable time and size of algorithm.
 
 Nevertheless, you can find numerous papers about breaking these cryptosystems with reduced number of rounds:
-when expression isn't \textit{exploded} yet, sometimes it's possible.
+when expression isn't \emph{exploded} yet, sometimes it's possible.
 This cannot be applied in practice, but such an experience has some interesting theoretical uses.
 
 \subsection{Attempts to break ``serious'' crypto}
@@ -119,7 +119,7 @@ One funny thing to mention: if you try to implement amateur cryptoalgorithm in V
 maybe in brute-force way,
 you can find that \ac{EDA} tools can optimize many things during synthesis
 (this is the word they use for ``compilation'') and can leave cryptoalgorithm much smaller/simpler than it was.
-Even if you try to implement \ac{DES} algorithm \textit{in bare metal} with a fixed key,
+Even if you try to implement \ac{DES} algorithm \emph{in bare metal} with a fixed key,
 Altera Quartus can optimize first round of it and make it smaller than others.
 
 \subsection{Bugs}

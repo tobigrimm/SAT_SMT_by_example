@@ -30,8 +30,8 @@ int LZCNT(uint32_t x)
 (This is usually done using simpler algorithm, but it will contain conditional jumps, which is bad for
 CPUs starting at RISC. There are no conditional jumps in this algorithm.)
 
-The magic number used here is called \textit{de Bruijn sequence},
-and I once used bruteforce to find it (one of the results was \textit{0x4badf0d}, which is used here).
+The magic number used here is called \emph{de Bruijn sequence},
+and I once used bruteforce to find it (one of the results was \emph{0x4badf0d}, which is used here).
 But what if we need magic number for 64-bit values?
 Bruteforce is not an option here.
 
@@ -52,7 +52,7 @@ Output:
 \lstinputlisting{\CURPATH/output.txt}
 
 Overlapping chunks are clearly visible.
-So the magic number is \textit{0x79c52dd0991abf60}.
+So the magic number is \emph{0x79c52dd0991abf60}.
 Let's check:
 
 \lstinputlisting[style=customc]{\CURPATH/64.c}

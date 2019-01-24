@@ -3,18 +3,18 @@
 
 (The test was first published in my blog at April 2015: \url{http://blog.yurichev.com/node/86}).
 
-There is a ``A Hacker's Assistant'' program\footnote{\url{http://www.hackersdelight.org/}} (\textit{Aha!}) written by Henry Warren,
+There is a ``A Hacker's Assistant'' program\footnote{\url{http://www.hackersdelight.org/}} (\emph{Aha!}) written by Henry Warren,
 who is also the author of the great ``Hacker's Delight'' book.
 
-The \textit{Aha!} program is essentially \textit{superoptimizer}\footnote{\url{http://en.wikipedia.org/wiki/Superoptimization}},
+The \emph{Aha!} program is essentially \emph{superoptimizer}\footnote{\url{http://en.wikipedia.org/wiki/Superoptimization}},
 which blindly brute-force a list of some generic RISC CPU instructions to achieve shortest possible (and jumpless or branch-free) 
 CPU code sequence for desired operation.
-For example, \textit{Aha!} can find jumpless version of abs() function easily.
+For example, \emph{Aha!} can find jumpless version of abs() function easily.
 
 Compiler developers use superoptimization to find shortest possible (and/or jumpless) code,
 but I tried to do otherwise---to find longest code for some primitive operation.
-I tried \textit{Aha!} to find equivalent of basic XOR operation without usage of the actual XOR instruction,
-and the most bizarre example \textit{Aha!} gave is:
+I tried \emph{Aha!} to find equivalent of basic XOR operation without usage of the actual XOR instruction,
+and the most bizarre example \emph{Aha!} gave is:
 
 \begin{lstlisting}
 Found a 4-operation program:
@@ -26,14 +26,14 @@ Found a 4-operation program:
 \end{lstlisting}
 
 And it's hard to say, why/where we can use it, maybe for obfuscation, I'm not sure.
-I would call this \textit{suboptimization} (as opposed to \textit{superoptimization}).
-Or maybe \textit{superdeoptimization}.
+I would call this \emph{suboptimization} (as opposed to \emph{superoptimization}).
+Or maybe \emph{superdeoptimization}.
 
 But my another question was also, is it possible to prove that this is correct formula at all?
-The \textit{Aha!} checking some intput/output values against XOR operation, but of course, not all the possible values.
+The \emph{Aha!} checking some intput/output values against XOR operation, but of course, not all the possible values.
 It is 32-bit code, so it may take very long time to try all possible 32-bit inputs to test it.
 
-We can try Z3 theorem prover for the job. It's called \textit{prover}, after all.
+We can try Z3 theorem prover for the job. It's called \emph{prover}, after all.
 
 So I wrote this:
 
@@ -53,7 +53,7 @@ print s.check()
 In plain English language, this means
 ``are there any case for $x$ and $y$ where $x \oplus y$ doesn't equals to $((y \& x)*-2) + (y + x)$?''
 \dots and Z3 prints ``unsat'', meaning, it can't find any counterexample to the equation.
-So this \textit{Aha!} result is proved to be working just like XOR operation.
+So this \emph{Aha!} result is proved to be working just like XOR operation.
 
 Oh, I also tried to extend the formula to 64 bit:
 
@@ -86,7 +86,7 @@ s.add(((y & x)*0xFFFFFFFFFFFFFFFE) + (y + x)!=output)
 print s.check()
 \end{lstlisting}
 
-Now it says ``unsat'', so the formula given by \textit{Aha!} works for 64-bit code as well.
+Now it says ``unsat'', so the formula given by \emph{Aha!} works for 64-bit code as well.
 
 \subsection{In SMT-LIB form}
 
@@ -176,7 +176,7 @@ like them all were checked.
 
 Mathematically speaking: $\forall n\!\in\!\mathbb{N}\; (x \oplus y = (x + y - ((x \& y)<<1)))$
 \footnote{
-$\forall$ means \textit{equation must be true for all possible values}, which are choosen from natural numbers ($\mathbb{N}$).}
+$\forall$ means \emph{equation must be true for all possible values}, which are choosen from natural numbers ($\mathbb{N}$).}
 
 \subsection{How the expression works}
 

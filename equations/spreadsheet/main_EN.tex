@@ -19,13 +19,13 @@ As it turns out, though overkill, this can be solved using MK85 with little effo
 ( \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/equations/spreadsheet/spreadsheet_MK85.py} )
 
 All we do is just creating pack of variables for each cell, named A0, B1, etc, of integer type.
-All of them are stored in \textit{cells[]} dictionary.
+All of them are stored in \emph{cells[]} dictionary.
 Key is a string.
-Then we parse all the strings from cells, and add to list of constraints \textit{A0=123}
-(in case of number in cell) or \textit{A0=B1+C2} (in case of expression in cell).
-There is a slight preparation: string like \textit{A0+B2} becomes \textit{cells["A0"]+cells["B2"]}.
+Then we parse all the strings from cells, and add to list of constraints \emph{A0=123}
+(in case of number in cell) or \emph{A0=B1+C2} (in case of expression in cell).
+There is a slight preparation: string like \emph{A0+B2} becomes \emph{cells["A0"]+cells["B2"]}.
 
-Then the string is evaluated using Python \textit{eval()} method,
+Then the string is evaluated using Python \emph{eval()} method,
 which is highly dangerous
 \footnote{\url{http://stackoverflow.com/questions/1832940/is-using-eval-in-python-a-bad-practice}}:
 imagine if end-user could add a string to cell other than expression?
@@ -49,7 +49,7 @@ Two first cells of the last row (C0 and C1) are linked to each other.
 Our program will just tells ``unsat'', meaning, it couldn't satisfy all constraints together.
 We can't use this as error message reported to end-user, because it's highly unfriendly.
 
-However, we can fetch \textit{unsat core}, i.e., list of variables which Z3 finds conflicting.
+However, we can fetch \emph{unsat core}, i.e., list of variables which Z3 finds conflicting.
 
 \begin{lstlisting}
 ...
@@ -67,7 +67,7 @@ else:
 
 ( \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/equations/spreadsheet/spreadsheet_Z3_2.py} )
 
-We must explicitly turn on unsat core support and use \textit{assert\_and\_track()} instead of \textit{add()} method,
+We must explicitly turn on unsat core support and use \emph{assert\_and\_track()} instead of \emph{add()} method,
 because this feature slows down the whole process, and is turned off by default.
 That works:
 
@@ -77,7 +77,7 @@ unsat
 [C0, C1]
 \end{lstlisting}
 
-Perhaps, these variables could be removed from the 2D array, marked as \textit{unresolved}
+Perhaps, these variables could be removed from the 2D array, marked as \emph{unresolved}
 and the whole spreadsheet could be recalculated again.
 
 \subsection{Stress test}
@@ -101,7 +101,7 @@ with the use of information from topological sorted graph.
 
 \input{\CURPATH/math}
 
-Here is an output from \textit{Grid[]}:
+Here is an output from \emph{Grid[]}:
 
 \input{\CURPATH/grid.tex}
 

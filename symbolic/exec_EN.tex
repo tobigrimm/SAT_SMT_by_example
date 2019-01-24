@@ -165,7 +165,7 @@ Now we can process this expressions somehow to get a smaller picture on what is 
 Let's say, if we can find ``in\_2\_3'' substring in expression, this means that 3rd bit of 2nd byte of input
 affects this expression.
 But even more than that: since this is XOR tree (i.e., expression consisting only of XOR operations),
-if some input variable is occurring twice, it's \textit{annihilated}, since $x \oplus x=0$.
+if some input variable is occurring twice, it's \emph{annihilated}, since $x \oplus x=0$.
 More than that: if a vairable occurred even number of times (2, 4, 8, etc), it's annihilated, but left if it's occurred
 odd number of times (1, 3, 5, etc).
 

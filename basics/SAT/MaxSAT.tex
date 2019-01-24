@@ -2,10 +2,10 @@
 
 MaxSAT problem is a problem where as many clauses should be satisfied, as possible, but maybe not all.
 
-(Usual) clauses which \textit{must} be satisfied, called \textit{hard clauses}.
-Clauses which \textit{should} be satisfied, called \textit{soft clauses}.
+(Usual) clauses which \emph{must} be satisfied, called \emph{hard clauses}.
+Clauses which \emph{should} be satisfied, called \emph{soft clauses}.
 
-MaxSAT solver tries to satisfy all \textit{hard clauses} and as much \textit{soft clauses}, as possible.
+MaxSAT solver tries to satisfy all \emph{hard clauses} and as much \emph{soft clauses}, as possible.
 
 *.wcnf files are used, the format is almost the same as in DIMACS files, like:
 
@@ -29,8 +29,8 @@ p wcnf 207 796 208
 Each clause is written as in DIMACS file, but the first number if weight.
 MaxSAT solver tries to maximize clauses with bigger weights first.
 
-If the weight has \textit{top weight}, the clause is \textit{hard clause} and must always be satisfied.
-\textit{Top weight} is set in header.
+If the weight has \emph{top weight}, the clause is \emph{hard clause} and must always be satisfied.
+\emph{Top weight} is set in header.
 In our case, it's 208.
 
 Some well-known MaxSAT solvers are Open-WBO\footnote{\url{http://sat.inesc-id.pt/open-wbo}}, etc.

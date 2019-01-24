@@ -9,7 +9,7 @@ piracy of such software close to impossible --- an encrypted date file created o
 would be impossible to decrypt on cracked version of the same software.
 (This leads to many nuisances, though.)
 
-That's what is called \textit{black box}.
+That's what is called \emph{black box}.
 
 Some software protection dongles offers this functionality too.
 One example is Rockey 4\footnote{\url{http://www.rockey.nl/en/rockey.html}}.
@@ -33,8 +33,8 @@ Each algorithm is described by string like \\
 
 There are no memory, stack, conditional/unconditional jumps, etc.
 
-Each algorithm, obviously, can't have side effects, so they are actually \textit{pure functions}
-and their results can be \textit{memoized}.
+Each algorithm, obviously, can't have side effects, so they are actually \emph{pure functions}
+and their results can be \emph{memoized}.
 
 By the way, as it has been mentioned in Rockey 4 manual, first and last instruction cannot have constants.
 Maybe that's because these fields used for some internal data:
@@ -121,13 +121,13 @@ Now let's start with Z3. We will need to express Rockey 4 toy CPU in Z3Py (Z3 Py
 It can be said, my Python script is divided into two parts: 
 
 \begin{itemize}
-\item constraint definitions (like, \textit{output\_1 should be $n$ for input\_1=m},
-\textit{constant cannot be greater than 63}, etc); 
+\item constraint definitions (like, \emph{output\_1 should be $n$ for input\_1=m},
+\emph{constant cannot be greater than 63}, etc); 
 
 \item functions constructing system of equations.
 \end{itemize}
 
-This piece of code define some kind of \textit{structure} consisting of 4 named 16-bit variables,
+This piece of code define some kind of \emph{structure} consisting of 4 named 16-bit variables,
 each represent register in our toy CPU.
 
 \begin{lstlisting}
@@ -136,7 +136,7 @@ Registers_State.declare('cons', ('A', BitVecSort(16)), ('B', BitVecSort(16)), ('
 Registers_State=Registers_State.create()
 \end{lstlisting}
 
-These enumerations define two new types (or \textit{sorts} in Z3's terminology):
+These enumerations define two new types (or \emph{sorts} in Z3's terminology):
 
 \begin{lstlisting}
 Operation, (OP_MULT, OP_MINUS, OP_PLUS, OP_XOR, OP_OR, OP_AND) = EnumSort('Operation', ('OP_MULT', 'OP_MINUS', 'OP_PLUS', 'OP_XOR', 'OP_OR', 'OP_AND'))
@@ -147,7 +147,7 @@ Register, (A, B, C, D) = EnumSort('Register', ('A', 'B', 'C', 'D'))
 This part is very important, it defines all variables in our system of equations. 
 \TT{op\_step} is type of operation in instruction.
 \TT{reg\_or\_constant} is selector between register and constant in second argument ---
-\textit{False} if it's a register and \textit{True} if it's a constant. 
+\emph{False} if it's a register and \emph{True} if it's a constant. 
 \TT{reg\_step} is a destination register of this instruction. 
 \TT{reg1\_step} and \TT{reg2\_step} are just registers at arg1 and arg2. 
 \TT{constant\_step} is constant (in case it's used in instruction instead of arg2).
@@ -188,7 +188,7 @@ def register_selector (register, input_registers):
                            0)))) # default
 \end{lstlisting}
 
-This function returning corresponding register value from \textit{structure}.
+This function returning corresponding register value from \emph{structure}.
 Needless to say, the code above is not executed. 
 \TT{If()} is Z3Py function. 
 The code only declares the function, which will be used in another. 

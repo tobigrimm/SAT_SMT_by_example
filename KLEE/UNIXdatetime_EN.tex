@@ -117,7 +117,7 @@ object    0: size: 4
 object    0: data: 978278400
 \end{lstlisting}
 
-So, if this piece of code can be triggered on remote computer, with this input value (\textit{input of death}),
+So, if this piece of code can be triggered on remote computer, with this input value (\emph{input of death}),
 it's possible to crash the process (with some luck, though).\\
 \\
 OK, now I'm fixing a bug by moving year subtracting expression to line 43, and let's find, what UNIX time value corresponds to some fancy date
@@ -187,5 +187,5 @@ Tue Feb 22 22:22:22 UTC 2022
 Now that is precise.
 
 Yes, of course, C/C++ libraries has function(s) to encode human-readable date into UNIX time value, but what we've got here is KLEE working
-\textit{antipode} of decoding function, \textit{inverse function} in a way.
+\emph{antipode} of decoding function, \emph{inverse function} in a way.
 

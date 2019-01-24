@@ -10,16 +10,16 @@ The problem is to find such a set of variables, which, if plugged into boolean e
 
 \subsection{CNF form}
 
-\ac{CNF}\footnote{\url{https://en.wikipedia.org/wiki/Conjunctive_normal_form}} is a \textit{normal form}.
+\ac{CNF}\footnote{\url{https://en.wikipedia.org/wiki/Conjunctive_normal_form}} is a \emph{normal form}.
 
 % TODO recheck
 % TODO write abt it!
-%\textit{normal form} is somewhat similar to polynomials in algebra. 
+%\emph{normal form} is somewhat similar to polynomials in algebra. 
 %What is polynomial?
 %It is a standard way to express unsystematic equations like $2x \cdot x$ as $3x$ polynomial, 
 %and so you will be able to apply some operations to polynomials like summing, etc.
 
-Any boolean expression can be converted to \textit{normal form} and \ac{CNF} is one of them.
+Any boolean expression can be converted to \emph{normal form} and \ac{CNF} is one of them.
 The \ac{CNF} expression is a bunch of clauses (sub-expressions) constisting of terms (variables), ORs and NOTs, 
 all of which are then glueled together with AND into a full expression.
 There is a way to memorize it: \ac{CNF} is ``AND of ORs'' (or ``product of sums'') and \ac{DNF} is ``OR of ANDs'' (or ``sum of products'').
@@ -107,25 +107,25 @@ Zero at the end is just terminating zero, meaning end of the clause.
 In other words, each line is OR-clause with optional negations,
 and the task of MiniSat is to find such set of input, which can satisfy all lines in the input file.
 
-That file I named as \textit{adder.cnf} and now let's try MiniSat:
+That file I named as \emph{adder.cnf} and now let's try MiniSat:
 
 \begin{lstlisting}
 % minisat -verb=0 adder.cnf results.txt
 SATISFIABLE
 \end{lstlisting}
 
-The results are in \textit{results.txt} file:
+The results are in \emph{results.txt} file:
 
 \begin{lstlisting}
 SAT
 -1 -2 3 4 0
 \end{lstlisting}
 
-This means, if the first two variables (aH and aL) will be \textit{false}, and the last two variables (bH and bL) will be set to \textit{true},
+This means, if the first two variables (aH and aL) will be \emph{false}, and the last two variables (bH and bL) will be set to \emph{true},
 the whole \ac{CNF} expression is satisfiable.
-Seems to be true: if bH and bL are the only inputs set to \textit{true}, both resulting bits are also has \textit{true} states.
+Seems to be true: if bH and bL are the only inputs set to \emph{true}, both resulting bits are also has \emph{true} states.
 
-Now how to get other instances? \ac{SAT}-solvers, like \ac{SMT} solvers, produce only one solution (or \textit{instance}).
+Now how to get other instances? \ac{SAT}-solvers, like \ac{SMT} solvers, produce only one solution (or \emph{instance}).
 
 MiniSat uses \ac{PRNG} and its initial seed can be set explicitely. I tried different values, but result is still the same.
 Nevertheless, CryptoMiniSat in this case was able to show all possible 4 instances, in chaotic order, though.
@@ -151,7 +151,7 @@ SAT
 1 2 -3 -4 0
 \end{lstlisting}
 
-This means, aH and aL must be both \textit{true} and bH and bL must be \textit{false}, to satisfy the input expression.
+This means, aH and aL must be both \emph{true} and bH and bL must be \emph{false}, to satisfy the input expression.
 Let's negate this clause and add it again:
 
 \begin{lstlisting}
@@ -191,7 +191,7 @@ SAT
 1 -2 -3 4 0
 \end{lstlisting}
 
-\textit{aH=true, aL=false, bH=false, bL=true.} This is also correct.
+\emph{aH=true, aL=false, bH=false, bL=true.} This is also correct.
 
 This is fourth result. There are shouldn't be more. What if to add it?
 

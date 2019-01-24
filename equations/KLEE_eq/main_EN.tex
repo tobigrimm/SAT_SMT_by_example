@@ -47,7 +47,7 @@ object    2: data: 1
 
 This is indeed correct solution to the system of equations.
 
-KLEE has \textit{intrinsic} \TT{klee\_assume()} which tells KLEE to cut path if some constraint is not satisfied.
+KLEE has \emph{intrinsic} \TT{klee\_assume()} which tells KLEE to cut path if some constraint is not satisfied.
 So we can rewrite our example in such cleaner way:
 
 \lstinputlisting[style=customc]{equations/KLEE_eq/klee_eq2.c}

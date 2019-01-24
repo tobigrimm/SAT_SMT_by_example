@@ -3,14 +3,14 @@
 
 \renewcommand{\CURPATH}{equations/minesweeper_SAT}
 
-\subsection{Simple \textit{population count} function}
+\subsection{Simple \emph{population count} function}
 
 First of all, somehow we need to count neighbour bombs.
-The counting function is similar to \textit{population count} function.
+The counting function is similar to \emph{population count} function.
 
 We can try to make \ac{CNF} expression using Wolfram Mathematica.
-This will be a function, returning \textit{True}
-if any of 2 bits of 8 inputs bits are \textit{True} and others are \textit{False}.
+This will be a function, returning \emph{True}
+if any of 2 bits of 8 inputs bits are \emph{True} and others are \emph{False}.
 First, we make truth table of such function:
 
 \begin{lstlisting}
@@ -88,10 +88,10 @@ SAT
 1 -2 -3 -4 -5 -6 -7 8 0
 \end{lstlisting}
 
-The variable name in results lacking minus sign is \textit{True}.
-Variable name with minus sign is \textit{False}.
-We see there are just two variables are \textit{True}: 1 and 8.
-This is indeed correct: MiniSat solver found a condition, for which our function returns \textit{True}.
+The variable name in results lacking minus sign is \emph{True}.
+Variable name with minus sign is \emph{False}.
+We see there are just two variables are \emph{True}: 1 and 8.
+This is indeed correct: MiniSat solver found a condition, for which our function returns \emph{True}.
 Zero at the end is just a terminal symbol which means nothing.
 
 We can ask MiniSat for another solution, by adding current solution to the input CNF file, but with all variables negated:
@@ -106,7 +106,7 @@ We can ask MiniSat for another solution, by adding current solution to the input
 
 In plain English language, this means ``give me ANY solution which can satisfy all clauses, but also not equal to the last clause we've just added''.
 
-MiniSat, indeed, found another solution, again, with only 2 variables equal to \textit{True}:
+MiniSat, indeed, found another solution, again, with only 2 variables equal to \emph{True}:
 
 \begin{lstlisting}
 % minisat -verb=0 tst2.cnf results.txt
@@ -117,13 +117,13 @@ SAT
 1 2 -3 -4 -5 -6 -7 -8 0
 \end{lstlisting}
 
-By the way, \textit{population count} function for 8 neighbours (POPCNT8) in CNF form is simplest:
+By the way, \emph{population count} function for 8 neighbours (POPCNT8) in CNF form is simplest:
 
 \begin{lstlisting}
 a&&b&&c&&d&&e&&f&&g&&h
 \end{lstlisting}
 
-Indeed: it's true if all 8 input bits are \textit{True}.
+Indeed: it's true if all 8 input bits are \emph{True}.
 
 The function for 0 neighbours (POPCNT0) is also simple:
 
@@ -131,7 +131,7 @@ The function for 0 neighbours (POPCNT0) is also simple:
 !a&&!b&&!c&&!d&&!e&&!f&&!g&&!h
 \end{lstlisting}
 
-It means, it will return \textit{True}, if all input variables are \textit{False}.
+It means, it will return \emph{True}, if all input variables are \emph{False}.
 
 By the way, POPCNT1 function is also simple:
 
@@ -150,7 +150,7 @@ And yes, you can ask Mathematica for finding \ac{CNF} expressions for any other 
 
 \subsection{Minesweeper}
 
-Now we can use Mathematica to generate all \textit{population count} functions for 0..8 neighbours.
+Now we can use Mathematica to generate all \emph{population count} functions for 0..8 neighbours.
 
 For $9 \cdot 9$ Minesweeper matrix including invisible border, there will be $11 \cdot 11=121$ variables,
 mapped to Minesweeper matrix like this:
@@ -167,12 +167,12 @@ mapped to Minesweeper matrix like this:
 111 112 113 114 115 116 117 118 119 120 121
 \end{lstlisting}
 
-Then we write a Python script which stacks all \textit{population count} functions:
+Then we write a Python script which stacks all \emph{population count} functions:
 each function for each known number of neighbours (digit on Minesweeper field).
 Each POPCNTx() function takes list of variable numbers and outputs list of clauses to be added to the final \ac{CNF} file.
 
-As of empty cells, we also add them as clauses, but with minus sign, which means, the variable must be \textit{False}.
-Whenever we try to place bomb, we add its variable as clause without minus sign, this means the variable must be \textit{True}.
+As of empty cells, we also add them as clauses, but with minus sign, which means, the variable must be \emph{False}.
+Whenever we try to place bomb, we add its variable as clause without minus sign, this means the variable must be \emph{True}.
 
 Then we execute external minisat process.
 The only thing we need from it is exit code.

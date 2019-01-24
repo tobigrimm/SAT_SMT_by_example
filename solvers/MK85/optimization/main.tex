@@ -6,19 +6,19 @@ See simple example on \ac{GCD}: \ref{GCD}.
 It was surprisingly easy to add support of it to MK85.
 First, we take MaxSAT/WBO solver Open-WBO\footnote{\url{http://sat.inesc-id.pt/open-wbo/}}.
 It supports both hard and soft clauses.
-Hard are clauses which are \textit{must} be satisfied.
-Soft are \textit{should} be satisfied, but they are also weighted.
+Hard are clauses which are \emph{must} be satisfied.
+Soft are \emph{should} be satisfied, but they are also weighted.
 The task of MaxSAT solver is to find such an assignment for variables, so the sum of weights of soft clauses would be
-\textit{maximized}.
+\emph{maximized}.
 
 This is GCD example rewritten to SMT-LIB format:
 
 \lstinputlisting[style=customsmt]{GCD_BV2.smt}
 
 We are going to find such an assignment, for which GCD variable will be as big as possible
-(that would not break \textit{hard} constraints, of course).
+(that would not break \emph{hard} constraints, of course).
 
-Whenever my MK85 encounters \textit{minimize/maximize} command, the following function is called:
+Whenever my MK85 encounters \emph{minimize/maximize} command, the following function is called:
 
 \begin{lstlisting}[style=customc]
 void create_min_max (struct expr* e, bool min_max)

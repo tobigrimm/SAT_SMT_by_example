@@ -8,7 +8,7 @@ What we can do is to run each test and get code coverage
 (information about which lines of code was executed and which are not).
 Then the task is to make such test suite, where coverage is maximum, and number of tests is minimal.
 
-In fact, this is \textit{set cover problem} (also known as \textit{hitting set problem}).
+In fact, this is \emph{set cover problem} (also known as \emph{hitting set problem}).
 While simpler algorithms exist (see Wikipedia\footnote{\url{https://en.wikipedia.org/wiki/Set_cover_problem}}),
 it is also possible to solve with SMT-solver.
 
@@ -53,7 +53,7 @@ A leftmost number is an execution count for each line.
 \TT{\#\#\#\#\#} means the line of code hasn't been executed at all.
 The second column is a line number.
 
-Now the Z3Py script, which will parse all these 1000 gcov results and produce minimal \textit{hitting set}:
+Now the Z3Py script, which will parse all these 1000 gcov results and produce minimal \emph{hitting set}:
 
 \lstinputlisting[style=custompy]{MaxSMT/set_cover/set_cover.py}
 

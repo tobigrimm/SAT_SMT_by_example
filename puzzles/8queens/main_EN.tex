@@ -24,8 +24,8 @@ Let's try to figure out how to solve it.
 \label{POPCNTOne}
 
 One important function we will (often) use is \TT{make\_one\_hot}.
-This is a function which returns \textit{True} if one single of inputs is \textit{True} and others are \textit{False}.
-It will return \textit{False} otherwise.
+This is a function which returns \emph{True} if one single of inputs is \emph{True} and others are \emph{False}.
+It will return \emph{False} otherwise.
 
 In my other examples, I've used Wolfram Mathematica to generate CNF clauses for it, for example: \ref{minesweeper_SAT}.
 What expression Mathematica offers as \TT{make\_one\_hot} function with 8 inputs?
@@ -38,16 +38,16 @@ What expression Mathematica offers as \TT{make\_one\_hot} function with 8 inputs
 
 We can clearly see that the expression constisting of all possible variable pairs (negated) plus
 enumeration of all variables (non-negated).
-In plain English terms, this means: ``no pair can be equal to two \textit{True}'s \textit{AND} at least one \textit{True}
+In plain English terms, this means: ``no pair can be equal to two \emph{True}'s \emph{AND} at least one \emph{True}
 must be present among all variables''.
 
-This is how it works: if two variables will be \textit{True}, negated they will be both \textit{False},
+This is how it works: if two variables will be \emph{True}, negated they will be both \emph{False},
 and this clause will not be evaluated
-to \textit{True}, which is our ultimate goal.
-If one of variables is \textit{True}, both negated will produce one \textit{True} and one \textit{False} (fine).
-If both variables are False, both negated will produce two \textit{True's} (again, fine).
+to \emph{True}, which is our ultimate goal.
+If one of variables is \emph{True}, both negated will produce one \emph{True} and one \emph{False} (fine).
+If both variables are False, both negated will produce two \emph{True's} (again, fine).
 
-Here is how I can generate clauses for the function using \textit{itertools} module from Python,
+Here is how I can generate clauses for the function using \emph{itertools} module from Python,
 which provides many important functions from combinatorics:
 
 \begin{lstlisting}
@@ -62,11 +62,11 @@ which provides many important functions from combinatorics:
         self.OR_always(lst)
 \end{lstlisting}
 
-\TT{AtMost1()} function enumerates all possible pairs using \textit{itertools} function
-\textit{combinations()}.
+\TT{AtMost1()} function enumerates all possible pairs using \emph{itertools} function
+\emph{combinations()}.
 
 \TT{make\_one\_hot()} function does the same, but also adds a final clause, which forces at least one
-\textit{True} variable to be present.
+\emph{True} variable to be present.
 
 What clauses will be generated for 5 variables (1..5)?
 
@@ -99,7 +99,7 @@ s SOLUTIONS 5
 Now let's get back to eight queens.
 
 We can assign 64 variables to $8 \cdot 8=64$ cells.
-Cell occuppied with queen will be \textit{True}, vacant cell will be \textit{False}.
+Cell occuppied with queen will be \emph{True}, vacant cell will be \emph{False}.
 
 The problem of placing non-attacking (each other) queens on chess board (of any size) can be stated in plain English like this:
 \begin{itemize}
@@ -113,11 +113,11 @@ The problem of placing non-attacking (each other) queens on chess board (of any 
 These rules can be translated like that:
 
 \begin{itemize}
-\item make\_one\_hot(each row)==\textit{True}
+\item make\_one\_hot(each row)==\emph{True}
 
-\item make\_one\_hot(each column)==\textit{True}
+\item make\_one\_hot(each column)==\emph{True}
 
-\item AtMost1(each diagonal)==\textit{True}
+\item AtMost1(each diagonal)==\emph{True}
 \end{itemize}
 
 Now all we need is to enumerate rows, columns and diagonals and gather all clauses:
@@ -127,7 +127,7 @@ Now all we need is to enumerate rows, columns and diagonals and gather all claus
 
 Perhaps, \TT{gen\_diagonal()} function is not very aesthetically appealing: it enumerates also subdiagonals
 of already enumerated longer diagonals.
-To prevent presence of duplicate clauses, \textit{clauses} global variable is not a list, rather set, which allows
+To prevent presence of duplicate clauses, \emph{clauses} global variable is not a list, rather set, which allows
 only unique data to be present there.
 
 Also, I've used \TT{AtMost1} for each column, this will help to produce slightly lower number of clauses.
@@ -165,7 +165,7 @@ The SAT instance is also small enough to be easily solved by my simplest possibl
 
 We get a solution, negate it and add as a new constraint.
 In plain English language this sounds ``find a solution, which is also can't be equal to the recently found/added''.
-We add them consequently and the process is slowing---just because a problem (\textit{instance}) is growing and SAT solver
+We add them consequently and the process is slowing---just because a problem (\emph{instance}) is growing and SAT solver
 experience hard times in find yet another solution.
 
 \subsection{Skipping symmetrical solutions}

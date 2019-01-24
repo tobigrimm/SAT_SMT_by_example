@@ -61,11 +61,11 @@ len= 19
 This is not readable. But what is interesting, the solution exist only for 17-byte key.
 
 What do we know about English language texts?
-Digits are rare there, so we can \textit{minimize} them in plain text.
+Digits are rare there, so we can \emph{minimize} them in plain text.
 
-There are so called \textit{digraphs}---a very popular combinations of two letters.
-The most popular in English are: \textit{th}, \textit{he}, \textit{in} and \textit{er}.
-We can count them in plain text and \textit{maximize} them:
+There are so called \emph{digraphs}---a very popular combinations of two letters.
+The most popular in English are: \emph{th}, \emph{he}, \emph{in} and \emph{er}.
+We can count them in plain text and \emph{maximize} them:
 
 \begin{lstlisting}
 ...
@@ -188,7 +188,7 @@ So this is correct 17-byte XOR-key.
 Needless to say, that the bigger ciphertext for analysis we have, the better.
 That 350-byte file is in fact the beginning of bigger file I prepared
 (\url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/crypto/XOR/cipher2.txt}, 12903 bytes).
-And a correct key for it can be found for it without additional \textit{heuristics} we used here.
+And a correct key for it can be found for it without additional \emph{heuristics} we used here.
 
 SMT solver is overkill for this. I once solved this problem naively, and it was much faster:
 \url{https://yurichev.com/blog/XOR_mask_2/}.

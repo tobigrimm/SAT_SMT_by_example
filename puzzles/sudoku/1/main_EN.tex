@@ -86,7 +86,7 @@ My first approach is far from effective, I did what first came to my mind and wo
 Another approach is to use \TT{distinct} command from SMT-LIB, which tells Z3 that some variables must be distinct (or unique).
 This command is also available in Z3 Python interface.
 
-I've rewritten my first Sudoku solver, now it operates over \textit{Int} \textit{sort}, it has \TT{distinct} commands instead of bit operations,
+I've rewritten my first Sudoku solver, now it operates over \emph{Int} \emph{sort}, it has \TT{distinct} commands instead of bit operations,
 and now also other constaint added: each cell value must be in 1..9 range, because, otherwise, Z3 will offer (although correct) solution with too big
 and/or negative numbers.
 
@@ -133,10 +133,10 @@ try to find more solutions, or prove that the solution you have just found is th
 It's also possible to represend Sudoku puzzle as a huge \ac{CNF} equation and use \ac{SAT}-solver to find solution, but it's just trickier.
 
 Some articles about it:
-\textit{Building a Sudoku Solver with SAT}\footnote{\url{https://dspace.mit.edu/bitstream/handle/1721.1/106923/6-005-fall-2011/contents/assignments/MIT6_005F11_ps4.pdf}},
-Tjark Weber, \textit{A SAT-based Sudoku Solver}\footnote{\url{https://www.lri.fr/~conchon/mpri/weber.pdf}},
-Ines Lynce, Joel Ouaknine, \textit{Sudoku as a SAT Problem}\footnote{\url{http://sat.inesc-id.pt/~ines/publications/aimath06.pdf}},
-Gihwon Kwon, Himanshu Jain, \textit{Optimized CNF Encoding for Sudoku Puzzles}\footnote{\url{http://www.cs.cmu.edu/~hjain/papers/sudoku-as-SAT.pdf}}.
+\emph{Building a Sudoku Solver with SAT}\footnote{\url{https://dspace.mit.edu/bitstream/handle/1721.1/106923/6-005-fall-2011/contents/assignments/MIT6_005F11_ps4.pdf}},
+Tjark Weber, \emph{A SAT-based Sudoku Solver}\footnote{\url{https://www.lri.fr/~conchon/mpri/weber.pdf}},
+Ines Lynce, Joel Ouaknine, \emph{Sudoku as a SAT Problem}\footnote{\url{http://sat.inesc-id.pt/~ines/publications/aimath06.pdf}},
+Gihwon Kwon, Himanshu Jain, \emph{Optimized CNF Encoding for Sudoku Puzzles}\footnote{\url{http://www.cs.cmu.edu/~hjain/papers/sudoku-as-SAT.pdf}}.
 
 \ac{SMT}-solver can also use \ac{SAT}-solver in its core, so it does all mundane translating work.
 As a ``compiler'', it may not do this in the most efficient way, though.

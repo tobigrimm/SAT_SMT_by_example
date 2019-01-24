@@ -4,10 +4,10 @@
 
 \subsection{Buffer alteration case \#1}
 
-Sometimes, you need to alter a piece of data which is \textit{protected} by some kind of checksum or \ac{CRC}, and you can't change checksum or CRC value, but can alter piece of data so that checksum will remain the same.
+Sometimes, you need to alter a piece of data which is \emph{protected} by some kind of checksum or \ac{CRC}, and you can't change checksum or CRC value, but can alter piece of data so that checksum will remain the same.
 
 Let's pretend, we've got a piece of data with ``Hello, world!'' string at the beginning and ``and goodbye'' string at the end.
-We can alter 14 characters at the middle, but for some reason, they must be in \textit{a..z} limits, but we can put any characters there.
+We can alter 14 characters at the middle, but for some reason, they must be in \emph{a..z} limits, but we can put any characters there.
 CRC64 of the whole block must be \TT{0x12345678abcdef12}.
 
 Let's see\footnote{There are several slightly different CRC64 implementations, the one I use here can also be different from popular ones.}:
@@ -53,7 +53,7 @@ which is close to 64 bits.
 In other words, one need $\approx 14$ latin characters to encode 64 bits.
 And KLEE + \ac{SMT} solver needs 64 bits at some place it can alter to make final CRC64 value equal to what we defined.
 
-I tried to reduce length of the \textit{middle block} to 13 characters: no luck for KLEE then, it has no space enough.
+I tried to reduce length of the \emph{middle block} to 13 characters: no luck for KLEE then, it has no space enough.
 
 \subsection{Buffer alteration case \#2}
 
@@ -126,7 +126,7 @@ I've always wanted to do so, but everyone knows this is impossible for input buf
 As my experiments show, it's still possible for tiny input buffers of data, which is constrained in some way.
 
 The CRC32 value of 6-byte ``SILVER'' string is known: \TT{0xDFA3DFDD}.
-KLEE can find this 6-byte string, if it knows that each byte of input buffer is in \textit{A..Z} limits:
+KLEE can find this 6-byte string, if it knows that each byte of input buffer is in \emph{A..Z} limits:
 
 \lstinputlisting[numbers=left]{\CURPATH/klee_SILVER.c}
 
@@ -152,7 +152,7 @@ object    0: data: b'SILVER'
 Still, it's no magic: if to remove condition at lines 23..25 (i.e., if to relax constraints),
 KLEE will produce some other string, which will be still correct for the CRC32 value given.
 
-It works, because 6 Latin characters in \textit{A..Z} limits contain $\approx 28.2$ bits:
+It works, because 6 Latin characters in \emph{A..Z} limits contain $\approx 28.2$ bits:
 $log_2{26^6} \approx 28.2$, which is even smaller value than 32.
 In other words, the final CRC32 value holds enough bits to recover $\approx 28.2$ bits of input.
 
@@ -161,7 +161,7 @@ constraints (decimal digits, binary digits, etc).
 
 \subsection{In comparison with other hashing algorithms}
 
-Things are that easy for some other hashing algorithms like \textit{Fletcher checksum},
+Things are that easy for some other hashing algorithms like \emph{Fletcher checksum},
 but not for cryptographically secure ones (like MD5, SHA1, etc), they are protected from such simple cryptoanalysis.
 See also: \ref{crypto}.
 

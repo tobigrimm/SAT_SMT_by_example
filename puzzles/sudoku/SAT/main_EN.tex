@@ -2,7 +2,7 @@
 \label{Sudoku_SAT}
 
 One might think that we can encode each 1..9 number in binary form: 5 bits or variables would be enough.
-But there is even simpler way: allocate 9 bits, where only one bit will be \textit{True}.
+But there is even simpler way: allocate 9 bits, where only one bit will be \emph{True}.
 The number 1 can be encoded as [1, 0, 0, 0, 0, 0, 0, 0, 0], the number 3 as [0, 0, 1, 0, 0, 0, 0, 0, 0], etc.
 Seems uneconomical? Yes, but other operations would be simpler.
 
@@ -23,9 +23,9 @@ If each number is encoded as 9-bits vector, 9 numbers can form a matrix, like:
 0 0 0 1 0 0 0 0 0 <- 9th number
 \end{lstlisting}
 
-Now we will use a \TT{POPCNT1} function to make each row in the matrix to contain only one \textit{True} bit, that will
-preserve consistency in encoding, since no vector can contain more than 1 \textit{True} bit, or no \textit{True} bits at all.
-Then we will use a \TT{POPCNT1} function again to make all columns in the matrix to have only one single \textit{True} bit.
+Now we will use a \TT{POPCNT1} function to make each row in the matrix to contain only one \emph{True} bit, that will
+preserve consistency in encoding, since no vector can contain more than 1 \emph{True} bit, or no \emph{True} bits at all.
+Then we will use a \TT{POPCNT1} function again to make all columns in the matrix to have only one single \emph{True} bit.
 That will make all rows in matrix unique, in other words, all 9 encoded numbers will always be unique.
 
 After applying \TT{POPCNT1} function 9+9=18 times we'll have 9 unique numbers in 1..9 range.
@@ -137,9 +137,9 @@ These are "conflicts", "decisions", "propagations", "conflict literals".
 \label{OR_in_POPCNT1}
 
 To make 9 unique 1..9 numbers we can use \TT{POPCNT1} function to make each row in matrix be unique and
-use \textit{OR} boolean operation for all columns.
+use \emph{OR} boolean operation for all columns.
 That will have merely the same effect: all rows has to be unique to make each column to be evaluated
-to \textit{True} if all variables in column are OR'ed.
+to \emph{True} if all variables in column are OR'ed.
 (I will do this in the next example: \ref{Zebra_SAT}.)
 
 That will make 3447 clauses instead of 12195, but somehow, SAT solvers works slower. No idea why.

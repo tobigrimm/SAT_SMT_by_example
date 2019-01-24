@@ -12,8 +12,8 @@ See also: \url{https://en.wikipedia.org/wiki/Barrel_shifter}
 
 So we have a pack of multiplexers. A tier of them for each bit in $cnt$ variable (number of bits to shift).
 
-First, I define functions which do \textit{rewiring} rather than shifting, it's just another name.
-Part of input is \textit{connected} to output bits, other bits are fixed to zero:
+First, I define functions which do \emph{rewiring} rather than shifting, it's just another name.
+Part of input is \emph{connected} to output bits, other bits are fixed to zero:
 
 \begin{lstlisting}[style=customc]
 	// "cnt" is not a SMT variable!
@@ -39,7 +39,7 @@ Part of input is \textit{connected} to output bits, other bits are fixed to zero
 
 It can be said, the |cnt| variable would be set during SAT instance creation, but it cannot be changed during solving.
 
-Now let's create a \textit{real} shifter.
+Now let's create a \emph{real} shifter.
 Now for 8-bit left shifter, I'm generating the following (long) expression:
 
 \begin{lstlisting}

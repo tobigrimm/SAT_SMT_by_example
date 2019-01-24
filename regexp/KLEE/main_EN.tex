@@ -41,7 +41,7 @@ object    0: data: b'5aaax\xff'
 \end{lstlisting}
 
 This is indeed correct string. ``\textbackslash{}xff'' is at the place where terminal zero byte should be, but RE engine we use ignores the last zero byte, because it has buffer lenght as a passed parameter.
-Hence, KLEE doesn't \textit{reconstruct} final byte.
+Hence, KLEE doesn't \emph{reconstruct} final byte.
 
 Can we get more?
 Now we add additional constraint:

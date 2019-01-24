@@ -83,7 +83,7 @@ Then we add the so-called constraints on lines 10..15.
 The last constraint at 17 is the most important one: 
 we are going to try to find an input value for which our algorithm will produce 10816636949158156260.
 
-\textit{RotateRight, RotateLeft, URem}---are functions from the Z3 Python API, not related to Python language.
+\emph{RotateRight, RotateLeft, URem}---are functions from the Z3 Python API, not related to Python language.
 
 Then we run it:
 
@@ -165,7 +165,7 @@ Let's also try to research our algorithm a bit more.
 Acting on a sadistic whim, let's find if there are any possible input/output pairs in 
 which the lower 32-bit parts are equal to each other?
 
-Let's remove the \textit{outp} constraint and add another, at line 17:
+Let's remove the \emph{outp} constraint and add another, at line 17:
 
 \lstinputlisting[numbers=left,style=custompy]{crypto/hash/4.py}
 
