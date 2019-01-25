@@ -1,0 +1,31 @@
+* group 0
+students: 7 12 1
+common interests between 1 and 2: 1
+common interests between 1 and 3: 1
+common interests between 2 and 3: 0
+total= 2
+* group 1
+students: 13 2 10
+common interests between 1 and 2: 0
+common interests between 1 and 3: 1
+common interests between 2 and 3: 0
+total= 1
+* group 2
+students: 3 4 14
+common interests between 1 and 2: 1
+common interests between 1 and 3: 1
+common interests between 2 and 3: 0
+total= 2
+* group 3
+students: 8 5 11
+common interests between 1 and 2: 0
+common interests between 1 and 3: 0
+common interests between 2 and 3: 1
+total= 1
+* group 4
+students: 9 0 6
+common interests between 1 and 2: 1
+common interests between 1 and 3: 1
+common interests between 2 and 3: 1
+total= 3
+* total between all groups= 9

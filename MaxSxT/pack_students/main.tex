@@ -1,0 +1,68 @@
+\section{Packing students into a dorm}
+
+Given, say, 15 students.
+And they all have various interests/hobbies in their life, like
+hiking, clubbing, dancing, swimming, maybe hanging out with girls, etc.
+
+A dormitory has 5 rooms.
+Three students can be accommodated in each room.
+
+The problem to pack them all in such a way, so that all roommates would
+share as many interests/hobbies with each other, as possible.
+To make them happy and tight-knit.
+
+This is what I will do using Open-WBO MaxSAT solver this time
+and my small \href{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/libs/SAT_lib.py}{Python library}.
+
+\lstinputlisting[style=custompy]{MaxSxT/pack_students/1.py}
+
+Most significant parts from the library used, are:
+
+\begin{lstlisting}[style=custompy]
+    # bitvectors must be different.
+    def fix_BV_NEQ(self, l1, l2):
+        #print len(l1), len(l2)
+        assert len(l1)==len(l2)
+        self.add_comment("fix_BV_NEQ")
+        t=[self.XOR(l1[i], l2[i]) for i in range(len(l1))]
+        self.add_clause(t)
+
+    def make_distinct_BVs (self, lst):
+        assert type(lst)==list
+        assert type(lst[0])==list
+        for pair in itertools.combinations(lst, r=2):
+            self.fix_BV_NEQ(pair[0], pair[1])
+
+...
+
+    def create_MUX(self, ins, sels):
+        assert 2**len(sels)==len(ins)
+        x=self.create_var()
+        for sel in range(len(ins)): # for example, 32 for 5-bit selector
+            tmp=[self.neg_if((sel>>i)&1==1, sels[i]) for i in range(len(sels))] # 5 for 5-bit selector
+   
+            self.add_clause([self.neg(ins[sel])] + tmp + [x])
+            self.add_clause([ins[sel]] + tmp + [self.neg(x)])
+        return x
+    
+    # for 1-bit sel
+    # ins=[[outputs for sel==0], [outputs for sel==1]]
+    def create_wide_MUX (self, ins, sels):
+        out=[]
+        for i in range(len(ins[0])):
+            inputs=[x[i] for x in ins]
+            out.append(self.create_MUX(inputs, sels))
+        return out
+\end{lstlisting}
+( \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/libs/SAT_lib.py} )
+
+... and then Open-WBO MaxSAT searches such a solution, for which as many
+soft clauses as possible would be satisfied, i.e., as many hobbies shared,
+as possible.
+
+And the result:
+
+\lstinputlisting{MaxSxT/pack_students/res.txt}
+
+Surely, you can group any other objects with each other based on multiple preferences.
+
