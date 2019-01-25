@@ -1,0 +1,40 @@
+RAM total we need 85
+storage total we need 22260
+trying to fit VMs into servers: (3, 4, 5, 6, 7) unsat
+trying to fit VMs into servers: (3, 4, 5, 7, 9) sat
+* solution (5 servers):
+srv3 (total=16/8000): VM2 (4/710) VM3 (2/800) VM5 (8/4000) VM6 (2/800) allocated on srv=16/6310 free on srv=0/1690 
+srv4 (total=8/3000): VM0 (1/100) VM7 (4/2500) allocated on srv=5/2600 free on srv=3/400 
+srv5 (total=16/6000): VM9 (16/3700) allocated on srv=16/3700 free on srv=0/2300 
+srv7 (total=32/2000): VM1 (16/900) VM8 (16/450) allocated on srv=32/1350 free on srv=0/650 
+srv9 (total=16/10000): VM4 (4/7000) VM10 (12/1300) allocated on srv=16/8300 free on srv=0/1700 
+total in all servers=88/29000
+allocated on all servers=96%/76%
+
+trying to fit VMs into servers: (3, 4, 6, 7, 9) sat
+* solution (5 servers):
+srv3 (total=16/8000): VM2 (4/710) VM3 (2/800) VM5 (8/4000) VM6 (2/800) allocated on srv=16/6310 free on srv=0/1690 
+srv4 (total=8/3000): VM0 (1/100) VM7 (4/2500) allocated on srv=5/2600 free on srv=3/400 
+srv6 (total=16/4000): VM9 (16/3700) allocated on srv=16/3700 free on srv=0/300 
+srv7 (total=32/2000): VM1 (16/900) VM8 (16/450) allocated on srv=32/1350 free on srv=0/650 
+srv9 (total=16/10000): VM4 (4/7000) VM10 (12/1300) allocated on srv=16/8300 free on srv=0/1700 
+total in all servers=88/27000
+allocated on all servers=96%/82%
+
+trying to fit VMs into servers: (3, 5, 6, 7, 9) sat
+* solution (5 servers):
+srv3 (total=16/8000): VM0 (1/100) VM5 (8/4000) VM6 (2/800) VM7 (4/2500) allocated on srv=15/7400 free on srv=1/600 
+srv5 (total=16/6000): VM10 (12/1300) allocated on srv=12/1300 free on srv=4/4700 
+srv6 (total=16/4000): VM9 (16/3700) allocated on srv=16/3700 free on srv=0/300 
+srv7 (total=32/2000): VM1 (16/900) VM8 (16/450) allocated on srv=32/1350 free on srv=0/650 
+srv9 (total=16/10000): VM2 (4/710) VM3 (2/800) VM4 (4/7000) allocated on srv=10/8510 free on srv=6/1490 
+total in all servers=96/30000
+allocated on all servers=88%/74%
+
+trying to fit VMs into servers: (3, 5, 7, 8, 9) unsat
+trying to fit VMs into servers: (3, 5, 7, 9, 10) unsat
+trying to fit VMs into servers: (3, 6, 7, 8, 9) unsat
+trying to fit VMs into servers: (3, 6, 7, 9, 10) unsat
+trying to fit VMs into servers: (4, 5, 6, 7, 9) unsat
+trying to fit VMs into servers: (5, 6, 7, 8, 9) unsat
+trying to fit VMs into servers: (5, 6, 7, 9, 10) unsat

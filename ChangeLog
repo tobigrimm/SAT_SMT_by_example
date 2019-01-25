@@ -1,3 +1,4 @@
+   Jan-2019 Heavily updated.
    Dec-2018 Heavily updated.
    Jun-2018 megaupdate: now ~450 pp.
    May-2018 Russian version is not supported anymore. Maybe I'll rework it in future, or maybe not.
@@ -19,15 +20,11 @@
 
 ...
 
-December 2015 Work has begun.
+December 2015 The work has begun.
 
 ...
 
 August 2012: Rockey dongle article has been published: http://blog.yurichev.com/node/71
              http://www.reddit.com/r/ReverseEngineering/comments/y9tvx/finding_unknown_algorithm_using_only_inputoutput/
              http://www.reddit.com/r/compsci/comments/yijjn/finding_unknown_algorithm_using_only_inputoutput/
-
-...
-
-Other history items can be obtained from git repo: https://github.com/DennisYurichev/SAT_SMT_by_example
 

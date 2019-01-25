@@ -17,7 +17,7 @@ First, I took \ac{LZSS} compression/decompression code
 from Apple sources.
 Such routines are not easy to test.
 Here is my version of it:
-\url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/MaxSMT/set_cover/compression.c}.
+\url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/MaxSxT/set_cover/compression.c}.
 I've added random generation of input data to be compressed.
 Random generation is dependent of some kind of input seed.
 Standard \TT{srand()}/\TT{rand()} are not recommended to be used, but for such simple task as ours, it's OK.
@@ -55,7 +55,7 @@ The second column is a line number.
 
 Now the Z3Py script, which will parse all these 1000 gcov results and produce minimal \emph{hitting set}:
 
-\lstinputlisting[style=custompy]{MaxSMT/set_cover/set_cover.py}
+\lstinputlisting[style=custompy]{MaxSxT/set_cover/set_cover.py}
 
 And what it produces (\textasciitilde{}19s on my old Intel Quad-Core Xeon E3-1220 3.10GHz):
 
@@ -72,13 +72,13 @@ We need just these 3 tests to execute (almost) all lines in the code:
 looks impressive, given the fact, that it would be notoriously hard to pick these tests by hand!
 The result can be checked easily, again, using gcov utility.
 
-This is sometimes also called MaxSAT/MaxSMT --- the problem is to find solution,
+This is sometimes also called MaxSAT/MaxSxT --- the problem is to find solution,
 but the solution where some variable/expression is maximal as possible, or minimal as possible.
 
 Also, the code gives incorrect results on Z3 4.4.1, but working correctly on Z3 4.5.0 (so please upgrade).
 This is relatively fresh feature in Z3, so probably it was not stable in previous versions?
 
-The files: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/tree/master/MaxSMT/set_cover}.
+The files: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/tree/master/MaxSxT/set_cover}.
 
 Further reading:
 \url{https://en.wikipedia.org/wiki/Set_cover_problem},

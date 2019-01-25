@@ -5,7 +5,7 @@ I've found this at \url{http://www.math.harvard.edu/archive/20_spring_05/handout
 
 \begin{figure}[H]
 \centering
-\frame{\includegraphics[scale=0.6]{MaxSMT/assign_problem/1.png}}
+\frame{\includegraphics[scale=0.6]{MaxSxT/assign_problem/1.png}}
 \end{figure}
 
 As in my previous examples, Z3 and SMT-solver may be overkill for the task.
@@ -16,7 +16,7 @@ But again, I use it to demonstrate the problem + as SMT-solvers demonstration.
 
 Here is what I do:
 
-\lstinputlisting[style=custompy]{MaxSMT/assign_problem/1.py}
+\lstinputlisting[style=custompy]{MaxSxT/assign_problem/1.py}
 
 In plain English this means \emph{choose such columns, so that their sum would be as small as possible}.
 
@@ -43,14 +43,14 @@ Again, as it is in the corresponding PDF presentation:
 
 \begin{figure}[H]
 \centering
-\frame{\includegraphics[scale=0.6]{MaxSMT/assign_problem/2.png}}
+\frame{\includegraphics[scale=0.6]{MaxSxT/assign_problem/2.png}}
 \end{figure}
 
 (However, I've no idea what ``z3name'' variables mean, perhaps, some internal variables?)\\
 \\
 The problem can also be stated in SMT-LIB 2.0 format, and solved using MK85:
 
-\lstinputlisting[style=customsmt]{MaxSMT/assign_problem/assign_problem.smt}
+\lstinputlisting[style=customsmt]{MaxSxT/assign_problem/assign_problem.smt}
 
-\lstinputlisting[caption=The result]{MaxSMT/assign_problem/assign_problem.correct}
+\lstinputlisting[caption=The result]{MaxSxT/assign_problem/assign_problem.correct}
 

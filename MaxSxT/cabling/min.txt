@@ -1,0 +1,36 @@
+minimizing diff_A_H +
+diff_A_E*2 +
+diff_B_F*4 +
+diff_C_G +
+diff_C_D +
+diff_C_E +
+diff_D_H*3 +
+diff_G_H
+sat
+[A = 1,
+ B = 6,
+ C = 2,
+ D = 3,
+ E = 0,
+ F = 7,
+ G = 5,
+ H = 4,
+ final_sum2 = 19,
+ diff_G_H = 1,
+ diff_D_H = 1,
+ diff_C_E = 2,
+ diff_C_D = 1,
+ diff_C_G = 3,
+ diff_B_F = 1,
+ diff_A_E = 1,
+ diff_A_H = 3]
+order:
+E
+A
+C
+D
+H
+G
+B
+F
+final_sum2 19

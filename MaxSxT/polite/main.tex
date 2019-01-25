@@ -1,0 +1,87 @@
+\section{"Polite customer" problem}
+
+This is probably not relevant in the era of credit cards, but...
+
+In a shop or bar, you have to pay something in cash and, as a polite customer, you try to give such a set of banknotes,
+so that the cashier will not touch small banknotes in his/her cash desk, which are valuable (because of
+impoliteness of many others).
+
+For a small amount of money, this can be solved in one's mind, but for large...
+
+The problem is surprisingly easy to solve using Z3 SMT-solver:
+
+\lstinputlisting[style=custompy]{MaxSxT/polite/polite.py}
+
+\begin{lstlisting}
+sat                                                                                                                               
+from_cash_register_1= 0
+from_cash_register_3= 0
+from_cash_register_5= 0
+from_cash_register_10= 2
+from_cash_register_25= 0
+from_cash_register_50= 0
+from_cash_register_100= 0
+from_cash_register= 20
+
+from_customer_wallet_1= 2
+from_customer_wallet_3= 1
+from_customer_wallet_5= 0
+from_customer_wallet_10= 0
+from_customer_wallet_25= 0
+from_customer_wallet_50= 11
+from_customer_wallet_100= 16
+from_customer= 2155
+\end{lstlisting}
+
+So that the cashier have to pull only 2 tenners from cash desk.
+
+\myhrule{}
+
+Now what if we don't care about small banknotes, but want to make transaction as paperless as possible:
+
+\begin{lstlisting}[style=custompy]
+...
+
+# minimize number of all banknotes in transaction:
+s.minimize(
+from_cash_register_1 + 
+from_cash_register_3 + 
+from_cash_register_5 + 
+from_cash_register_10 + 
+from_cash_register_25 + 
+from_cash_register_50 + 
+from_cash_register_100 +
+from_customer_wallet_1 +
+from_customer_wallet_3 +
+from_customer_wallet_5 +
+from_customer_wallet_10 +
+from_customer_wallet_25 +
+from_customer_wallet_50 +
+from_customer_wallet_100)
+
+...
+\end{lstlisting}
+
+\begin{lstlisting}
+sat
+from_cash_register_1= 0
+from_cash_register_3= 0
+from_cash_register_5= 1
+from_cash_register_10= 1
+from_cash_register_25= 0
+from_cash_register_50= 0
+from_cash_register_100= 0
+from_cash_register= 15
+
+from_customer_wallet_1= 0
+from_customer_wallet_3= 0
+from_customer_wallet_5= 0
+from_customer_wallet_10= 0
+from_customer_wallet_25= 0
+from_customer_wallet_50= 3
+from_customer_wallet_100= 20
+from_customer= 2150
+\end{lstlisting}
+
+Likewise, you can minimize banknotes from cashier only, or from customer only.
+
