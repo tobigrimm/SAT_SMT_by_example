@@ -109,7 +109,12 @@ Addition (or \href{https://yurichev.com/blog/modulo/}{modular addition}, as cryp
 
 As en exercise, you can try to make a block cipher which KLEE wouldn't break.
 This is quite sobering experience.
-But even if you can, this is not a panacea, there is an array of other cryptoanalytical methods to break it.
+
+Another significant property of the \textit{serious} cryptography is:
+``The two inputs differ by only a single bit, but approximately half the bits are different in the digests.''
+(Alan A. A. Donovan, Brian W. Kernighan ---  The Go Programming Language).
+
+And even if you can, this is not a panacea, there is an array of other cryptoanalytical methods to break it.
 
 Summary: if you deal with amateur cryptography, you can always give KLEE and SMT solver a try.
 Even more: sometimes you have only decryption function, and if algorithm is simple enough,
