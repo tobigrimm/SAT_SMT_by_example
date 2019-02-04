@@ -1,0 +1,44 @@
+\section{Job Shop Scheduling/Problem}
+\label{JobShop}
+
+\renewcommand{\CURPATH}{other/job_shop}
+
+You have number of machines and number of jobs.
+Each jobs consists of tasks, each task is to be processed on a machine, in specific order.
+
+Probably, this can be a restaurant, each dish is a job.
+However, a dish is to be cooked in a multi-stage process, and each stage/task require specific kitchen appliance and/or chef.
+Each appliance/chef at each moment can be busy with only one single task.
+
+The problem is to schedule all jobs/tasks so that they will finish as soon as possible.
+
+See also:
+\url{https://en.wikipedia.org/wiki/Job_shop_scheduling},
+\url{https://developers.google.com/optimization/scheduling/job_shop}.
+
+\subsection{My first version}
+
+\lstinputlisting[style=custompy]{\CURPATH/job.py}
+
+( Syntax-highlighted version: \url{\GitHubBlobMasterURL\CURPATH/job.py} )
+
+The solution for the 3*3 (3 jobs and 3 machines) problem:
+
+\lstinputlisting{\CURPATH/r1.txt}
+
+It takes ~20s on my venerable Intel Xeon E31220 3.10GHz to solve 10*10 (10 jobs and 10 machines) problem from 
+\href{http://support.sas.com/documentation/cdl/en/orcpug/63973/HTML/default/viewer.htm#orcpug_clp_sect048.htm}{sas.com}:
+\url{\GitHubBlobMasterURL\CURPATH/r2.txt}.
+
+Further work: makespan can be decreased gradually, or maybe binary search can be used...
+
+\subsection{MaxSMT version by Chad Brewbaker}
+
+\lstinputlisting[style=custompy]{\CURPATH/job_fix.py}
+
+( Syntax-highlighted version: \url{\GitHubBlobMasterURL\CURPATH/job_fix.py} )
+
+Works faster.
+
+See also: \url{https://github.com/DennisYurichev/yurichev.com/pull/2}.
+
