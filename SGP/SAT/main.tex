@@ -1,5 +1,7 @@
 \section{School teams scheduling (SAT)}
 
+\renewcommand{\CURPATH}{SGP/SAT}
+
 I've found this in the "Puzzles for Programmers and Pros" book by Dennis E. Shasha:
 
 \begin{framed}
@@ -31,10 +33,10 @@ If you understand how, you can solve the harder problem.
 \end{framed}
 
 % TODO \ref{}
-This is like Kirkman's Schoolgirl Problem I have solved using Z3 before, but this time I've rewritten it as a SAT problem.
+This is like Kirkman's Schoolgirl Problem I have solved using SMT before, but this time I've rewritten it as a SAT problem.
 Also, I added additional constraints relating to ``team rivalries''.
 
-\lstinputlisting[style=custompy]{SGP/SAT/kirkman_SAT.py}
+\lstinputlisting[style=custompy]{\CURPATH/kirkman_SAT.py}
 
 The solution:
 
@@ -73,5 +75,5 @@ Thanks to
 parallel lingeling SAT solver\footnote{\url{http://fmv.jku.at/lingeling/}}
 I've used this time, it takes couple of minutes on a decent 4-core CPU.
 
-The source code: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/tree/master/SGP/SAT}.
+The source code: \url{\GitHubTreeMasterURL/\CURPATH}.
 

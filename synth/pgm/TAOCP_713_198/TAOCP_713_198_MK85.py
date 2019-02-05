@@ -1,7 +1,5 @@
 from MK85 import *
 
-# see: https://yurichev.com/blog/TAOCP_713_198/
-
 s=MK85(verbose=0)
 
 # FIXME: must work with 22-bit bitvecs:

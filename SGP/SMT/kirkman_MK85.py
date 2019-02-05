@@ -1,13 +1,14 @@
-from z3 import *
+from MK85 import *
 import itertools
 
+#PERSONS, DAYS, GROUPS = 8, 7, 4
 PERSONS, DAYS, GROUPS = 15, 7, 5
 #PERSONS, DAYS, GROUPS = 20, 5, 5
 
-# each element - group for each person and each day:
-tbl=[[Int('%d_%d' % (person, day)) for day in range(DAYS)] for person in range(PERSONS)]
+s=MK85()
 
-s=Solver()
+# each element - group for each person and each day:
+tbl=[[s.BitVec('%d_%d' % (person, day), 16) for day in range(DAYS)] for person in range(PERSONS)]
 
 for person in range(PERSONS):
     for day in range(DAYS):
@@ -39,7 +40,7 @@ def only_one_in_pair_can_be_equal(l1, l2):
 for pair in itertools.combinations(range(PERSONS), r=2):
     only_one_in_pair_can_be_equal (tbl[pair[0]], tbl[pair[1]])
 
-print s.check()
+assert s.check()
 m=s.model()
 
 print "group for each person:"
@@ -47,13 +48,13 @@ print "person:"+"".join([chr(ord('A')+i)+" " for i in range(PERSONS)])
 for day in range(DAYS):
     print "day=%d:" % day,
     for person in range(PERSONS):
-        print m[tbl[person][day]].as_long(),
+        print m["%d_%d" % (person, day)],
     print ""
 
 def persons_in_group(day, group):
     rt=""
     for person in range(PERSONS):
-        if m[tbl[person][day]].as_long()==group:
+        if m["%d_%d" % (person, day)]==group:
             rt=rt+chr(ord('A')+person)
     return rt
 

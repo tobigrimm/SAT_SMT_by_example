@@ -1,0 +1,49 @@
+\section{Kirkman's Schoolgirl Problem (SMT)}
+
+\renewcommand{\CURPATH}{SGP/SMT}
+
+\begin{framed}
+\begin{quotation}
+Fifteen young ladies in a school walk out three abreast for seven days in succession: it is required to arrange them daily so that no two shall walk twice abreast.
+\end{quotation}
+\end{framed}
+
+( \url{https://en.wikipedia.org/wiki/Kirkman%27s_schoolgirl_problem} )
+
+This is naive and straightforward solution:
+
+\lstinputlisting[style=custompy]{\CURPATH/kirkman_MK85.py}
+
+\begin{lstlisting}
+group for each person:
+person:A B C D E F G H I J K L M N O
+day=0: 4 3 1 4 0 1 3 1 0 2 2 4 0 2 3
+day=1: 2 4 0 0 4 1 2 3 1 4 0 3 3 2 1
+day=2: 4 3 3 2 2 0 1 4 4 1 0 1 0 3 2
+day=3: 0 4 3 4 2 0 3 1 4 0 2 2 3 1 1
+day=4: 2 3 4 1 0 3 0 0 4 4 2 3 1 1 2
+day=5: 0 4 0 2 0 2 2 4 1 3 4 1 3 1 3
+day=6: 0 0 2 4 1 1 3 4 3 4 3 2 0 1 2
+
+persons grouped:
+day=0: EIM  CFH  JKN  BGO  ADL
+day=1: CDK  FIO  AGN  HLM  BEJ
+day=2: FKM  GJL  DEO  BCN  AHI
+day=3: AFJ  HNO  EKL  CGM  BDI
+day=4: EGH  DMN  AKO  BFL  CIJ
+day=5: ACE  ILN  DFG  JMO  BHK
+day=6: ABM  EFN  CLO  GIK  DHJ
+\end{lstlisting}
+
+It takes 3-5s seconds on my old Intel Xeon E3-1220 3.10GHz.
+Thanks to picosat SAT solver, MK85 one this small problem has comparable efficiency as Z3's.
+
+I've also tried to represent each number (group in which schoolgirl/golfer is) as a single bit (one-hot encoding):
+
+\lstinputlisting[style=custompy]{\CURPATH/kirkman_MK85_onehot.py}
+
+Unfortunately, bigger \ac{SGP} problems are out of reach. Yet?
+\url{http://www.mathpuzzle.com/MAA/54-Golf%20Tournaments/mathgames_08_14_07.html}.
+
+The files, including scripts for Z3: \url{\GitHubTreeMasterURL/\CURPATH}.
+
