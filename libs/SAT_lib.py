@@ -2,7 +2,7 @@
 
 # my own SAT/CNF library
 
-# dennis(a)yurichev, 2017-2018
+# dennis(a)yurichev, 2017-2019
 
 # "BV" stands for bitvector
 
@@ -115,8 +115,8 @@ class SAT_lib:
         return self.run_plingeling_or_open_wbo(["plingeling", self.CNF_fname])
 
     def run_sat_solver(self):
-        #return self.run_minisat()
-        return self.run_plingeling()
+        return self.run_minisat()
+        #return self.run_plingeling()
 
     def run_open_wbo_solver (self):
         return self.run_plingeling_or_open_wbo(["open-wbo", "-algorithm=1", self.CNF_fname])
@@ -177,6 +177,10 @@ class SAT_lib:
             self.CNF.append(" ".join(cls) + " 0\n")
         else:
             self.CNF.append(str(self.HARD_CLAUSE) + " " + " ".join(cls) + " 0\n")
+
+    def add_clauses(self, clauses):
+        for cls in clauses:
+            self.add_clause(cls)
 
     def add_soft_clause(self, cls, weight):
         assert self.maxsat==True
@@ -596,34 +600,23 @@ class SAT_lib:
         for pair in itertools.combinations(lst, r=2):
             self.fix_BV_NEQ(pair[0], pair[1])
 
-"""
-to be added:
+    def sort_unit(self, a, b):
+        return self.OR_list([a,b]), self.AND(a,b)
 
-def mathematica_to_CNF (s, d):
-    for k in d.keys():
-        s=s.replace(k, d[k])
-    s=s.replace("!", "-").replace("||", " ").replace("(", "").replace(")", "")
-    s=s.split ("&&")
-    return s
+    def sorting_network_make_ladder(self, lst):
+        if len(lst)==2:
+            return list(self.sort_unit(lst[0], lst[1]))
+    
+        tmp=self.sorting_network_make_ladder(lst[1:]) # lst without head
+        first, second=self.sort_unit(lst[0], tmp[0])
+        return [first, second] + tmp[1:]
 
-def sort_unit(a, b):
-    return OR([a,b]), AND(a,b)
+    def sorting_network(self, lst):
+        # simplest possible, bubble sort
+    
+        if len(lst)==2:
+            return self.sorting_network_make_ladder(lst)
 
-def sorting_network_make_ladder(lst):
-    if len(lst)==2:
-        return list(sort_unit(lst[0], lst[1]))
-
-    tmp=sorting_network_make_ladder(lst[1:]) # lst without head
-    first, second=sort_unit(lst[0], tmp[0])
-    return [first, second] + tmp[1:]
-
-def sorting_network(lst):
-    # simplest possible, bubble sort
-
-    if len(lst)==2:
-        return sorting_network_make_ladder(lst)
-
-    tmp=sorting_network_make_ladder(lst)
-    return sorting_network(tmp[:-1]) + [tmp[-1]]
-"""
+        tmp=self.sorting_network_make_ladder(lst)
+        return self.sorting_network(tmp[:-1]) + [tmp[-1]]
 
