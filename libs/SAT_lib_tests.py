@@ -3,6 +3,7 @@
 # dennis(a)yurichev, 2017
 
 import my_utils, SAT_lib
+import collections
 
 def div_test():
     s=SAT_lib.SAT_lib(False)
@@ -35,9 +36,24 @@ def AND_list_test():
     _vars=s.alloc_BV(4)
     s.fix(s.AND_list(_vars),False)
 
-    assert (s.count_solutions()==15)
+    assert s.count_solutions()==15
+
+def make_one_hot_tst():
+    s=SAT_lib.SAT_lib(False)
+    vars=[s.create_var() for x in range(1000)]
+    s.make_one_hot(vars)
+    assert s.solve()==True
+    for i in range(10):
+        sol=[]
+        for v in vars:
+            sol.append(s.get_var_from_solution(v))
+        assert collections.Counter(sol)[1]==1 # only single 1
+        #print "OK"
+        assert s.fetch_next_solution()==True
+    #assert s.count_solutions()==10
 
 div_test()
 SumIsNot1_test()
 AND_list_test()
+make_one_hot_tst()
 

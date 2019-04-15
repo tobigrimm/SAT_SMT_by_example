@@ -8,6 +8,17 @@ See also in
 
 Layman's explanation in Russian: \url{https://lenta.ru/articles/2012/10/15/nobel/}.
 
+One interesting use of it:
+
+\begin{framed}
+\begin{quotation}
+The Internet infrastructure company Akamai, cofounded by Tom Leighton, also uses a variation of the Mating Ritual to assign web traffic to its servers.
+
+In the early days, Akamai used other combinatorial optimization algorithms that got to be too slow as the number of servers (over 65,000 in 2010) and requests (over 800 billion per day) increased. Akamai switched to a Ritual-like approach, since a Ritual is fast and can be run in a distributed manner. In this case, web requests correspond to women and web servers correspond to men. The web requests have preferences based on latency and packet loss, and the web servers have preferences based on cost of bandwidth and co-location.
+\end{quotation}
+\end{framed}
+( Eric Lehman, F Thomson Leighton, Albert R Meyer - Mathematics for Computer Science ) 
+
 My solution is much less efficient, because much simpler/better algorithm exists (Gale/Shapley algorithm),
 but I did it to demonstrate the essence of the problem plus as a yet another SMT-solvers and Z3 demonstration.
 

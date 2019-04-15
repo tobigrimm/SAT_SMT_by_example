@@ -60,3 +60,7 @@ def ANSI_set_normal_color(color):
 def ANSI_reset():
     return '\033[0m'
 
+def partition(lst, n):
+    division = len(lst) / float(n)
+    return [ lst[int(round(division * i)): int(round(division * (i + 1)))] for i in xrange(n) ]
+

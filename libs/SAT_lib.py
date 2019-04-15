@@ -74,10 +74,20 @@ class SAT_lib:
             print ("(minisat) unknown retcode: ", child.returncode)
             exit(0)
 
-        solution=my_utils.read_lines_from_file("results.txt")[1].split(" ")
+        #print "minisat done"
+        t=my_utils.read_lines_from_file("results.txt")[1].split(" ")
         # remove last "variable", which is 0
-        assert solution[-1]=='0'
-        solution=solution[:-1]
+        assert t[-1]=='0'
+        t=t[:-1]
+        # there was a time whan $t$ list was returned as solution!
+        # now it's dict
+        solution={}
+        for i in t:
+            if i.startswith("-"):
+                solution[-int(i)]=False
+            else:
+                solution[int(i)]=True
+
         os.remove ("results.txt")
 
         return solution
@@ -108,15 +118,23 @@ class SAT_lib:
 
         logfile.close()
         os.remove(tmp_fname)
-        solution=" ".join(tmp).split(" ")
+        t=" ".join(tmp).split(" ")
+        # there was a time whan $t$ list was returned as solution!
+        # now it's dict
+        solution={}
+        for i in t:
+            if i.startswith("-"):
+                solution[-int(i)]=False
+            else:
+                solution[int(i)]=True
         return solution
 
     def run_plingeling (self):
         return self.run_plingeling_or_open_wbo(["plingeling", self.CNF_fname])
 
     def run_sat_solver(self):
-        return self.run_minisat()
-        #return self.run_plingeling()
+        #return self.run_minisat()
+        return self.run_plingeling()
 
     def run_open_wbo_solver (self):
         return self.run_plingeling_or_open_wbo(["open-wbo", "-algorithm=1", self.CNF_fname])
@@ -177,6 +195,8 @@ class SAT_lib:
             self.CNF.append(" ".join(cls) + " 0\n")
         else:
             self.CNF.append(str(self.HARD_CLAUSE) + " " + " ".join(cls) + " 0\n")
+        #if (self.clauses_total % 1000000)==0:
+        #    print "(hearbeat) add_clause(). clauses_total=", self.clauses_total
 
     def add_clauses(self, clauses):
         for cls in clauses:
@@ -265,9 +285,9 @@ class SAT_lib:
 
     def get_var_from_solution(self, var):
         # 1 if var is present in solution, 0 if present in negated form:
-        if var in self.solution:
+        if self.solution[int(var)]:
             return 1
-        if "-"+var in self.solution:
+        else:
             return 0
         print "get_var_from_solution(): incorrect var number: ", var
         raise AssertionError # incorrect var number
@@ -326,11 +346,30 @@ class SAT_lib:
     def NEQ(self, x, y):
         return self.XOR(x,y)
 
-    # naive/pairwise encoding   
-    def AtMost1(self, lst):
+    # naive/pairwise/quadratic encoding
+    def AtMost1_pairwise(self, lst):
         for pair in itertools.combinations(lst, r=2):
             self.add_clause([self.neg(pair[0]), self.neg(pair[1])])
-       
+
+    # "commander" (?) encoding
+    def AtMost1_commander(self, lst):
+        parts=my_utils.partition(lst, 5)
+        c=[]
+        for part in parts:
+            if len(part)<10:
+                self.AtMost1_pairwise(part)
+                c.append(self.OR_list(part))
+            else:
+                c.append(self.AtMost1_commander(part))
+        self.AtMost1_pairwise(c)
+        return self.OR_list(c)
+
+    def AtMost1(self, lst):
+        if len(lst)<=10:
+            self.AtMost1_pairwise(lst)
+        else:
+            self.AtMost1_commander(lst)
+
     # previously named POPCNT1 
     # make one-hot (AKA unitary) variable
     def make_one_hot(self, lst):
@@ -619,4 +658,22 @@ class SAT_lib:
 
         tmp=self.sorting_network_make_ladder(lst)
         return self.sorting_network(tmp[:-1]) + [tmp[-1]]
+
+# G=list of tuples. each tuple is edge between two vertices
+# each number is vertex
+# total=number of vertices
+# return: list, color for each vertex
+def find_2_coloring_of_graph (G, total):
+    #print "find_2_coloring_of_graph begin"
+    s=SAT_lib(False)
+    colors=[s.alloc_BV(2) for p in range(total)]
+
+    for i in G:
+        #s.add(colors[i[0]]!=colors[i[1]])
+        s.fix_BV_NEQ(colors[i[0]], colors[i[1]])
+
+    assert s.solve()
+    # get solution and return it:
+    #print "find_2_coloring_of_graph end"
+    return [BV_to_number(s.get_BV_from_solution(colors[p])) for p in range(total)]
 
