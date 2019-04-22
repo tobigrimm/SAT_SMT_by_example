@@ -16,7 +16,10 @@ What we have here, actually? Hidden cells, empty cells (where bombs are not pres
 
 \subsection{The method}
 
-Here is what we can do: we will try to place a bomb to all possible hidden cells and ask Z3 SMT solver, if it can disprove the very fact that the bomb can be placed there.
+Unlike many other examples, where our goal is to find a solution, here we use the fact that an instance is unsolvable (unsat).
+
+Here is what we can do: we will try to place a bomb to all possible hidden cells and ask Z3 SMT solver,
+if it can disprove the very fact that the bomb can be placed there.
 
 Take a look at this fragment. "?" mark is for hidden cell, "." is for empty cell, number is a number of neighbours.
 
