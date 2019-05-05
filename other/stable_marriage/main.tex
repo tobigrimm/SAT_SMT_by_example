@@ -66,7 +66,7 @@ There are no ``steps'', all pairs are married couples already.
 
 Another important thing to notice: only one solution must exist.
 
-\begin{lstlisting}
+\begin{lstlisting}[style=custompy]
 ...
 
 results=[]
@@ -92,4 +92,31 @@ while True:
 ( The source code: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/other/stable_marriage/stable2.py} )
 
 That reports only 1 model available, which is correct indeed.
+
+Wojciech Niedbala fixed chained If's, but I left the old version, so you can see a difference...
+
+\begin{lstlisting}[style=custompy]
+...
+
+def _if_x(x, ind, i):
+    if i == len(x) - 1:
+        return If(x[i] == ind, i, -1)
+    return If(x[i] == ind, i, _if_x(x, ind, i+1))
+
+
+def _if_xy(x, y, i):
+    if i == len(y) - 1:
+        return If(x == y[i], i, -1)
+    return If(x == y[i], i, _if_xy(x, y, i+1))
+
+...
+
+    s.add(WomanChoice[i]== _if_x(ManChoice, i, 0))
+
+...
+
+    s.add (ManChoiceInOwnRating[m]== _if_xy(ManChoice[m], ManPrefer[m], 0))
+\end{lstlisting}
+
+( The source code: \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/other/stable_marriage/stable_fixed.py} )
 

@@ -114,13 +114,16 @@ Another significant property of the \textit{serious} cryptography is:
 ``The two inputs differ by only a single bit, but approximately half the bits are different in the digests.''
 (Alan A. A. Donovan, Brian W. Kernighan ---  The Go Programming Language).
 
-And even if you can, this is not a panacea, there is an array of other cryptoanalytical methods to break it.
+Another easy way to test your algorithm: encrypt numbers starting at 0 and feed the resulting ciphertext to \emph{diehard test}
+\footnote{\url{https://en.wikipedia.org/wiki/Diehard_tests}} (like in Counter/CTR encryption mode).
+These tests are designed to check \ac{PRNG}s.
+In other words, tests shouldn't find any regularities in a list of random numbers, as well as in a ciphertext.
 
 Summary: if you deal with amateur cryptography, you can always give KLEE and SMT solver a try.
 Even more: sometimes you have only decryption function, and if algorithm is simple enough,
 KLEE or SMT solver can reverse things back.
 
-One funny thing to mention: if you try to implement amateur cryptoalgorithm in Verilog/VHDL language to run it on \ac{FPGA},
+One amusing thing to mention: if you try to implement amateur cryptoalgorithm in Verilog/VHDL language to run it on \ac{FPGA},
 maybe in brute-force way,
 you can find that \ac{EDA} tools can optimize many things during synthesis
 (this is the word they use for ``compilation'') and can leave cryptoalgorithm much smaller/simpler than it was.
