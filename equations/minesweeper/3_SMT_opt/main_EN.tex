@@ -1,0 +1,43 @@
+\subsection{Optimization}
+
+\renewcommand{\CURPATH}{equations/minesweeper/3_SMT_opt}
+
+A simple observation can help us: there is no need to probe hidden cells in the middle of other hidden cells.
+In fact, only those hidden cells surrounding digits (known number of bombs) is to be probed:
+It speeds up everything a little.
+
+\begin{lstlisting}[style=custompy]
+...
+    def get_from_known_or_empty(known, r, c):
+        # I'm lazy to do overflow checks
+        try:
+            return known[r][c]
+        except IndexError:
+            return ""
+
+    def have_neighbour_digit(known, r, c):
+        # returns True if neighbour is digit, False otherwise
+        digits="0123456789"
+        t=[]
+        t.append(get_from_known_or_empty(known, r-1, c-1) in digits)
+        t.append(get_from_known_or_empty(known, r-1, c) in digits)
+        t.append(get_from_known_or_empty(known, r-1, c+1) in digits)
+        t.append(get_from_known_or_empty(known, r, c-1) in digits)
+        t.append(get_from_known_or_empty(known, r, c+1) in digits)
+        t.append(get_from_known_or_empty(known, r+1, c-1) in digits)
+        t.append(get_from_known_or_empty(known, r+1, c) in digits)
+        t.append(get_from_known_or_empty(known, r+1, c+1) in digits)
+        return any(t)
+
+    # enumerate all hidden cells:
+    rt=[]
+    for r in range(1,HEIGHT+1):
+        for c in range(1,WIDTH+1):
+            if known[r-1][c-1]=="?" and have_neighbour_digit(known, r-1, c-1):
+                #print "checking", r, c
+                rt.append(chk_bomb(r, c))
+    return filter(None, rt)
+...
+\end{lstlisting}
+( \url{\GitHubBlobMasterURL/\CURPATH/minesweeper_Z3_with_tests.py} )
+

@@ -1,0 +1,206 @@
+\subsection{Cracking Minesweeper with SAT solver}
+\label{minesweeper_SAT}
+
+\renewcommand{\CURPATH}{equations/minesweeper/2_SAT}
+
+\subsubsection{Simple \emph{population count} function}
+
+First of all, somehow we need to count neighbour bombs.
+The counting function is similar to \emph{population count} function.
+
+We can try to make \ac{CNF} expression using Wolfram Mathematica.
+This will be a function, returning \emph{True}
+if any of 2 bits of 8 inputs bits are \emph{True} and others are \emph{False}.
+First, we make truth table of such function:
+
+\begin{lstlisting}
+In[]:= tbl2 = 
+ Table[PadLeft[IntegerDigits[i, 2], 8] -> 
+   If[Equal[DigitCount[i, 2][[1]], 2], 1, 0], {i, 0, 255}]
+
+Out[]= {{0, 0, 0, 0, 0, 0, 0, 0} -> 0, {0, 0, 0, 0, 0, 0, 0, 1} -> 0, 
+{0, 0, 0, 0, 0, 0, 1, 0} -> 0, {0, 0, 0, 0, 0, 0, 1, 1} -> 1, 
+{0, 0, 0, 0, 0, 1, 0, 0} -> 0, {0, 0, 0, 0, 0, 1, 0, 1} -> 1, 
+{0, 0, 0, 0, 0, 1, 1, 0} -> 1, {0, 0, 0, 0, 0, 1, 1, 1} -> 0, 
+{0, 0, 0, 0, 1, 0, 0, 0} -> 0, {0, 0, 0, 0, 1, 0, 0, 1} -> 1, 
+{0, 0, 0, 0, 1, 0, 1, 0} -> 1, {0, 0, 0, 0, 1, 0, 1, 1} -> 0, 
+...
+{1, 1, 1, 1, 1, 0, 1, 0} -> 0, {1, 1, 1, 1, 1, 0, 1, 1} -> 0, 
+{1, 1, 1, 1, 1, 1, 0, 0} -> 0, {1, 1, 1, 1, 1, 1, 0, 1} -> 0, 
+{1, 1, 1, 1, 1, 1, 1, 0} -> 0, {1, 1, 1, 1, 1, 1, 1, 1} -> 0}
+\end{lstlisting}
+
+Now we can make \ac{CNF} expression using this truth table:
+
+\begin{lstlisting}
+In[]:= BooleanConvert[
+ BooleanFunction[tbl2, {a, b, c, d, e, f, g, h}], "CNF"]
+
+Out[]= (! a || ! b || ! c) && (! a || ! b || ! d) && (! a || ! 
+    b || ! e) && (! a || ! b || ! f) && (! a || ! b || ! g) && (! 
+    a || ! b || ! h) && (! a || ! c || ! d) && (! a || ! c || ! 
+    e) && (! a || ! c || ! f) && (! a || ! c || ! g) && (! a || ! 
+    c || ! h) && (! a || ! d || ! e) && (! a || ! d || ! f) && (! 
+    a || ! d || ! g) && (! a || ! d || ! h) && (! a || ! e || ! 
+    f) && (! a || ! e || ! g) && (! a || ! e || ! h) && (! a || ! 
+    f || ! g) && (! a || ! f || ! h) && (! a || ! g || ! h) && (a || 
+   b || c || d || e || f || g) && (a || b || c || d || e || f || 
+   h) && (a || b || c || d || e || g || h) && (a || b || c || d || f ||
+    g || h) && (a || b || c || e || f || g || h) && (a || b || d || 
+   e || f || g || h) && (a || c || d || e || f || g || 
+   h) && (! b || ! c || ! d) && (! b || ! c || ! e) && (! b || ! 
+    c || ! f) && (! b || ! c || ! g) && (! b || ! c || ! h) && (! 
+    b || ! d || ! e) && (! b || ! d || ! f) && (! b || ! d || ! 
+    g) && (! b || ! d || ! h) && (! b || ! e || ! f) && (! b || ! 
+    e || ! g) && (! b || ! e || ! h) && (! b || ! f || ! g) && (! 
+    b || ! f || ! h) && (! b || ! g || ! h) && (b || c || d || e || 
+   f || g || 
+   h) && (! c || ! d || ! e) && (! c || ! d || ! f) && (! c || ! 
+    d || ! g) && (! c || ! d || ! h) && (! c || ! e || ! f) && (! 
+    c || ! e || ! g) && (! c || ! e || ! h) && (! c || ! f || ! 
+    g) && (! c || ! f || ! h) && (! c || ! g || ! h) && (! d || ! 
+    e || ! f) && (! d || ! e || ! g) && (! d || ! e || ! h) && (! 
+    d || ! f || ! g) && (! d || ! f || ! h) && (! d || ! g || ! 
+    h) && (! e || ! f || ! g) && (! e || ! f || ! h) && (! e || ! 
+    g || ! h) && (! f || ! g || ! h)
+\end{lstlisting}
+
+The syntax is similar to C/C++.
+Let's check it.
+
+I wrote a Python function to convert Mathematica's output into \ac{CNF} file which can be feeded to SAT solver:
+
+\lstinputlisting[style=custompy]{\CURPATH/tst.py}
+
+It replaces a/b/c/... variables to the variable names passed (1/2/3...), reworks syntax, etc.
+Here is a result:
+
+\lstinputlisting{\CURPATH/tst1.cnf}
+
+I can run it:
+
+\begin{lstlisting}
+% minisat -verb=0 tst1.cnf results.txt
+SATISFIABLE
+
+% cat results.txt
+SAT
+1 -2 -3 -4 -5 -6 -7 8 0
+\end{lstlisting}
+
+The variable name in results lacking minus sign is \emph{True}.
+Variable name with minus sign is \emph{False}.
+We see there are just two variables are \emph{True}: 1 and 8.
+This is indeed correct: MiniSat solver found a condition, for which our function returns \emph{True}.
+Zero at the end is just a terminal symbol which means nothing.
+
+We can ask MiniSat for another solution, by adding current solution to the input CNF file, but with all variables negated:
+
+\begin{lstlisting}
+...
+-5 -6 -8 0
+-5 -7 -8 0
+-6 -7 -8 0
+-1 2 3 4 5 6 7 -8 0
+\end{lstlisting}
+
+In plain English language, this means ``give me ANY solution which can satisfy all clauses, but also not equal to the last clause we've just added''.
+
+MiniSat, indeed, found another solution, again, with only 2 variables equal to \emph{True}:
+
+\begin{lstlisting}
+% minisat -verb=0 tst2.cnf results.txt
+SATISFIABLE
+
+% cat results.txt
+SAT
+1 2 -3 -4 -5 -6 -7 -8 0
+\end{lstlisting}
+
+By the way, \emph{population count} function for 8 neighbours (POPCNT8) in CNF form is simplest:
+
+\begin{lstlisting}
+a&&b&&c&&d&&e&&f&&g&&h
+\end{lstlisting}
+
+Indeed: it's true if all 8 input bits are \emph{True}.
+
+The function for 0 neighbours (POPCNT0) is also simple:
+
+\begin{lstlisting}
+!a&&!b&&!c&&!d&&!e&&!f&&!g&&!h
+\end{lstlisting}
+
+It means, it will return \emph{True}, if all input variables are \emph{False}.
+
+By the way, POPCNT1 function is also simple:
+
+\begin{lstlisting}
+(!a||!b)&&(!a||!c)&&(!a||!d)&&(!a||!e)&&(!a||!f)&&(!a||!g)&&(!a||!h)&&(a||b||c||d||e||f||g||h)&&
+(!b||!c)&&(!b||!d)&&(!b||!e)&&(!b||!f)&&(!b||!g)&&(!b||!h)&&(!c||!d)&&(!c||!e)&&(!c||!f)&&(!c||!g)&&
+(!c||!h)&&(!d||!e)&&(!d||!f)&&(!d||!g)&&(!d||!h)&&(!e||!f)&&(!e||!g)&&(!e||!h)&&(!f||!g)&&(!f||!h)&&(!g||!h)
+\end{lstlisting}
+
+There is just enumeration of all possible pairs of 8 variables (a/b, a/c, a/d, etc), which implies:
+no two bits must be present simultaneously in each possible pair.
+And there is another clause: ``(a||b||c||d||e||f||g||h)'', which implies:
+at least one bit must be present among 8 variables.
+
+And yes, you can ask Mathematica for finding \ac{CNF} expressions for any other truth table.
+
+\subsubsection{Minesweeper}
+
+Now we can use Mathematica to generate all \emph{population count} functions for 0..8 neighbours.
+
+For $9 \cdot 9$ Minesweeper matrix including invisible border, there will be $11 \cdot 11=121$ variables,
+mapped to Minesweeper matrix like this:
+
+\begin{lstlisting}
+ 1    2   3   4   5   6   7   8   9  10  11
+12   13  14  15  16  17  18  19  20  21  22
+23   24  25  26  27  28  29  30  31  32  33
+34   35  36  37  38  39  40  41  42  43  44
+
+...
+
+100 101 102 103 104 105 106 107 108 109 110
+111 112 113 114 115 116 117 118 119 120 121
+\end{lstlisting}
+
+Then we write a Python script which stacks all \emph{population count} functions:
+each function for each known number of neighbours (digit on Minesweeper field).
+Each POPCNTx() function takes list of variable numbers and outputs list of clauses to be added to the final \ac{CNF} file.
+
+As of empty cells, we also add them as clauses, but with minus sign, which means, the variable must be \emph{False}.
+Whenever we try to place bomb, we add its variable as clause without minus sign, this means the variable must be \emph{True}.
+
+Then we execute external minisat process.
+The only thing we need from it is exit code.
+If an input \ac{CNF} is \TT{UNSAT}, it returns 20:
+
+We use here the information from the previous solving of Minesweeper: \ref{minesweeper_SMT}.
+
+\lstinputlisting[style=custompy]{\CURPATH/minesweeper_SAT.py}
+
+( \url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/equations/minesweeper_SAT/minesweeper_SAT.py} ) \\
+\\
+The output \ac{CNF} file can be large, up to $\approx 2000$ clauses, or more, here is an example:
+\url{https://github.com/DennisYurichev/SAT_SMT_by_example/blob/master/equations/minesweeper_SAT/sample.cnf}.
+
+Anyway, it works just like my previous Z3Py script:
+
+\begin{lstlisting}
+row=1, col=3, unsat!
+row=6, col=2, unsat!
+row=6, col=3, unsat!
+row=7, col=4, unsat!
+row=7, col=9, unsat!
+row=8, col=9, unsat!
+\end{lstlisting}
+
+\dots but it runs way faster, even considering overhead of executing external program.
+Perhaps, Z3Py version could be optimized much better?
+
+The files, including Wolfram Mathematica notebook: 
+\url{https://github.com/DennisYurichev/SAT_SMT_by_example/tree/master/equations/minesweeper_SAT}.
+
