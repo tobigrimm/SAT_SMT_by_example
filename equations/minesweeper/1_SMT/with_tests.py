@@ -21,7 +21,7 @@ def find_safe_cells(known):
         for r in range(HEIGHT+2):
             s.add(cells[r][0]==0)
             s.add(cells[r][WIDTH+1]==0)
-
+                        
         for r in range(1,HEIGHT+1):
             for c in range(1,WIDTH+1):
                 # otherwise -1 is possible, etc:
@@ -44,35 +44,13 @@ def find_safe_cells(known):
         else:
             return None
 
-    def get_from_known_or_empty(known, r, c):
-        # I'm lazy to do overflow checks
-        try:
-            return known[r][c]
-        except IndexError:
-            return ""
-
-    def have_neighbour_digit(known, r, c):
-        # returns True if neighbour is digit, False otherwise
-        digits="0123456789"
-        t=[]
-        t.append(get_from_known_or_empty(known, r-1, c-1) in digits)
-        t.append(get_from_known_or_empty(known, r-1, c) in digits)
-        t.append(get_from_known_or_empty(known, r-1, c+1) in digits)
-        t.append(get_from_known_or_empty(known, r, c-1) in digits)
-        t.append(get_from_known_or_empty(known, r, c+1) in digits)
-        t.append(get_from_known_or_empty(known, r+1, c-1) in digits)
-        t.append(get_from_known_or_empty(known, r+1, c) in digits)
-        t.append(get_from_known_or_empty(known, r+1, c+1) in digits)
-        return any(t)
-
-    # enumerate all hidden cells:
     rt=[]
+    # enumerate all hidden cells:
     for r in range(1,HEIGHT+1):
         for c in range(1,WIDTH+1):
-            if known[r-1][c-1]=="?" and have_neighbour_digit(known, r-1, c-1):
-                #print "checking", r, c
+            if known[r-1][c-1]=="?":
                 rt.append(chk_bomb(r, c))
-    return filter(None, rt)
+    return filter(None,rt)
 
 tests=[
 ([
@@ -110,7 +88,6 @@ tests=[
 "??2??2110",
 "????22?10"],
 [(8, 2), (9, 4)]),
-
 ([
 "01110001?",
 "01?100011",

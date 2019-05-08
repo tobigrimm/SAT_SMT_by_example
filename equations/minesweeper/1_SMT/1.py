@@ -35,6 +35,8 @@ def chk_bomb(row, col):
 
     for r in range(1,HEIGHT+1):
         for c in range(1,WIDTH+1):
+            # otherwise -1 is possible, etc:
+            s.add(Or(cells[r][c]==0, cells[r][c]==1))
 
             t=known[r-1][c-1]
             if t in "012345678":
