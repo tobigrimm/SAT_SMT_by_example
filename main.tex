@@ -48,6 +48,19 @@
 %\usepackage[charter]{mathdesign}
 \usepackage[]{hyperref} % should be last
 \usepackage{epigraph}
+\usepackage{fancyhdr}
+
+% fancyhdr =============================================================================================================================
+\pagestyle{fancy}
+\setlength{\headheight}{13pt}
+% https://tex.stackexchange.com/questions/10043/page-number-position
+\fancyhf{}
+\fancyhead[R]{\thepage} % suppress chapter name, add page number (upper right corner)
+
+\cfoot{(For statistics collecting purposes) if you've read this far, please click \href{https://yurichev.com/stat/SSBE-EN \today p.\thepage}{here}. Thanks!}
+% https://tex.stackexchange.com/questions/13406/how-to-add-a-horizontal-line-above-the-footer-with-fancyhdr
+\renewcommand{\footrulewidth}{0.4pt}
+% ======================================================================================================================================
 
 \definecolor{lstbgcolor}{rgb}{0.94,0.94,0.94}
 \definecolor{light-gray}{gray}{0.87}
