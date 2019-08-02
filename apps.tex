@@ -3,6 +3,8 @@
 \begin{itemize}
 \item All sorts of theorem provers, including (but not limited to) Isabelle, HOL...
 
+\item Dafny (Microsoft Research)\footnote{\url{https://en.wikipedia.org/wiki/Dafny}}, uses Z3.
+
 \item KLEE\footnote{\url{https://klee.github.io/}} (uses STP).
 
 \item CBMC -- Bounded Model Checker for C and C++ programs
@@ -38,7 +40,7 @@ a language for cryptoalgorithms specification and prooving it's correctness. Use
 \section{Compiler's optimization verification}
 
 Your compiler optimized something out, but you're unsure if your optimization rules are correct, because there are lots of them.
-You can prove the original expression and optimized are equal to each other.
+You can prove the original expression and the optimized are equal to each other.
 
 This is what I did for my toy decompiler: \ref{ToyDecompilerTestingZ3}.
 
