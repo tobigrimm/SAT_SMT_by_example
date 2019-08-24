@@ -26,7 +26,7 @@ char my_getchar()
 	return rt;
 };
 
-// The token buffer. We never check for overflow! Do so in production code.
+// The token buffer. We never check for overflow! Don't so in production code.
 // it's deliberately smaller than input[] so KLEE could find buffer overflow
 char buf[64];
 int n = 0;
